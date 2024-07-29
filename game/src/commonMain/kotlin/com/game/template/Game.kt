@@ -12,12 +12,14 @@ import com.littlekt.math.geom.degrees
 import com.littlekt.math.geom.radians
 import com.littlekt.resources.Fonts
 import com.littlekt.util.viewport.ExtendViewport
+import io.itch.mattemade.utils.releasing.Releasing
+import io.itch.mattemade.utils.releasing.Self
 import kotlin.time.Duration.Companion.milliseconds
 
-class Game(context: Context) : ContextListener(context) {
+class Game(context: Context) : ContextListener(context), Releasing by Self() {
 
     override suspend fun Context.start() {
-        val device = graphics.device
+        val device = graphics.device.releasing()
         val surfaceCapabilities = graphics.surfaceCapabilities
         val preferredFormat = graphics.preferredFormat
 
@@ -27,7 +29,7 @@ class Game(context: Context) : ContextListener(context) {
             PresentMode.FIFO,
             surfaceCapabilities.alphaModes[0]
         )
-        val batch = SpriteBatch(device, graphics, preferredFormat)
+        val batch = SpriteBatch(device, graphics, preferredFormat).releasing()
         val shapeRenderer = ShapeRenderer(batch)
         val viewport = ExtendViewport(960, 540)
         val camera = viewport.camera
@@ -111,9 +113,6 @@ class Game(context: Context) : ContextListener(context) {
             swapChainTexture.release()
         }
 
-        onRelease {
-            batch.release()
-            device.release()
-        }
+        onRelease(::release)
     }
 }
