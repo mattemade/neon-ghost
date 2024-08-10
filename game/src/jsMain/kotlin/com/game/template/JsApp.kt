@@ -18,7 +18,11 @@ fun main() {
         canvasId = CANVAS_ID
     }.start {
         scheduleCanvasResize(it)
-        Game(it)
+        val game = Game(it)
+        window.addEventListener("blur", {
+            game.focused = false
+        })
+        game
     }
 }
 
