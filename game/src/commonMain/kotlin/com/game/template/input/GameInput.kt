@@ -36,7 +36,7 @@ fun Context.bindInputs(): InputMapController<GameInput> =
         addBinding(GameInput.LEFT, listOf(Key.A, Key.ARROW_LEFT).any(), axes = listOf(GameAxis.LX), buttons = listOf(GameButton.LEFT).any())
         addAxis(GameInput.HORIZONTAL, GameInput.RIGHT, GameInput.LEFT)
 
-// creates an axis based off the DOWN and UP input types
+        // creates an axis based off the DOWN and UP input types
         addBinding(GameInput.UP, listOf(Key.W, Key.ARROW_UP).any(), axes = listOf(GameAxis.LY), buttons = listOf(GameButton.UP).any())
         addBinding(GameInput.DOWN, listOf(Key.S, Key.ARROW_DOWN).any(), axes = listOf(GameAxis.LY), buttons = listOf(GameButton.DOWN).any())
         addAxis(GameInput.VERTICAL, GameInput.DOWN, GameInput.UP)

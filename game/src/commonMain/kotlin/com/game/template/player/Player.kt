@@ -3,12 +3,13 @@ package com.game.template.player
 import com.game.template.Assets
 import com.littlekt.graphics.Color
 import com.littlekt.graphics.MutableColor
-import com.littlekt.graphics.PixmapTexture
+import com.littlekt.graphics.Texture
+import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.ParticleSimulator
 import com.littlekt.graphics.g2d.SpriteBatch
+import com.littlekt.graphics.gl.PixmapTextureData
 import com.littlekt.input.InputMapController
 import com.littlekt.math.random
-import com.littlekt.resources.Textures
 import com.littlekt.util.seconds
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.utils.animation.SignallingAnimationPlayer
@@ -83,21 +84,25 @@ class Player(
 
     fun update(dt: Duration, millis: Float) {
         val xMovement = controller.axis(GameInput.HORIZONTAL)
-        val yMovement = -controller.axis(GameInput.VERTICAL)
+        val yMovement = controller.axis(GameInput.VERTICAL)
+        if (xMovement != 0f || yMovement != 0f) {
+            println("xMovement: $xMovement, yMovement: $yMovement")
+        }
         body.linearVelocity.set(xMovement * 100f * millis, yMovement * 100f * millis)
         body.isAwake = true
         currentAnimation.update(dt)
 
         if (controller.pressed(GameInput.ATTACK) || controller.pressed(GameInput.JUMP) || controller.justTouched) {
             currentAnimation.currentKeyFrame?.let {
-                if (it is PixmapTexture) {
+                val textureData = it.textureData
+                if (textureData is PixmapTextureData) {
                     val xOffset = texturePositionX()
                     val yOffset = texturePositionY()
                     val midHeight = it.height / 2
                     var firstMeaningfulX = 0
                     for (x in 0 until it.width step pixelWidthInt) {
                         for (y in 0 until it.height step pixelHeightInt) {
-                            val pixelColor = it.pixmap.get(x, y)
+                            val pixelColor = textureData.pixmap.get(x, y)
                             if (pixelColor != 0) {
                                 if (firstMeaningfulX == 0) {
                                     firstMeaningfulX = x
@@ -107,7 +112,7 @@ class Player(
                                         //alpha = 1f
                                         scale(1f)
                                         delay = ((x - firstMeaningfulX) / 750f + 1f).seconds
-                                        color.setArgb888(pixelColor)
+                                        color.setRgba8888(pixelColor)
                                         xDelta = 0.4f + (-0.25f..0.25f).random()
                                         yDelta = (midHeight - y) / 500f + (-0.45f..0.45f).random()//0f//-(-1.15f..1.15f).random()
                                         //alphaDelta = 0.5f
@@ -132,10 +137,13 @@ class Player(
 
     fun draw(batch: SpriteBatch) {
         currentAnimation.currentKeyFrame?.let { frame ->
+            val positionX = texturePositionX()
+            val positionY = texturePositionY()
+            println("player at $positionX, $positionY")
             batch.draw(
                 frame,
-                texturePositionX(),
-                texturePositionY(),
+                positionX,
+                positionY,
                 width = textureSizeInWorldUnits.x,
                 height = textureSizeInWorldUnits.y,
                 flipX = false
@@ -144,7 +152,7 @@ class Player(
     }
 
     private fun texturePositionX() = body.position.x - physicalHw - textureSizeInWorldUnits.x / 2f
-    private fun texturePositionY() = body.position.y - physicalHh
+    private fun texturePositionY() = body.position.y - physicalHh - textureSizeInWorldUnits.y
 }
 
 private fun MutableColor.setArgb888(argb8888: Int):MutableColor {

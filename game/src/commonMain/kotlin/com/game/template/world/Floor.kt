@@ -12,24 +12,24 @@ import org.jbox2d.dynamics.FixtureDef
 import org.jbox2d.dynamics.World
 import org.jbox2d.dynamics.contacts.Position
 
-class Floor(world: World, val rect: Rect) {
+class Floor(world: World, val rect: Rect, mapHeight: Int) {
 
     val renderPath = mutableListOf<Vec2f>()
     private val body = world.createBody(
         BodyDef(
         type = BodyType.STATIC,
     ).apply {
-        position.set(rect.x, rect.y)
+        //position.set(0f, 0f)
     }).apply {
         createFixture(
             FixtureDef(
             shape = ChainShape().apply {
                 createLoop(
                     arrayOf(
-                        Vec2(0f, 0f),
-                        Vec2(rect.width, 0f),
-                        Vec2(rect.width + rect.height, -rect.height),
-                        Vec2(rect.height, -rect.height)
+                        Vec2(rect.x, mapHeight - rect.y),
+                        Vec2(rect.x + rect.width, mapHeight - rect.y),
+                        Vec2(rect.x + rect.width + rect.height, mapHeight - rect.y + rect.height),
+                        Vec2(rect.x + rect.height, mapHeight - rect.y + rect.height)
                     ).also {
                         renderPath.addAll(it.map { Vec2f(it.x, it.y) })
                     },

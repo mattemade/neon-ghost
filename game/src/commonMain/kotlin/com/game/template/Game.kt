@@ -1,42 +1,32 @@
 package com.game.template
 
 import com.game.template.player.Player
-import com.game.template.shader.Crt
 import com.game.template.world.Floor
 import com.littlekt.Context
 import com.littlekt.ContextListener
+import com.littlekt.graph.node.resource.HAlign
 import com.littlekt.graphics.Color
-import com.littlekt.graphics.EmptyTexture
-import com.littlekt.graphics.HAlign
+import com.littlekt.graphics.Fonts
+import com.littlekt.graphics.FrameBuffer
 import com.littlekt.graphics.MutableColor
-import com.littlekt.graphics.g2d.ParticleSimulator
 import com.littlekt.graphics.g2d.SpriteBatch
 import com.littlekt.graphics.g2d.draw
 import com.littlekt.graphics.g2d.shape.ShapeRenderer
 import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
+import com.littlekt.graphics.gl.BlendFactor
+import com.littlekt.graphics.gl.ClearBufferMask
+import com.littlekt.graphics.gl.State
+import com.littlekt.graphics.gl.TexMagFilter
+import com.littlekt.graphics.gl.TexMinFilter
 import com.littlekt.graphics.shader.Shader
-import com.littlekt.graphics.shader.SpriteShader
-import com.littlekt.graphics.webgpu.AlphaMode
-import com.littlekt.graphics.webgpu.BindGroupLayoutDescriptor
-import com.littlekt.graphics.webgpu.BindGroupLayoutEntry
-import com.littlekt.graphics.webgpu.BufferBindingLayout
-import com.littlekt.graphics.webgpu.LoadOp
-import com.littlekt.graphics.webgpu.PresentMode
-import com.littlekt.graphics.webgpu.RenderPassColorAttachmentDescriptor
-import com.littlekt.graphics.webgpu.RenderPassDescriptor
-import com.littlekt.graphics.webgpu.SamplerBindingLayout
-import com.littlekt.graphics.webgpu.ShaderStage
-import com.littlekt.graphics.webgpu.StoreOp
-import com.littlekt.graphics.webgpu.TextureBindingLayout
-import com.littlekt.graphics.webgpu.TextureStatus
-import com.littlekt.graphics.webgpu.TextureUsage
+import com.littlekt.graphics.slice
+import com.littlekt.graphics.toFloatBits
+import com.littlekt.graphics.util.BlendMode
 import com.littlekt.input.InputProcessor
 import com.littlekt.input.Pointer
 import com.littlekt.math.geom.degrees
 import com.littlekt.math.geom.radians
-import com.littlekt.resources.Fonts
 import com.littlekt.util.Scaler
-import com.littlekt.util.align
 import com.littlekt.util.milliseconds
 import com.littlekt.util.seconds
 import com.littlekt.util.viewport.ScalingViewport
@@ -61,14 +51,16 @@ class Game(context: Context) : ContextListener(context), Releasing by Self() {
 
 
     private val virtualWidth = 320//256
-    private val virtualHeight = 224//240
+    private val virtualHeight = 240//224//240
 
     private val floors = mutableListOf<Floor>()
     private val world by lazy { World(gravityX = 0f, gravityY = 0f).apply {
-        assets.level.testRoom.layers.asSequence().filterIsInstance<TiledObjectLayer>().forEach {
+        val level = assets.level.testRoom
+        val mapHeight = level.height * level.tileHeight
+        level.layers.asSequence().filterIsInstance<TiledObjectLayer>().forEach {
             if (it.name == "floor") {
                 it.objects.forEach {
-                    floors += Floor(this, it.bounds)
+                    floors += Floor(this, it.bounds, mapHeight)
                 }
             }
         }
@@ -82,21 +74,18 @@ class Game(context: Context) : ContextListener(context), Releasing by Self() {
 
     override suspend fun Context.start() {
 
-        val device = graphics.device.releasing()
-        val surfaceCapabilities = graphics.surfaceCapabilities
-        val preferredFormat = graphics.preferredFormat
-        val target = EmptyTexture(device, preferredFormat, virtualWidth, virtualHeight)
 
-        graphics.configureSurface(
-            TextureUsage.RENDER_ATTACHMENT,
-            preferredFormat,
-            PresentMode.FIFO,
-            surfaceCapabilities.alphaModes[0]
-        )
-        val batch = SpriteBatch(device, graphics, preferredFormat).releasing()
-        val postBatch = SpriteBatch(device, graphics, preferredFormat).releasing()
-        postBatch.shader = Crt(device)
+        val batch = SpriteBatch(context).releasing()
+        val postBatch = SpriteBatch(context).releasing()
         val shapeRenderer = ShapeRenderer(batch)
+        val target = FrameBuffer(
+            virtualWidth,
+            virtualHeight,
+            listOf(FrameBuffer.TextureAttachment(minFilter = TexMinFilter.NEAREST, magFilter = TexMagFilter.NEAREST))
+        ).also {
+            it.prepare(context)
+        }
+        val targetSlice = target.textures[0].slice()
         val targetViewport = ScalingViewport(scaler = Scaler.Fit(), virtualWidth, virtualHeight)
         val targetCamera = targetViewport.camera
         val surfaceViewport = ScalingViewport(scaler = Scaler.Fit(), virtualWidth, virtualHeight)
@@ -135,43 +124,15 @@ class Game(context: Context) : ContextListener(context), Releasing by Self() {
 
             surfaceViewport.virtualWidth = width.toFloat()
             surfaceViewport.virtualHeight = height.toFloat()
-            surfaceViewport.update(width, height)
+            surfaceViewport.update(width, height, context)
             offsetX = -scaledWidth * 0.5f
             offsetY = -scaledHeight * 0.5f
 
-            graphics.configureSurface(
-                TextureUsage.RENDER_ATTACHMENT,
-                preferredFormat,
-                PresentMode.FIFO,
-                surfaceCapabilities.alphaModes[0]
-            )
             focused = false
 
 
         }
-        onUpdate { dt ->
-            val surfaceTexture = graphics.surface.getCurrentTexture()
-            when (val status = surfaceTexture.status) {
-                TextureStatus.SUCCESS -> {
-                    // all good, could check for `surfaceTexture.suboptimal` here.
-                }
-
-                TextureStatus.TIMEOUT,
-                TextureStatus.OUTDATED,
-                TextureStatus.LOST -> {
-                    surfaceTexture.texture?.release()
-                    logger.info { "getCurrentTexture status=$status" }
-                    return@onUpdate
-                }
-
-                else -> {
-                    // fatal
-                    logger.fatal { "getCurrentTexture status=$status" }
-                    close()
-                    return@onUpdate
-                }
-            }
-
+        onRender { dt ->
 
             val assetsReady = assets.isLoaded
             if (assetsReady) {
@@ -181,7 +142,7 @@ class Game(context: Context) : ContextListener(context), Releasing by Self() {
                         if (!wasFocused) {
                             println("Playing")
                             vfs.launch {
-                                assets.music.background.play(volume = 0.1f, loop = true, onCompletion = { println("Finished") })
+                                assets.music.background.play(volume = 0.1f, loop = true)
                             }
                         } else {
                             println("Resuming")
@@ -192,34 +153,16 @@ class Game(context: Context) : ContextListener(context), Releasing by Self() {
                 }
             }
 
-
-            val swapChainTexture = checkNotNull(surfaceTexture.texture)
-            val frame = swapChainTexture.createView()
-
-            val commandEncoder = device.createCommandEncoder()
-
-            val renderTargetRenderPass =
-                commandEncoder.beginRenderPass(
-                    RenderPassDescriptor(
-                        listOf(
-                            RenderPassColorAttachmentDescriptor(
-                                view = target.view,
-                                loadOp = LoadOp.CLEAR,
-                                storeOp = StoreOp.STORE,
-                                clearColor =
-                                if (preferredFormat.srgb) Color.YELLOW.toLinear()
-                                else Color.YELLOW
-                            )
-                        ),
-                        label = "Target render pass"
-                    )
-                )
-
-            targetViewport.apply()
+            target.begin()
+            gl.clearColor(Color.BLACK)
+            gl.clear(ClearBufferMask.COLOR_BUFFER_BIT)
+            //gl.enable(State.BLEND)
+            targetViewport.apply(context)
             targetCamera.position.x = virtualWidth / 2f
             targetCamera.position.y = virtualHeight / 2f
             targetCamera.update()
             batch.begin(targetCamera.viewProjection)
+            //batch.setBlendFunction(BlendMode.Alpha)
             if (!focused) {
                 Fonts.default.draw(batch, "CLICK TO FOCUS", 120f, 40f, align = HAlign.CENTER)
             } else if (!assetsReady) {
@@ -229,60 +172,51 @@ class Game(context: Context) : ContextListener(context), Releasing by Self() {
                 assets.level.testRoom.render(batch, targetCamera)
                 floors.forEach {
                     //shapeRenderer.path(it.renderPath, color = opaqueYellow)
-                    shapeRenderer.rectangle(it.rect.x, it.rect.y - it.rect.height, it.rect.width, it.rect.height, color = opaqueYellow)
+                    shapeRenderer.rectangle(it.rect.x, it.rect.y - it.rect.height, it.rect.width, it.rect.height, color = opaqueYellow.toFloatBits())
                 }
                 player.update(dt, millis)
                 assets.objects.particleSimulator.update(dt)
                 world.step(dt.seconds, 6, 2)
                 player.draw(batch)
+
+                //gl.enable(State.BLEND)
+                //batch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
                 assets.objects.particleSimulator.draw(batch)
+                //batch.setToPreviousBlendFunction()
+                //gl.disable(State.BLEND)
+
                 shapeRenderer.filledRectangle(
                     -50f,
                     50f,
                     100f,
                     50f,
                     rotation,
-                    color = if (time % doubleSecondsPerBeat < secondsPerBeat) Color.RED else Color.GREEN
+                    color = (if (time % doubleSecondsPerBeat < secondsPerBeat) Color.RED else Color.GREEN).toFloatBits()
                 )
             }
-            batch.flush(renderTargetRenderPass)
+            batch.flush()
             batch.end()
-            renderTargetRenderPass.end()
+            target.end()
 
-            val renderPassEncoder =
-                commandEncoder.beginRenderPass(
-                    desc =
-                    RenderPassDescriptor(
-                        listOf(
-                            RenderPassColorAttachmentDescriptor(
-                                view = frame,
-                                loadOp = LoadOp.CLEAR,
-                                storeOp = StoreOp.STORE,
-                                clearColor =
-                                if (preferredFormat.srgb) Color.BLACK.toLinear()
-                                else Color.BLACK
-                            )
-                        ),
-                        label = "Surface render pass",
-                    )
 
-                )
+            gl.clearColor(Color.BLACK)
+            gl.clear(ClearBufferMask.COLOR_BUFFER_BIT)
 
-            surfaceViewport.apply()
+            surfaceViewport.apply(context)
             surfaceCamera.update()
             postBatch.begin(surfaceCamera.viewProjection)
             postBatch.draw(
-                target,
+                targetSlice,
                 x = offsetX,
                 y = offsetY,
                 originX = 0f,
                 originY = 0f,
                 width = virtualWidth.toFloat() * scale,
                 height = virtualHeight.toFloat() * scale,
+                flipY = true,
             )
-            postBatch.flush(renderPassEncoder)
+            postBatch.flush()
             postBatch.end()
-            renderPassEncoder.end()
 
             rotationTimer += dt
             if (rotationTimer > 10.milliseconds) {
@@ -290,18 +224,8 @@ class Game(context: Context) : ContextListener(context), Releasing by Self() {
                 rotation += 1.degrees
             }
 
-            val commandBuffer = commandEncoder.finish()
-
-            device.queue.submit(commandBuffer)
-            graphics.surface.present()
-
-            commandBuffer.release()
-            renderPassEncoder.release()
-            commandEncoder.release()
-            frame.release()
-            swapChainTexture.release()
         }
 
-        onRelease(::release)
+        onDispose(::release)
     }
 }

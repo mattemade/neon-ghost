@@ -90,7 +90,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.littlekt.core)
-                implementation(libs.littlekt.scenegraph)
+                //implementation(libs.littlekt.scenegraph)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation("com.soywiz.korlibs.kbox2d:kbox2d:3.3.0")
             }

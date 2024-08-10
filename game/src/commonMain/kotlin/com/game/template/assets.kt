@@ -3,8 +3,8 @@ package com.game.template
 import com.littlekt.Context
 import com.littlekt.file.vfs.readAudioStreamEx
 import com.littlekt.file.vfs.readTiledMap
+import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.ParticleSimulator
-import com.littlekt.resources.Textures
 import io.itch.mattemade.utils.asset.AssetPack
 import kotlin.time.Duration
 

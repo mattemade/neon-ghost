@@ -28,7 +28,7 @@ fun main() {
 
 private fun scheduleCanvasResize(context: Context) {
     var removeContextCallback: RemoveContextCallback? = null
-    removeContextCallback = context.onUpdate {
+    removeContextCallback = context.onRender {
         // scale the container to allow canvas take all the available device pixel of hi-DPI display
         val canvasContainer = document.getElementById("canvas-container") as HTMLElement
         val zoom = (1 / window.devicePixelRatio).toFloat()
