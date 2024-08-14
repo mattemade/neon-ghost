@@ -1,0 +1,14 @@
+{ "columns":3,
+ "image":"Outside-Light 150_150.png",
+ "imageheight":150,
+ "imagewidth":450,
+ "margin":0,
+ "name":"Outside-Light 150_150",
+ "spacing":0,
+ "tilecount":3,
+ "tiledversion":"1.10.2",
+ "tileheight":150,
+ "tilewidth":150,
+ "type":"tileset",
+ "version":"1.10"
+}

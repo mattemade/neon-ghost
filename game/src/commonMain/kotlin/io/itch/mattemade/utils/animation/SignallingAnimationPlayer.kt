@@ -1,6 +1,7 @@
 package io.itch.mattemade.utils.animation
 
 import com.littlekt.graphics.Texture
+import com.littlekt.graphics.g2d.TextureSlice
 import kotlin.time.Duration
 
 class SignallingAnimationPlayer(
@@ -64,8 +65,8 @@ class SignallingAnimationPlayer(
         updateCurrentPlayer()
     }
 
-    private var precalculatedCurrentKeyFrame: Texture? = null
-    val currentKeyFrame: Texture?
+    private var precalculatedCurrentKeyFrame: TextureSlice? = null
+    val currentKeyFrame: TextureSlice?
         get() = precalculatedCurrentKeyFrame
 
 

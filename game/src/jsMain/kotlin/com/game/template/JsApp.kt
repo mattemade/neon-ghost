@@ -32,9 +32,9 @@ private fun scheduleCanvasResize(context: Context) {
         // scale the container to allow canvas take all the available device pixel of hi-DPI display
         val canvasContainer = document.getElementById("canvas-container") as HTMLElement
         val zoom = (1 / window.devicePixelRatio).toFloat()
-        canvasContainer.style.apply {
+        /*canvasContainer.style.apply {
             this.asDynamic().zoom = "$zoom"
-        }
+        }*/
 
         // resize the canvas to fit max available space
         val canvas = document.getElementById(CANVAS_ID) as HTMLCanvasElement
@@ -47,7 +47,9 @@ private fun scheduleCanvasResize(context: Context) {
             right = "0"
             width = "100%"
             height = "100%"
+            this.asDynamic().zoom = "$zoom" // TODO: makes better pixels but impacts performance in firefox
         }
+        //canvas.getContext("webgl2").asDynamic().translate(0.5f, 0.5f)
         removeContextCallback?.invoke()
         removeContextCallback = null
     }

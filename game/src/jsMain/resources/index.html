@@ -14,34 +14,18 @@
       padding: 15px;
       border-radius: 5px;
     }
-    #error-message {
-      font-size: 24px;
-      display: none;
-    }
   </style>
 </head>
 <body>
   <div id="canvas-container" style="text-align:center;">
     <h1>
-      LittleKt WebGPU Examples
+      LittleKt WebGL Examples
     </h1>
-    <p id="error-message">
-      Your browser does not currently support WebGPU. You must use Chrome Canary, Edge Canary, or Firefox Nightly and
-      enable WebGPU (See <a href="https://github.com/gpuweb/gpuweb/wiki/Implementation-Status">here</a>
-      for more details)
-    </p>
     <div id="content">
       <canvas id="canvas" width="1" height="1"></canvas>
     </div>
   </div>
 </body>
-<script type="application/javascript">
-  if (!navigator.gpu) {
-     document.body.className = 'error';
-     document.getElementById('content').style.display = "none";
-     document.getElementById('error-message').style.display = "initial";
- }
-</script>
 <!-- Uncomment the below script tag if you want simple FPS tracking on screen -->
 <script type="text/javascript" src="https://mrdoob.github.io/stats.js/build/stats.min.js" onload="if (navigator.gpu) {
 var stats = new Stats();

@@ -1,9 +1,8 @@
 package com.game.template.player
 
 import com.game.template.Assets
-import com.littlekt.graphics.Color
+import com.littlekt.file.Vfs
 import com.littlekt.graphics.MutableColor
-import com.littlekt.graphics.Texture
 import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.ParticleSimulator
 import com.littlekt.graphics.g2d.SpriteBatch
@@ -31,14 +30,14 @@ class Player(
     private val assets: Assets,
     private val controller: InputMapController<GameInput>,
     private val particleSimulator: ParticleSimulator,
+    private val vfs: Vfs
 ) : Releasing by Self(),
     HasContext<Body> {
 
-    private val textureSizeInWorldUnits =
-        Vec2(444f * 16f / 320f, 366f * 9f / 240f).mulLocal(2f) // 3.7 x 3.05
-    val pixelWidth = 444f / textureSizeInWorldUnits.x
+    private val textureSizeInWorldUnits = Vec2(60f, 96f)
+    val pixelWidth = 1f//textureSizeInWorldUnits.x
     val pixelWidthInt = pixelWidth.toInt()
-    val pixelHeight = 366f / textureSizeInWorldUnits.y
+    val pixelHeight = 1f//textureSizeInWorldUnits.y
     val pixelHeightInt = pixelHeight.toInt()
     private val physicalHw = 1f
     private val physicalHh = 1f
@@ -56,10 +55,19 @@ class Player(
     val x get() = body.position.x
     val y get() = body.position.y
 
-    private var currentAnimation: SignallingAnimationPlayer = assets.playerAnimations.idle
+    private var currentAnimation: SignallingAnimationPlayer = assets.normalReiAnimations.walk
         set(value) {
-            value.restart()
-            field = value
+            if (field != value) {
+                value.restart()
+                field = value
+            }
+        }
+    private var currentMagicalAnimation: SignallingAnimationPlayer = assets.magicalReiAnimations.walk
+        set(value) {
+            if (field != value) {
+                value.restart()
+                field = value
+            }
         }
 
     private val fixture = body.createFixture(
@@ -82,56 +90,131 @@ class Player(
     private val zeroVec2 = Vec2()
     private val tempColor = MutableColor()
 
+    private var isFacingLeft = false
+    private var wasPunching = false
+    private var nextLeftPunch = true
+    private var punchCooldown = 0f
+
     fun update(dt: Duration, millis: Float) {
+        if (punchCooldown > 0f) {
+            body.linearVelocity.set(0f, 0f)
+            punchCooldown -= millis
+            if (punchCooldown > 0f) {
+                currentAnimation.update(dt)
+                currentMagicalAnimation.update(dt)
+                return
+            }
+        }
         val xMovement = controller.axis(GameInput.HORIZONTAL)
         val yMovement = controller.axis(GameInput.VERTICAL)
         if (xMovement != 0f || yMovement != 0f) {
-            println("xMovement: $xMovement, yMovement: $yMovement")
+            wasPunching = false
+            nextLeftPunch = true
+            currentAnimation = assets.normalReiAnimations.walk
+            currentMagicalAnimation = assets.magicalReiAnimations.walk
+            if (isFacingLeft && xMovement > 0f) {
+                isFacingLeft = false
+            } else if (!isFacingLeft && xMovement < 0f) {
+                isFacingLeft = true
+            }
+        } else if (!wasPunching) {
+            currentAnimation = assets.normalReiAnimations.idle
+            currentMagicalAnimation = assets.magicalReiAnimations.idle
         }
         body.linearVelocity.set(xMovement * 100f * millis, yMovement * 100f * millis)
         body.isAwake = true
-        currentAnimation.update(dt)
 
         if (controller.pressed(GameInput.ATTACK) || controller.pressed(GameInput.JUMP) || controller.justTouched) {
-            currentAnimation.currentKeyFrame?.let {
-                val textureData = it.textureData
-                if (textureData is PixmapTextureData) {
-                    val xOffset = texturePositionX()
-                    val yOffset = texturePositionY()
-                    val midHeight = it.height / 2
-                    var firstMeaningfulX = 0
-                    for (x in 0 until it.width step pixelWidthInt) {
-                        for (y in 0 until it.height step pixelHeightInt) {
-                            val pixelColor = textureData.pixmap.get(x, y)
-                            if (pixelColor != 0) {
-                                if (firstMeaningfulX == 0) {
-                                    firstMeaningfulX = x
-                                }
-                                particleSimulator.alloc(Textures.white, xOffset + x/pixelWidth, yOffset - y/pixelHeight)
-                                    .apply {
-                                        //alpha = 1f
-                                        scale(1f)
-                                        delay = ((x - firstMeaningfulX) / 750f + 1f).seconds
-                                        color.setRgba8888(pixelColor)
-                                        xDelta = 0.4f + (-0.25f..0.25f).random()
-                                        yDelta = (midHeight - y) / 500f + (-0.45f..0.45f).random()//0f//-(-1.15f..1.15f).random()
-                                        //alphaDelta = 0.5f
-                                        life = 4f.seconds
-                                        //scaleDelta = 0f
-                                        friction = 0.97f
-                                        //fadeOutSpeed = 0.01f
-                                        alphaDelta = -0.015f
-                                        /*onUpdate = {
-                                            it.color.a /= 1.05f
-                                        }*/
-                                    }
-                            }
-                        }
-                    }
-
+            punchCooldown = if (wasPunching) 600f else 900f
+            currentAnimation = if (nextLeftPunch) {
+                if (wasPunching) {
+                    assets.normalReiAnimations.quickLeftPunch
+                } else {
+                    assets.normalReiAnimations.leftPunch
+                }
+            } else {
+                if (wasPunching) {
+                    assets.normalReiAnimations.quickRightPunch
+                } else {
+                    assets.normalReiAnimations.rightPunch
                 }
             }
+            currentMagicalAnimation = if (nextLeftPunch) {
+                if (wasPunching) {
+                    assets.magicalReiAnimations.quickLeftPunch
+                } else {
+                    assets.magicalReiAnimations.leftPunch
+                }
+            } else {
+                if (wasPunching) {
+                    assets.magicalReiAnimations.quickRightPunch
+                } else {
+                    assets.magicalReiAnimations.rightPunch
+                }
+            }
+            wasPunching = true
+            nextLeftPunch = !nextLeftPunch
+            //activateParticles()
+        }
+        currentAnimation.update(dt)
+        currentMagicalAnimation.update(dt)
+    }
 
+    private fun activateParticles() {
+        println("position: ${body.position.x}")
+        assets.sound.wind.play(
+            volume = 0.5f,
+            positionX = body.position.x,
+            positionY = 0f,
+            referenceDistance = 200f,
+            rolloffFactor = 0.01f
+        )
+        currentAnimation.currentKeyFrame?.let { slice ->
+            val textureData = slice.texture.textureData
+            if (textureData is PixmapTextureData) {
+                val xOffset = texturePositionX()
+                val yOffset = texturePositionY()
+                val midHeight = slice.height / 2
+                var firstMeaningfulX = 0
+                val width = slice.x + slice.width
+                val height = slice.y + slice.height
+                for (sliceX in slice.x until width step pixelWidthInt) {
+                    for (sliceY in slice.y until height step pixelHeightInt) {
+                        val x = sliceX - slice.x
+                        val y = sliceY - slice.y
+                        val pixelColor = textureData.pixmap.get(x, y)
+                        if (pixelColor != 0) {
+                            if (firstMeaningfulX == 0) {
+                                firstMeaningfulX = x
+                            }
+                            particleSimulator.alloc(
+                                Textures.white,
+                                xOffset + textureSizeInWorldUnits.x * 2 - x / pixelWidth,
+                                yOffset + y / pixelHeight
+                            )
+                                .apply {
+                                    //alpha = 1f
+                                    scale(1f)
+                                    delay =
+                                        ((textureSizeInWorldUnits.x - x) / 7.5f + 1f + (-0.2f..0.2f).random()).seconds
+                                    color.setRgba8888(pixelColor)
+                                    xDelta = 0.4f + (-0.25f..0.25f).random()
+                                    yDelta =
+                                        (midHeight - y) / 500f + (-0.45f..0.45f).random()//0f//-(-1.15f..1.15f).random()
+                                    //alphaDelta = 0.5f
+                                    life = 4f.seconds
+                                    //scaleDelta = 0f
+                                    friction = 1.03f
+                                    //fadeOutSpeed = 0.01f
+                                    alphaDelta = -0.005f
+                                    /*onUpdate = {
+                                            it.color.a /= 1.05f
+                                        }*/
+                                }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -139,14 +222,27 @@ class Player(
         currentAnimation.currentKeyFrame?.let { frame ->
             val positionX = texturePositionX()
             val positionY = texturePositionY()
-            println("player at $positionX, $positionY")
+            //println("player at $positionX, $positionY")
             batch.draw(
                 frame,
                 positionX,
                 positionY,
                 width = textureSizeInWorldUnits.x,
                 height = textureSizeInWorldUnits.y,
-                flipX = false
+                flipX = isFacingLeft
+            )
+        }
+        currentMagicalAnimation.currentKeyFrame?.let { frame ->
+            val positionX = texturePositionX() + textureSizeInWorldUnits.x*2f
+            val positionY = texturePositionY()
+            //println("player at $positionX, $positionY")
+            batch.draw(
+                frame,
+                positionX,
+                positionY,
+                width = textureSizeInWorldUnits.x,
+                height = textureSizeInWorldUnits.y,
+                flipX = isFacingLeft
             )
         }
     }

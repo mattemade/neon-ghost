@@ -6,19 +6,24 @@ import com.littlekt.file.vfs.readTexture
 import com.littlekt.graphics.Texture
 import com.littlekt.graphics.g2d.Animation
 import com.littlekt.graphics.g2d.AnimationPlayer
+import com.littlekt.graphics.g2d.TextureSlice
+import com.littlekt.graphics.slice
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 data class AnimationSpec(
     val path: String,
     private val formatPrefix: String,
-    private val formatSuffix: String,
+    private val formatSuffix: String?,
     private val formatNumberDigits: Int,
     val framesCount: Int,
     val frameSpecs: List<AnimationFrameSpec>,
     val signals: Map<Int, String>
 ) {
     fun getFramePath(frame: Int): String {
+        if (formatNumberDigits == 0) {
+            return "$path/$formatPrefix"
+        }
         val frameString = frame.toString()
         val frameLength = frameString.length
         if (frameLength > formatNumberDigits) {
@@ -40,10 +45,15 @@ data class AnimationFrameSpec(
 )
 
 data class AnimationPlayerSpec(
-    val player: AnimationPlayer<Texture>,
-    val animation: Animation<Texture>,
+    val player: AnimationPlayer<TextureSlice>,
+    val animation: Animation<TextureSlice>,
     val limitRepeats: Int = 0,
     val duration: Duration,
+)
+
+private data class TextureUsageCounter(
+    var texture: Texture,
+    var counter: Int,
 )
 
 suspend fun VfsFile.readAnimationPlayer(
@@ -51,29 +61,38 @@ suspend fun VfsFile.readAnimationPlayer(
     registerDisposable: Releasable.() -> Unit
 ): SignallingAnimationPlayer =
     readAnimationSpec().let { spec ->
-        val frames = (1..spec.framesCount).map {
-            vfs[spec.getFramePath(it)].readTexture().also(registerDisposable)
+        val textureCache = mutableMapOf<String, TextureUsageCounter>()
+        (1..spec.framesCount).forEach {
+            val textureUsage = textureCache.getOrPut(spec.getFramePath(it)) {
+                TextureUsageCounter(
+                    vfs[spec.getFramePath(it)].readTexture().also(registerDisposable),
+                    0
+                )
+            }
+            textureUsage.counter++
+        }
+        val frames: List<TextureSlice> = (1..spec.framesCount).flatMap {
+            val textureUsage = textureCache[spec.getFramePath(it)]!!
+            val sliceWidth = textureUsage.texture.width / textureUsage.counter
+            (0 until textureUsage.counter).map {
+                TextureSlice(
+                    textureUsage.texture,
+                    x = it * sliceWidth,
+                    y = 0,
+                    width = sliceWidth,
+                    height = textureUsage.texture.height
+                )
+            }
         }
         val framesPerPlayer = mutableListOf<Int>()
         val players = spec.frameSpecs.map { frameSpec ->
-            /*val animation = Animation(
-                frames = (0..<frameSpec.frameIndicies.size).map { frames[frameSpec.frameIndicies[it]] },
-                frameIndices = frameSpec.frameIndicies.indices.toList(),
-                frameTimes = frameSpec.frameDuration,
-            )*/
             framesPerPlayer += frameSpec.frameIndicies.size
             val limitRepeats =
                 if (frameSpec.repeatLogic.isBlank()) 0 else frameSpec.repeatLogic.toInt()
             val totalFrameDurations =
                 frameSpec.frameDuration.reduce { acc, duration -> acc + duration }
             AnimationPlayerSpec(
-                player = AnimationPlayer<Texture>(),
-                /*.apply {
-                                    when (frameSpec.repeatLogic) {
-                                        "" -> playLooped(animation)
-                                        else -> play(animation, times = frameSpec.repeatLogic.toInt())
-                                    }
-                                }*/
+                player = AnimationPlayer(),
                 animation = Animation(
                     frames = (0..<frameSpec.frameIndicies.size).map { frames[frameSpec.frameIndicies[it]] },
                     frameIndices = frameSpec.frameIndicies.indices.toList(),
@@ -143,7 +162,7 @@ suspend fun VfsFile.readAnimationSpec(): AnimationSpec {
     return AnimationSpec(
         path,
         formatPrefix = formatSplit[0],
-        formatSuffix = formatSplit[1],
+        formatSuffix = formatSplit.getOrNull(1),
         format.count { it == '%' },
         framesCount,
         frameSpecs,
