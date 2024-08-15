@@ -154,7 +154,7 @@ class Player(
             }
             wasPunching = true
             nextLeftPunch = !nextLeftPunch
-            //activateParticles()
+            activateParticles()
         }
         currentAnimation.update(dt)
         currentMagicalAnimation.update(dt)
@@ -162,13 +162,13 @@ class Player(
 
     private fun activateParticles() {
         println("position: ${body.position.x}")
-        assets.sound.wind.play(
+        /*assets.sound.wind.play(
             volume = 0.5f,
             positionX = body.position.x,
             positionY = 0f,
             referenceDistance = 200f,
             rolloffFactor = 0.01f
-        )
+        )*/
         currentAnimation.currentKeyFrame?.let { slice ->
             val textureData = slice.texture.textureData
             if (textureData is PixmapTextureData) {

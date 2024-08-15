@@ -1,6 +1,6 @@
 10 frames like ../sheet.png
+signal punch
 8 for 600
 repeat 1
-signal punch
 7 for 5000
 repeat

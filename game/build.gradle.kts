@@ -93,6 +93,7 @@ kotlin {
                 //implementation(libs.littlekt.scenegraph)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation("com.soywiz.korlibs.kbox2d:kbox2d:3.3.0")
+                implementation("co.touchlab:stately-concurrent-collections:2.0.0")
             }
         }
         val commonTest by getting {

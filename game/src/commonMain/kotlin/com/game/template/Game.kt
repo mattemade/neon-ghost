@@ -4,11 +4,12 @@ import com.game.template.player.Player
 import com.game.template.world.Floor
 import com.littlekt.Context
 import com.littlekt.ContextListener
+import com.littlekt.file.vfs.readTexture
+import com.littlekt.file.vfs.writePixmap
 import com.littlekt.graph.node.resource.HAlign
 import com.littlekt.graphics.Color
 import com.littlekt.graphics.Fonts
 import com.littlekt.graphics.FrameBuffer
-import com.littlekt.graphics.GL
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.SpriteBatch
 import com.littlekt.graphics.g2d.draw
@@ -21,7 +22,6 @@ import com.littlekt.graphics.gl.TexMagFilter
 import com.littlekt.graphics.gl.TexMinFilter
 import com.littlekt.graphics.slice
 import com.littlekt.graphics.toFloatBits
-import com.littlekt.graphics.util.BlendMode
 import com.littlekt.input.InputProcessor
 import com.littlekt.input.Pointer
 import com.littlekt.math.geom.degrees
@@ -31,13 +31,14 @@ import com.littlekt.util.milliseconds
 import com.littlekt.util.seconds
 import com.littlekt.util.viewport.ScalingViewport
 import io.itch.mattemade.blackcat.input.bindInputs
+import io.itch.mattemade.utils.atlas.RuntimePacker
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.World
 import kotlin.time.Duration.Companion.milliseconds
 
-class Game(context: Context) : ContextListener(context), Releasing by Self() {
+class Game(context: Context, private val onLowPerformance: () -> Unit) : ContextListener(context), Releasing by Self() {
 
     var focused = false
         set(value) {
@@ -77,13 +78,12 @@ class Game(context: Context) : ContextListener(context), Releasing by Self() {
 
     private var audioReady = false
     val opaqueYellow = MutableColor(Color.YELLOW).also { it.a = 0.5f }
+    private var fpsCheckTimeout = 0f
+    private var framesRenderedInPeriod = 0
 
     override suspend fun Context.start() {
-
-
         val batch = SpriteBatch(context).releasing()
         val postBatch = SpriteBatch(context).releasing()
-        //postBatch.shader = ShaderProgram()
         val shapeRenderer = ShapeRenderer(batch)
         val postShapeRenderer = ShapeRenderer(postBatch)
         val target = FrameBuffer(
@@ -128,7 +128,6 @@ class Game(context: Context) : ContextListener(context), Releasing by Self() {
             scale = minOf(widthScale, heightScale)
             val scaledWidth = virtualWidth * scale
             val scaledHeight = virtualHeight * scale
-            //targetViewport.update(scaledWidth, scaledHeight)
 
             postViewport.virtualWidth = width.toFloat()
             postViewport.virtualHeight = height.toFloat()
@@ -138,8 +137,6 @@ class Game(context: Context) : ContextListener(context), Releasing by Self() {
             println("Resized to $width $height, scaled to $scaledWidth $scaledHeight, offset $offsetX $offsetY")
 
             focused = false
-
-
         }
         onRender { dt ->
             gl.clear(ClearBufferMask.COLOR_BUFFER_BIT)
@@ -149,24 +146,19 @@ class Game(context: Context) : ContextListener(context), Releasing by Self() {
             }
             val assetsReady = audioReady && assets.isLoaded
             if (assetsReady) {
+                if (!assets.runtimePacker.isReady) {
+                    assets.runtimePacker.exerciseQueue()
+                }
                 if (focused) {
                     time += dt.seconds
-                    if (!assets.music.background.playing) {
-                        if (!wasFocused) {
-                            println("Playing")
-                            audio.setListenerPosition(virtualWidth / 2f, virtualHeight / 2f, -200f)
-                            vfs.launch {
-                                assets.music.background.play(volume = 0.1f, loop = true)
-                            }
-                        } else {
-                            println("Resuming")
-                            //audio.resume()
-                            //assets.music.background.resume()
-                        }
+                    if (!assets.music.background.playing && !wasFocused) {
+                        audio.setListenerPosition(virtualWidth / 2f, virtualHeight / 2f, -200f)
+                        vfs.launch { assets.music.background.play(volume = 0.1f, loop = true) }
                     }
                     wasFocused = true
                 }
             }
+            val millis = dt.milliseconds
 
             target.begin()
             targetViewport.apply(context)
@@ -180,22 +172,11 @@ class Game(context: Context) : ContextListener(context), Releasing by Self() {
             } else if (!assetsReady) {
                 Fonts.default.draw(batch, "LOADING", 120f, 40f, align = HAlign.CENTER)
             } else {
-                val millis = dt.milliseconds
                 assets.level.testRoom.render(batch, targetCamera)
-                floors.forEach {
-                    //shapeRenderer.path(it.renderPath, color = opaqueYellow)
-                    //shapeRenderer.rectangle(it.rect.x, it.rect.y - it.rect.height, it.rect.width, it.rect.height, color = opaqueYellow.toFloatBits())
-                }
                 player.update(dt, millis)
-                //assets.objects.particleSimulator.update(dt)
+                assets.objects.particleSimulator.update(dt)
                 world.step(dt.seconds, 6, 2)
                 player.draw(batch)
-
-                //gl.enable(State.BLEND)
-                //batch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
-                //assets.objects.particleSimulator.draw(batch)
-                //batch.setToPreviousBlendFunction()
-                //gl.disable(State.BLEND)
 
                 if (time % doubleSecondsPerBeat < secondsPerBeat) {
                     opaqueYellow.set(Color.RED)
@@ -205,9 +186,8 @@ class Game(context: Context) : ContextListener(context), Releasing by Self() {
                 opaqueYellow.a = 1f - (time % secondsPerBeat) / secondsPerBeat
 
                 gl.enable(State.BLEND)
-                //gl.blendEquation(GL.FUNC_ADD)
                 batch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
-                //glBlendEquation (GL_FUNC_ADD);
+                assets.objects.particleSimulator.draw(batch)
                 shapeRenderer.filledRectangle(
                     virtualWidth/2f,
                     0f,
@@ -264,6 +244,15 @@ class Game(context: Context) : ContextListener(context), Releasing by Self() {
                 rotation += 1.degrees
             }
 
+            framesRenderedInPeriod++
+            fpsCheckTimeout -= millis
+            if (fpsCheckTimeout < 0f) {
+                if (framesRenderedInPeriod < 190) { // average is less than 38 fps
+                    onLowPerformance()
+                }
+                fpsCheckTimeout = 5000f
+                framesRenderedInPeriod = 0
+            }
         }
 
         onDispose(::release)

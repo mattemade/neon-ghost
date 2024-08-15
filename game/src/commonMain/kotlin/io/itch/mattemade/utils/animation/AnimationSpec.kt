@@ -8,6 +8,7 @@ import com.littlekt.graphics.g2d.Animation
 import com.littlekt.graphics.g2d.AnimationPlayer
 import com.littlekt.graphics.g2d.TextureSlice
 import com.littlekt.graphics.slice
+import io.itch.mattemade.utils.atlas.RuntimePacker
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -52,11 +53,12 @@ data class AnimationPlayerSpec(
 )
 
 private data class TextureUsageCounter(
-    var texture: Texture,
+    var texture: TextureSlice,
     var counter: Int,
 )
 
 suspend fun VfsFile.readAnimationPlayer(
+    runtimePacker: RuntimePacker,
     signalCallback: ((String) -> Unit)? = null,
     registerDisposable: Releasable.() -> Unit
 ): SignallingAnimationPlayer =
@@ -65,7 +67,7 @@ suspend fun VfsFile.readAnimationPlayer(
         (1..spec.framesCount).forEach {
             val textureUsage = textureCache.getOrPut(spec.getFramePath(it)) {
                 TextureUsageCounter(
-                    vfs[spec.getFramePath(it)].readTexture().also(registerDisposable),
+                    runtimePacker.pack(spec.getFramePath(it), vfs).await(),
                     0
                 )
             }

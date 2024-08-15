@@ -7,13 +7,16 @@ import com.littlekt.file.vfs.readTiledMap
 import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.ParticleSimulator
 import io.itch.mattemade.utils.asset.AssetPack
+import io.itch.mattemade.utils.atlas.RuntimePacker
 
 class Assets(context: Context) : AssetPack(context) {
+    val runtimePacker = RuntimePacker(context).releasing()
+
     val music = Music(context).packed()
     val sound = Sound(context).packed()
     val level = Levels(context).packed()
-    val normalReiAnimations = ReiAnimations.Normal(context, ::println).packed()
-    val magicalReiAnimations = ReiAnimations.Magical(context, ::println).packed()
+    val normalReiAnimations = ReiAnimations.Normal(context, runtimePacker, ::println).packed()
+    val magicalReiAnimations = ReiAnimations.Magical(context, runtimePacker, ::println).packed()
     val objects = Objects(context).packed()
 }
 
@@ -30,22 +33,22 @@ class Levels(context: Context) : AssetPack(context) {
     //val testRoom by prepare { context.resourcesVfs["brick-and-concrete/test-room.tmj"].readTiledMap() }
 }
 
-sealed class ReiAnimations(context: Context, mode: String, callback: (String) -> Unit) :
+sealed class ReiAnimations(context: Context, runtimePacker: RuntimePacker, mode: String, callback: (String) -> Unit) :
     AssetPack(context, callback) {
     //val idle by "texture/player/idle".prepareAnimationPlayer()
     //val idle by "texture/sailor/idle".prepareAnimationPlayer()
-    val walk by "texture/rei/$mode/walk".prepareAnimationPlayer()
-    val idle by "texture/rei/$mode/idle".prepareAnimationPlayer()
-    val leftPunch by "texture/rei/$mode/left_punch".prepareAnimationPlayer()
-    val quickLeftPunch by "texture/rei/$mode/quick_left_punch".prepareAnimationPlayer()
-    val rightPunch by "texture/rei/$mode/right_punch".prepareAnimationPlayer()
-    val quickRightPunch by "texture/rei/$mode/quick_right_punch".prepareAnimationPlayer()
+    val walk by "texture/rei/$mode/walk".prepareAnimationPlayer(runtimePacker)
+    val idle by "texture/rei/$mode/idle".prepareAnimationPlayer(runtimePacker)
+    val leftPunch by "texture/rei/$mode/left_punch".prepareAnimationPlayer(runtimePacker)
+    val quickLeftPunch by "texture/rei/$mode/quick_left_punch".prepareAnimationPlayer(runtimePacker)
+    val rightPunch by "texture/rei/$mode/right_punch".prepareAnimationPlayer(runtimePacker)
+    val quickRightPunch by "texture/rei/$mode/quick_right_punch".prepareAnimationPlayer(runtimePacker)
 
-    class Normal(context: Context, callback: (String) -> Unit) :
-        ReiAnimations(context, "normal", callback)
+    class Normal(context: Context, runtimePacker: RuntimePacker, callback: (String) -> Unit) :
+        ReiAnimations(context, runtimePacker, "normal", callback)
 
-    class Magical(context: Context, callback: (String) -> Unit) :
-        ReiAnimations(context, "magical", callback)
+    class Magical(context: Context, runtimePacker: RuntimePacker, callback: (String) -> Unit) :
+        ReiAnimations(context, runtimePacker, "magical", callback)
 }
 
 

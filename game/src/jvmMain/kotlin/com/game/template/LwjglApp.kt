@@ -8,6 +8,6 @@ fun main() {
         height = 540
         title = "LittleKt Game Template"
     }.start {
-        Game(it)
+        Game(it) {}
     }
 }
