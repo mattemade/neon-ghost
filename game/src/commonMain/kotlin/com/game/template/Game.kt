@@ -4,6 +4,7 @@ import com.game.template.player.Player
 import com.game.template.world.Floor
 import com.littlekt.Context
 import com.littlekt.ContextListener
+import com.littlekt.file.vfs.writePixmap
 import com.littlekt.graph.node.resource.HAlign
 import com.littlekt.graphics.Color
 import com.littlekt.graphics.Fonts
@@ -42,7 +43,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
         set(value) {
             println("setting focus to $focused")
             field = value
-            if (!value && assets.isLoaded/* && assets.music.background.playing*/) {
+            if (!value /*&& assets.isLoaded && assets.music.background.playing*/) {
                 println("Pausing audio")
                 //assets.music.background.pause()
                 //context.audio.suspend()
@@ -136,7 +137,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
 
             focused = false
         }
-        var atlas: TextureAtlas? = null
+
         onRender { dt ->
             gl.clear(ClearBufferMask.COLOR_BUFFER_BIT)
             gl.clearColor(Color.CLEAR)
@@ -152,6 +153,11 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                         audio.setListenerPosition(virtualWidth / 2f, virtualHeight / 2f, -200f)
                         vfs.launch { assets.music.background.play(volume = 0.1f, loop = true) }
                     }*/
+                    if (!wasFocused) {
+                        vfs.launch {
+                            vfs["atlas2.png"].writePixmap(assets.tileSets.wall.texture.textureData.pixmap)
+                        }
+                    }
                     wasFocused = true
                 }
             }
@@ -208,12 +214,6 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             //gl.disable(State.BLEND)
             gl.enable(State.BLEND)
             postBatch.setBlendFunction(BlendFactor.ONE, BlendFactor.ONE)
-            atlas?.entries?.forEach {
-                postBatch.draw(
-                    it.slice,
-                    it.slice.x.toFloat(), it.slice.y.toFloat() - 400f
-                )
-            }
 
             postBatch.draw(
                 targetSlice,
@@ -256,15 +256,6 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 }
                 fpsCheckTimeout = 5000f
                 framesRenderedInPeriod = 0
-                if (!assets.runtimeTextureAtlasPacker.isReady) {
-                    player.currentAnimation.currentKeyFrame?.let {
-                        println("Current keyframe before: ${it.texture} ${it}")
-                    }
-                    atlas = assets.runtimeTextureAtlasPacker.packAtlas()
-                    player.currentAnimation.currentKeyFrame?.let {
-                        println("Current keyframe after: ${it.texture}  ${it}")
-                    }
-                }
             }
         }
 

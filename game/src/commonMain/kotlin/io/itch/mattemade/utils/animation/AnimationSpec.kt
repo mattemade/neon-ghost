@@ -62,7 +62,7 @@ suspend fun VfsFile.readAnimationPlayer(
         (1..spec.framesCount).forEach {
             val textureUsage = textureCache.getOrPut(spec.getFramePath(it)) {
                 TextureUsageCounter(
-                    runtimeTextureAtlasPacker.pack(spec.getFramePath(it), vfs).await(),
+                    runtimeTextureAtlasPacker.pack(spec.getFramePath(it)).await(),
                     0
                 )
             }
