@@ -4,14 +4,13 @@ import com.game.template.player.Player
 import com.game.template.world.Floor
 import com.littlekt.Context
 import com.littlekt.ContextListener
-import com.littlekt.file.vfs.readTexture
-import com.littlekt.file.vfs.writePixmap
 import com.littlekt.graph.node.resource.HAlign
 import com.littlekt.graphics.Color
 import com.littlekt.graphics.Fonts
 import com.littlekt.graphics.FrameBuffer
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.SpriteBatch
+import com.littlekt.graphics.g2d.TextureAtlas
 import com.littlekt.graphics.g2d.draw
 import com.littlekt.graphics.g2d.shape.ShapeRenderer
 import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
@@ -31,7 +30,6 @@ import com.littlekt.util.milliseconds
 import com.littlekt.util.seconds
 import com.littlekt.util.viewport.ScalingViewport
 import io.itch.mattemade.blackcat.input.bindInputs
-import io.itch.mattemade.utils.atlas.RuntimePacker
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
 import org.jbox2d.common.Vec2
@@ -44,12 +42,12 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
         set(value) {
             println("setting focus to $focused")
             field = value
-            if (!value && assets.isLoaded && assets.music.background.playing) {
+            if (!value && assets.isLoaded/* && assets.music.background.playing*/) {
                 println("Pausing audio")
                 //assets.music.background.pause()
-                context.audio.suspend()
+                //context.audio.suspend()
             } else if (value) {
-                context.audio.resume()
+                //context.audio.resume()
             }
         }
     val assets = Assets(context).releasing()
@@ -78,7 +76,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
 
     private var audioReady = false
     val opaqueYellow = MutableColor(Color.YELLOW).also { it.a = 0.5f }
-    private var fpsCheckTimeout = 0f
+    private var fpsCheckTimeout = 5000f
     private var framesRenderedInPeriod = 0
 
     override suspend fun Context.start() {
@@ -138,6 +136,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
 
             focused = false
         }
+        var atlas: TextureAtlas? = null
         onRender { dt ->
             gl.clear(ClearBufferMask.COLOR_BUFFER_BIT)
             gl.clearColor(Color.CLEAR)
@@ -146,15 +145,13 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             }
             val assetsReady = audioReady && assets.isLoaded
             if (assetsReady) {
-                if (!assets.runtimePacker.isReady) {
-                    assets.runtimePacker.exerciseQueue()
-                }
+
                 if (focused) {
                     time += dt.seconds
-                    if (!assets.music.background.playing && !wasFocused) {
+                    /*if (!assets.music.background.playing && !wasFocused) {
                         audio.setListenerPosition(virtualWidth / 2f, virtualHeight / 2f, -200f)
                         vfs.launch { assets.music.background.play(volume = 0.1f, loop = true) }
-                    }
+                    }*/
                     wasFocused = true
                 }
             }
@@ -211,6 +208,13 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             //gl.disable(State.BLEND)
             gl.enable(State.BLEND)
             postBatch.setBlendFunction(BlendFactor.ONE, BlendFactor.ONE)
+            atlas?.entries?.forEach {
+                postBatch.draw(
+                    it.slice,
+                    it.slice.x.toFloat(), it.slice.y.toFloat() - 400f
+                )
+            }
+
             postBatch.draw(
                 targetSlice,
                 x = offsetX,
@@ -252,6 +256,15 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 }
                 fpsCheckTimeout = 5000f
                 framesRenderedInPeriod = 0
+                if (!assets.runtimeTextureAtlasPacker.isReady) {
+                    player.currentAnimation.currentKeyFrame?.let {
+                        println("Current keyframe before: ${it.texture} ${it}")
+                    }
+                    atlas = assets.runtimeTextureAtlasPacker.packAtlas()
+                    player.currentAnimation.currentKeyFrame?.let {
+                        println("Current keyframe after: ${it.texture}  ${it}")
+                    }
+                }
             }
         }
 

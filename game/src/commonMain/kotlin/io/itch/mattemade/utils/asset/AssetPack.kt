@@ -6,7 +6,7 @@ import com.littlekt.PreparableGameAsset
 import com.littlekt.Releasable
 import io.itch.mattemade.utils.animation.SignallingAnimationPlayer
 import io.itch.mattemade.utils.animation.readAnimationPlayer
-import io.itch.mattemade.utils.atlas.RuntimePacker
+import io.itch.mattemade.utils.atlas.RuntimeTextureAtlasPacker
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
 
@@ -40,11 +40,11 @@ open class AssetPack(protected val context: Context, private val defaultAnimatio
     fun <T : Releasable> prepare(action: suspend () -> T): PreparableGameAsset<T> =
         provider.prepare { action().releasing() }
 
-    protected fun String.prepareAnimationPlayer(runtimePacker: RuntimePacker, callback: ((String) -> Unit)? = defaultAnimationCallback): PreparableGameAsset<SignallingAnimationPlayer> =
-        provider.prepare { this.readAnimationPlayer(runtimePacker, callback) }
+    protected fun String.prepareAnimationPlayer(runtimeTextureAtlasPacker: RuntimeTextureAtlasPacker, callback: ((String) -> Unit)? = defaultAnimationCallback): PreparableGameAsset<SignallingAnimationPlayer> =
+        provider.prepare { this.readAnimationPlayer(runtimeTextureAtlasPacker, callback) }
 
-    protected suspend fun String.readAnimationPlayer(runtimePacker: RuntimePacker, callback: ((String) -> Unit)? = defaultAnimationCallback): SignallingAnimationPlayer =
-        context.resourcesVfs[this].readAnimationPlayer(runtimePacker, callback) { releasing() }
+    protected suspend fun String.readAnimationPlayer(runtimeTextureAtlasPacker: RuntimeTextureAtlasPacker, callback: ((String) -> Unit)? = defaultAnimationCallback): SignallingAnimationPlayer =
+        context.resourcesVfs[this].readAnimationPlayer(runtimeTextureAtlasPacker, callback)
 
     fun <T : AssetPack> T.packed(): T {
         this@AssetPack.providers.addAll(providers)

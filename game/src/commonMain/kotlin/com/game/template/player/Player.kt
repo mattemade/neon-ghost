@@ -55,7 +55,7 @@ class Player(
     val x get() = body.position.x
     val y get() = body.position.y
 
-    private var currentAnimation: SignallingAnimationPlayer = assets.normalReiAnimations.walk
+    internal var currentAnimation: SignallingAnimationPlayer = assets.normalReiAnimations.walk
         set(value) {
             if (field != value) {
                 value.restart()

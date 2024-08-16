@@ -1,14 +1,10 @@
 package io.itch.mattemade.utils.animation
 
-import com.littlekt.Releasable
 import com.littlekt.file.vfs.VfsFile
-import com.littlekt.file.vfs.readTexture
-import com.littlekt.graphics.Texture
 import com.littlekt.graphics.g2d.Animation
 import com.littlekt.graphics.g2d.AnimationPlayer
 import com.littlekt.graphics.g2d.TextureSlice
-import com.littlekt.graphics.slice
-import io.itch.mattemade.utils.atlas.RuntimePacker
+import io.itch.mattemade.utils.atlas.RuntimeTextureAtlasPacker
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -53,39 +49,40 @@ data class AnimationPlayerSpec(
 )
 
 private data class TextureUsageCounter(
-    var texture: TextureSlice,
+    var slice: TextureSlice,
     var counter: Int,
 )
 
 suspend fun VfsFile.readAnimationPlayer(
-    runtimePacker: RuntimePacker,
+    runtimeTextureAtlasPacker: RuntimeTextureAtlasPacker,
     signalCallback: ((String) -> Unit)? = null,
-    registerDisposable: Releasable.() -> Unit
 ): SignallingAnimationPlayer =
     readAnimationSpec().let { spec ->
         val textureCache = mutableMapOf<String, TextureUsageCounter>()
         (1..spec.framesCount).forEach {
             val textureUsage = textureCache.getOrPut(spec.getFramePath(it)) {
                 TextureUsageCounter(
-                    runtimePacker.pack(spec.getFramePath(it), vfs).await(),
+                    runtimeTextureAtlasPacker.pack(spec.getFramePath(it), vfs).await(),
                     0
                 )
             }
             textureUsage.counter++
         }
-        val frames: List<TextureSlice> = (1..spec.framesCount).flatMap {
-            val textureUsage = textureCache[spec.getFramePath(it)]!!
-            val sliceWidth = textureUsage.texture.width / textureUsage.counter
-            (0 until textureUsage.counter).map {
-                TextureSlice(
-                    textureUsage.texture,
-                    x = it * sliceWidth,
-                    y = 0,
-                    width = sliceWidth,
-                    height = textureUsage.texture.height
-                )
+        val sliceCache = mutableMapOf<Int, TextureSlice>()
+        fun getSlice(index: Int): TextureSlice =
+            sliceCache.getOrPut(index) {
+                var remainder = index
+                for (i in 1..spec.framesCount) {
+                    val textureUsage = textureCache[spec.getFramePath(i)]!!
+                    if (remainder >= textureUsage.counter) {
+                        remainder -= textureUsage.counter
+                    } else {
+                        val sliceWidth = textureUsage.slice.width / textureUsage.counter
+                        return textureUsage.slice.slice(x = remainder * sliceWidth, y = 0, width = sliceWidth, height = textureUsage.slice.height)
+                    }
+                }
+                error("Out of bounds")
             }
-        }
         val framesPerPlayer = mutableListOf<Int>()
         val players = spec.frameSpecs.map { frameSpec ->
             framesPerPlayer += frameSpec.frameIndicies.size
@@ -96,7 +93,7 @@ suspend fun VfsFile.readAnimationPlayer(
             AnimationPlayerSpec(
                 player = AnimationPlayer(),
                 animation = Animation(
-                    frames = (0..<frameSpec.frameIndicies.size).map { frames[frameSpec.frameIndicies[it]] },
+                    frames = (0..<frameSpec.frameIndicies.size).map { getSlice(frameSpec.frameIndicies[it]) },
                     frameIndices = frameSpec.frameIndicies.indices.toList(),
                     frameTimes = frameSpec.frameDuration,
                 ),
