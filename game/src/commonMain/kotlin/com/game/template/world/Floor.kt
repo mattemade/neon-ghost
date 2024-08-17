@@ -1,5 +1,6 @@
 package com.game.template.world
 
+import com.game.template.Game
 import com.littlekt.math.Rect
 import com.littlekt.math.Vec2f
 import org.jbox2d.collision.shapes.ChainShape
@@ -26,10 +27,10 @@ class Floor(world: World, val rect: Rect, mapHeight: Int) {
             shape = ChainShape().apply {
                 createLoop(
                     arrayOf(
-                        Vec2(rect.x, mapHeight - rect.y),
-                        Vec2(rect.x + rect.width, mapHeight - rect.y),
-                        Vec2(rect.x + rect.width + rect.height, mapHeight - rect.y + rect.height),
-                        Vec2(rect.x + rect.height, mapHeight - rect.y + rect.height)
+                        Vec2(rect.x, mapHeight - rect.y).mulLocal(Game.IPPU),
+                        Vec2(rect.x + rect.width, mapHeight - rect.y).mulLocal(Game.IPPU),
+                        Vec2(rect.x + rect.width + rect.height, mapHeight - rect.y + rect.height).mulLocal(Game.IPPU),
+                        Vec2(rect.x + rect.height, mapHeight - rect.y + rect.height).mulLocal(Game.IPPU)
                     ).also {
                         renderPath.addAll(it.map { Vec2f(it.x, it.y) })
                     },

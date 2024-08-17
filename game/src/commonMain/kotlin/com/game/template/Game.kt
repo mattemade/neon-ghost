@@ -57,9 +57,10 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     val assets = Assets(context, ::onAnimationEvent).releasing()
     val inputController = context.bindInputs()
 
-
     private val virtualWidth = 320//256
     private val virtualHeight = 240//224//240
+    private val visibleWorldWidth = (virtualWidth / PPU).toInt()
+    private val visibleWorldHeight = (virtualHeight / PPU).toInt()
 
     private val floors = mutableListOf<Floor>()
     private val world by lazy { World(gravityX = 0f, gravityY = 0f).apply {
@@ -75,10 +76,10 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
         setContactListener(GeneralContactListener())
     } }
     private val player by lazy {
-        Player(Vec2(100f, 100f), world, assets, inputController, assets.objects.particleSimulator, context.vfs)
+        Player(Vec2(100f / PPU, 100f / PPU), world, assets, inputController, assets.objects.particleSimulator, context.vfs)
     }
     private val enemy by lazy {
-        Enemy(Vec2(200f, 200f), player, world, assets, inputController, assets.objects.particleSimulator, context.vfs)
+        Enemy(Vec2(200f / PPU, 200f / PPU), player, world, assets, inputController, assets.objects.particleSimulator, context.vfs)
     }
 
 
@@ -88,6 +89,8 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     val opaqueYellow = MutableColor(Color.YELLOW).also { it.a = 0.5f }
     private var fpsCheckTimeout = 5000f
     private var framesRenderedInPeriod = 0
+    private val worldStep = 1f / 60f
+    private var worldAccumulator = 0f
 
     private fun onAnimationEvent(event: String) {
         if (!focused) {
@@ -112,7 +115,9 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             it.prepare(context)
         }
         val targetSlice = target.textures[0].slice()
-        val targetViewport = ScalingViewport(scaler = Scaler.Fit(), virtualWidth, virtualHeight)
+        val targetViewport = ScalingViewport(scaler = Scaler.Fit(), visibleWorldWidth, visibleWorldHeight).apply {
+            update(this@Game.virtualWidth, this@Game.virtualHeight, context, false)
+        }
         val targetCamera = targetViewport.camera
         val postViewport = ScalingViewport(scaler = Scaler.Fit(), virtualWidth, virtualHeight)
         val postCamera = postViewport.camera
@@ -189,20 +194,24 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
 
             target.begin()
             targetViewport.apply(context)
-            targetCamera.position.x = virtualWidth / 2f
-            targetCamera.position.y = virtualHeight / 2f
+            targetCamera.position.x = visibleWorldWidth / 2f
+            targetCamera.position.y = visibleWorldHeight / 2f
             targetCamera.update()
             batch.begin(targetCamera.viewProjection)
             //batch.setBlendFunction(BlendMode.Alpha)
             if (!focused) {
-                Fonts.default.draw(batch, "CLICK TO FOCUS", 120f, 40f, align = HAlign.CENTER)
+                Fonts.default.draw(batch, "CLICK TO FOCUS", 1.5f, 0.5f, align = HAlign.CENTER)
             } else if (!assetsReady) {
-                Fonts.default.draw(batch, "LOADING", 120f, 40f, align = HAlign.CENTER)
+                Fonts.default.draw(batch, "LOADING", 1.5f, 0.5f, align = HAlign.CENTER)
             } else {
-                assets.level.testRoom.render(batch, targetCamera)
+                assets.level.testRoom.render(batch, targetCamera, scale = IPPU)
                 depthBasedDrawables.forEach { it.update(dt, millis, toBeat) }
                 assets.objects.particleSimulator.update(dt)
-                world.step(dt.seconds, 6, 2)
+                worldAccumulator += dt.seconds
+                while (worldAccumulator >= worldStep) {
+                    world.step(worldStep, 6, 2)
+                    worldAccumulator -= worldStep
+                }
                 depthBasedDrawables.sortBy { it.depth }
                 depthBasedDrawables.forEach { it.render(batch) }
 
@@ -250,7 +259,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 height = virtualHeight.toFloat() * scale,
                 flipY = true,
             )
-            //postShapeRenderer.circle(x = 0f ,y = 0f, radius = 10f, thickness = 3, color = Color.BLUE.toFloatBits())
+            postShapeRenderer.circle(x = 0f - virtualWidth*scale / 2f + 200f*scale ,y = 0f - virtualHeight*scale / 2f+ 200f*scale, radius = 10f, thickness = 3, color = Color.BLUE.toFloatBits())
 
             gl.enable(State.BLEND)
             postBatch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
@@ -285,5 +294,10 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
         }
 
         onDispose(::release)
+    }
+
+    companion object {
+        const val PPU = 80f
+        const val IPPU = 1/80f
     }
 }

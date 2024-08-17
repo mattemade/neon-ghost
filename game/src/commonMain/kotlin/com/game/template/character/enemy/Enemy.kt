@@ -1,6 +1,7 @@
 package com.game.template.character.enemy
 
 import com.game.template.Assets
+import com.game.template.Game
 import com.game.template.character.DepthBasedRenderable
 import com.game.template.character.rei.Player
 import com.game.template.world.ContactBits
@@ -42,13 +43,13 @@ class Enemy(
     HasContext<Body>,
     DepthBasedRenderable {
 
-    private val textureSizeInWorldUnits = Vec2(60f, 96f)
+    private val textureSizeInWorldUnits = Vec2(60f / Game.PPU, 96f / Game.PPU)
     val pixelWidth = 1f//textureSizeInWorldUnits.x
     val pixelWidthInt = pixelWidth.toInt()
     val pixelHeight = 1f//textureSizeInWorldUnits.y
     val pixelHeightInt = pixelHeight.toInt()
-    private val physicalHw = 1f
-    private val physicalHh = 1f
+    private val physicalHw = 1f / Game.PPU
+    private val physicalHh = 1f / Game.PPU
 
 
     private val body = world.createBody(
@@ -104,7 +105,7 @@ class Enemy(
     fun hit(from: Vec2) {
         hitCooldown = 300f
         val direction = tempVec2f.set(body.position.x, body.position.y).subtract(from.x, from.y)
-        tempVec2f2.set(100f, 0f)
+        tempVec2f2.set(1f, 0f)
         val distance = direction.length()
         val rotation = direction.angleTo(tempVec2f2)
         println("distance: $distance")
@@ -137,7 +138,7 @@ class Enemy(
             .mulLocal(inverseBeat * inverseBeat * inverseBeat)
             .mulLocal(0.1f)
 
-        val speed = direction.length() / 100f
+        val speed = direction.length() / 100f * Game.PPU
 
         if (direction.x != 0f) {
             if (isFacingLeft && direction.x > 0f) {
@@ -147,7 +148,7 @@ class Enemy(
             }
         }
 
-        if (direction.x == 0f && direction.y == 0f || distance < 40f) {
+        if (direction.x == 0f && direction.y == 0f || distance < 0.5f) {
             currentMagicalAnimation = assets.magicalReiAnimations.idle
             body.linearVelocity.set(0f, 0f)
         } else if (speed != 0f) {
@@ -155,7 +156,7 @@ class Enemy(
             body.linearVelocity.set(direction)
             body.isAwake = true
         }
-        currentMagicalAnimation.update(dt * speed.toDouble())
+        currentMagicalAnimation.update(dt * speed.toDouble() )
     }
 
     private fun activateParticles() {

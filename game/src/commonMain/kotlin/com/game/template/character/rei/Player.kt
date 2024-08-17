@@ -1,6 +1,7 @@
 package com.game.template.character.rei
 
 import com.game.template.Assets
+import com.game.template.Game
 import com.game.template.character.DepthBasedRenderable
 import com.game.template.character.enemy.Enemy
 import com.game.template.world.ContactBits
@@ -40,16 +41,16 @@ class Player(
     HasContext<Body>,
     DepthBasedRenderable {
 
-    private val textureSizeInWorldUnits = Vec2(60f, 96f)
+    private val textureSizeInWorldUnits = Vec2(60f / Game.PPU, 96f / Game.PPU)
     val pixelWidth = 1f//textureSizeInWorldUnits.x
     val pixelWidthInt = pixelWidth.toInt()
     val pixelHeight = 1f//textureSizeInWorldUnits.y
     val pixelHeightInt = pixelHeight.toInt()
-    private val physicalHw = 1f
-    private val physicalHh = 1f
-    private val punchDistance = 24f
-    private val punchWidth = 24f
-    private val punchDepth = 20f
+    private val physicalHw = 1f / Game.PPU
+    private val physicalHh = 1f / Game.PPU
+    private val punchDistance = 24f / Game.PPU
+    private val punchWidth = 24f / Game.PPU
+    private val punchDepth = 20f / Game.PPU
 
 
     private val body = world.createBody(
@@ -164,7 +165,7 @@ class Player(
         } else if (!wasPunching) {
             currentAnimation = assets.normalReiAnimations.idle
         }
-        body.linearVelocity.set(xMovement * 100f * millis, yMovement * 100f * millis)
+        body.linearVelocity.set(xMovement / 10f * millis, yMovement / 10f * millis)
         body.isAwake = true
 
         if (controller.pressed(GameInput.ATTACK) || controller.pressed(GameInput.JUMP) || controller.justTouched) {
@@ -218,18 +219,18 @@ class Player(
                             }
                             particleSimulator.alloc(
                                 Textures.white,
-                                xOffset + textureSizeInWorldUnits.x * 2 - x / pixelWidth,
-                                yOffset + y / pixelHeight
+                                xOffset + textureSizeInWorldUnits.x * 2 - x / Game.PPU,
+                                yOffset + y / Game.PPU
                             )
                                 .apply {
                                     //alpha = 1f
-                                    scale(1f)
+                                    scale(Game.IPPU)
                                     delay =
-                                        ((textureSizeInWorldUnits.x - x) / 7.5f + 1f + (-0.2f..0.2f).random()).seconds
+                                        ((textureSizeInWorldUnits.x * Game.PPU - x) / 7.5f + 1f + (-0.2f..0.2f).random()).seconds
                                     color.setRgba8888(pixelColor)
-                                    xDelta = 0.4f + (-0.25f..0.25f).random()
+                                    xDelta = (0.4f + (-0.25f..0.25f).random()) / Game.PPU
                                     yDelta =
-                                        (midHeight - y) / 500f + (-0.45f..0.45f).random()//0f//-(-1.15f..1.15f).random()
+                                        (midHeight - y) / 500f / Game.PPU + (-0.45f..0.45f).random() / Game.PPU//0f//-(-1.15f..1.15f).random()
                                     //alphaDelta = 0.5f
                                     life = 4f.seconds
                                     //scaleDelta = 0f
