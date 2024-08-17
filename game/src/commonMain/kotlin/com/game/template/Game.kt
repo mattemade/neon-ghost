@@ -1,17 +1,17 @@
 package com.game.template
 
-import com.game.template.player.Player
+import com.game.template.character.DepthBasedRenderable
+import com.game.template.character.enemy.Enemy
+import com.game.template.character.rei.Player
 import com.game.template.world.Floor
 import com.littlekt.Context
 import com.littlekt.ContextListener
-import com.littlekt.file.vfs.writePixmap
 import com.littlekt.graph.node.resource.HAlign
 import com.littlekt.graphics.Color
 import com.littlekt.graphics.Fonts
 import com.littlekt.graphics.FrameBuffer
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.SpriteBatch
-import com.littlekt.graphics.g2d.TextureAtlas
 import com.littlekt.graphics.g2d.draw
 import com.littlekt.graphics.g2d.shape.ShapeRenderer
 import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
@@ -43,12 +43,12 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
         set(value) {
             println("setting focus to $focused")
             field = value
-            if (!value /*&& assets.isLoaded && assets.music.background.playing*/) {
+            if (!value && assets.isLoaded && assets.music.background.playing) {
                 println("Pausing audio")
                 //assets.music.background.pause()
-                //context.audio.suspend()
+                context.audio.suspend()
             } else if (value) {
-                //context.audio.resume()
+                context.audio.resume()
             }
         }
     val assets = Assets(context).releasing()
@@ -71,9 +71,14 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
         }
     } }
     private val player by lazy {
-
         Player(Vec2(100f, 100f), world, assets, inputController, assets.objects.particleSimulator, context.vfs)
     }
+    private val enemy by lazy {
+        Enemy(Vec2(200f, 200f), player, world, assets, inputController, assets.objects.particleSimulator, context.vfs)
+    }
+
+
+    private val depthBasedDrawables by lazy { mutableListOf<DepthBasedRenderable>(player, enemy) }
 
     private var audioReady = false
     val opaqueYellow = MutableColor(Color.YELLOW).also { it.a = 0.5f }
@@ -146,22 +151,17 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             }
             val assetsReady = audioReady && assets.isLoaded
             if (assetsReady) {
-
                 if (focused) {
                     time += dt.seconds
-                    /*if (!assets.music.background.playing && !wasFocused) {
+                    if (!assets.music.background.playing && !wasFocused) {
                         audio.setListenerPosition(virtualWidth / 2f, virtualHeight / 2f, -200f)
                         vfs.launch { assets.music.background.play(volume = 0.1f, loop = true) }
-                    }*/
-                    if (!wasFocused) {
-                        vfs.launch {
-                            vfs["atlas2.png"].writePixmap(assets.tileSets.wall.texture.textureData.pixmap)
-                        }
                     }
                     wasFocused = true
                 }
             }
             val millis = dt.milliseconds
+            val toBeat = (time % secondsPerBeat) / secondsPerBeat
 
             target.begin()
             targetViewport.apply(context)
@@ -176,10 +176,11 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 Fonts.default.draw(batch, "LOADING", 120f, 40f, align = HAlign.CENTER)
             } else {
                 assets.level.testRoom.render(batch, targetCamera)
-                player.update(dt, millis)
+                depthBasedDrawables.forEach { it.update(dt, millis, toBeat) }
                 assets.objects.particleSimulator.update(dt)
                 world.step(dt.seconds, 6, 2)
-                player.draw(batch)
+                depthBasedDrawables.sortBy { it.depth }
+                depthBasedDrawables.forEach { it.render(batch) }
 
                 if (time % doubleSecondsPerBeat < secondsPerBeat) {
                     opaqueYellow.set(Color.RED)
@@ -191,14 +192,14 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 gl.enable(State.BLEND)
                 batch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
                 assets.objects.particleSimulator.draw(batch)
-                shapeRenderer.filledRectangle(
+                /*shapeRenderer.filledRectangle(
                     virtualWidth/2f,
                     0f,
                     100f,
                     50f,
                     rotation,
                     color = opaqueYellow.toFloatBits()
-                )
+                )*/
                 batch.setToPreviousBlendFunction()
                 gl.disable(State.BLEND)
             }
@@ -225,18 +226,18 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 height = virtualHeight.toFloat() * scale,
                 flipY = true,
             )
-            postShapeRenderer.circle(x = 0f ,y = 0f, radius = 10f, thickness = 3, color = Color.BLUE.toFloatBits())
+            //postShapeRenderer.circle(x = 0f ,y = 0f, radius = 10f, thickness = 3, color = Color.BLUE.toFloatBits())
 
             gl.enable(State.BLEND)
             postBatch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
-            postShapeRenderer.filledRectangle(
+            /*postShapeRenderer.filledRectangle(
                 0f,
                 0f,
                 1000f,
                 500f,
                 rotation,
                 color = opaqueYellow.toFloatBits()
-            )
+            )*/
             postBatch.setToPreviousBlendFunction()
             gl.disable(State.BLEND)
             postBatch.flush()

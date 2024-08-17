@@ -37,7 +37,9 @@ class Floor(world: World, val rect: Rect, mapHeight: Int) {
                 )
             },
             friction = 0f,
-            //filter = Filter().apply(filter),
+            filter = Filter().apply{
+                categoryBits = ContactBits.WALL
+            },
             userData = userData
         )
         )

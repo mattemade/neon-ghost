@@ -1,11 +1,13 @@
-package com.game.template.player
+package com.game.template.character.rei
 
 import com.game.template.Assets
+import com.game.template.character.DepthBasedRenderable
+import com.game.template.world.ContactBits
 import com.littlekt.file.Vfs
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.Textures
+import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.ParticleSimulator
-import com.littlekt.graphics.g2d.SpriteBatch
 import com.littlekt.graphics.gl.PixmapTextureData
 import com.littlekt.input.InputMapController
 import com.littlekt.math.random
@@ -20,6 +22,7 @@ import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.Body
 import org.jbox2d.dynamics.BodyDef
 import org.jbox2d.dynamics.BodyType
+import org.jbox2d.dynamics.Filter
 import org.jbox2d.dynamics.FixtureDef
 import org.jbox2d.dynamics.World
 import kotlin.time.Duration
@@ -32,7 +35,8 @@ class Player(
     private val particleSimulator: ParticleSimulator,
     private val vfs: Vfs
 ) : Releasing by Self(),
-    HasContext<Body> {
+    HasContext<Body>,
+    DepthBasedRenderable {
 
     private val textureSizeInWorldUnits = Vec2(60f, 96f)
     val pixelWidth = 1f//textureSizeInWorldUnits.x
@@ -54,15 +58,9 @@ class Player(
 
     val x get() = body.position.x
     val y get() = body.position.y
+    override val depth: Float get() = y
 
     internal var currentAnimation: SignallingAnimationPlayer = assets.normalReiAnimations.walk
-        set(value) {
-            if (field != value) {
-                value.restart()
-                field = value
-            }
-        }
-    private var currentMagicalAnimation: SignallingAnimationPlayer = assets.magicalReiAnimations.walk
         set(value) {
             if (field != value) {
                 value.restart()
@@ -75,10 +73,10 @@ class Player(
             shape = PolygonShape().apply {
                 setAsBox(physicalHw, physicalHh)
             },
-            /*filter = Filter().apply {
-                categoryBits = ContactBits.CAT_BIT
-                maskBits = ContactBits.BLOCK_BIT or ContactBits.PLATFORM_BIT or ContactBits.WALL_BIT
-            },*/
+            filter = Filter().apply {
+                categoryBits = ContactBits.REI
+                maskBits = ContactBits.WALL
+            },
             friction = 2f,
             userData = this
         )
@@ -95,13 +93,12 @@ class Player(
     private var nextLeftPunch = true
     private var punchCooldown = 0f
 
-    fun update(dt: Duration, millis: Float) {
+    override fun update(dt: Duration, millis: Float, toBeat: Float) {
         if (punchCooldown > 0f) {
             body.linearVelocity.set(0f, 0f)
             punchCooldown -= millis
             if (punchCooldown > 0f) {
                 currentAnimation.update(dt)
-                currentMagicalAnimation.update(dt)
                 return
             }
         }
@@ -111,7 +108,6 @@ class Player(
             wasPunching = false
             nextLeftPunch = true
             currentAnimation = assets.normalReiAnimations.walk
-            currentMagicalAnimation = assets.magicalReiAnimations.walk
             if (isFacingLeft && xMovement > 0f) {
                 isFacingLeft = false
             } else if (!isFacingLeft && xMovement < 0f) {
@@ -119,7 +115,6 @@ class Player(
             }
         } else if (!wasPunching) {
             currentAnimation = assets.normalReiAnimations.idle
-            currentMagicalAnimation = assets.magicalReiAnimations.idle
         }
         body.linearVelocity.set(xMovement * 100f * millis, yMovement * 100f * millis)
         body.isAwake = true
@@ -139,25 +134,11 @@ class Player(
                     assets.normalReiAnimations.rightPunch
                 }
             }
-            currentMagicalAnimation = if (nextLeftPunch) {
-                if (wasPunching) {
-                    assets.magicalReiAnimations.quickLeftPunch
-                } else {
-                    assets.magicalReiAnimations.leftPunch
-                }
-            } else {
-                if (wasPunching) {
-                    assets.magicalReiAnimations.quickRightPunch
-                } else {
-                    assets.magicalReiAnimations.rightPunch
-                }
-            }
             wasPunching = true
             nextLeftPunch = !nextLeftPunch
             activateParticles()
         }
         currentAnimation.update(dt)
-        currentMagicalAnimation.update(dt)
     }
 
     private fun activateParticles() {
@@ -218,22 +199,9 @@ class Player(
         }
     }
 
-    fun draw(batch: SpriteBatch) {
+    override fun render(batch: Batch) {
         currentAnimation.currentKeyFrame?.let { frame ->
             val positionX = texturePositionX()
-            val positionY = texturePositionY()
-            //println("player at $positionX, $positionY")
-            batch.draw(
-                frame,
-                positionX,
-                positionY,
-                width = textureSizeInWorldUnits.x,
-                height = textureSizeInWorldUnits.y,
-                flipX = isFacingLeft
-            )
-        }
-        currentMagicalAnimation.currentKeyFrame?.let { frame ->
-            val positionX = texturePositionX() + textureSizeInWorldUnits.x*2f
             val positionY = texturePositionY()
             //println("player at $positionX, $positionY")
             batch.draw(

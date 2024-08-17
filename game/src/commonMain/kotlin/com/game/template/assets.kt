@@ -32,8 +32,8 @@ class Assets(context: Context) : AssetPack(context) {
         )
     }
 
-    //val music by pack { Music(context) }
-    //val sound by pack { Sound(context) }
+    val music by pack { Music(context) }
+    val sound by pack { Sound(context) }
     val objects by pack { Objects(context) }
     val tileSets by pack { TileSets(context, runtimeTextureAtlasPacker) }
 
@@ -48,8 +48,6 @@ class Sound(context: Context) : AssetPack(context) {
 
 class Music(context: Context) : AssetPack(context) {
     val background by prepare { context.resourcesVfs["sound/untitled.mp3"].readAudioStreamEx() }
-    val stage1mp3 by prepare { context.resourcesVfs["sound/stage1.mp3"].readAudioStreamEx() }
-    val stage1ogg by prepare { context.resourcesVfs["sound/stage1.ogg"].readAudioStreamEx() }
 }
 
 class Levels(context: Context, atlas: TextureAtlas? = null) : AssetPack(context) {
