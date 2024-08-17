@@ -14,26 +14,26 @@ import com.littlekt.graphics.g2d.TextureSlice
 import io.itch.mattemade.utils.asset.AssetPack
 import io.itch.mattemade.utils.atlas.RuntimeTextureAtlasPacker
 
-class Assets(context: Context) : AssetPack(context) {
+class Assets(context: Context, animationEventListener: (String) -> Unit) : AssetPack(context) {
     val runtimeTextureAtlasPacker = RuntimeTextureAtlasPacker(context).releasing()
 
     val normalReiAnimations by pack {
         ReiAnimations.Normal(
             context,
             runtimeTextureAtlasPacker,
-            ::println
+            animationEventListener
         )
     }
     val magicalReiAnimations by pack {
         ReiAnimations.Magical(
             context,
             runtimeTextureAtlasPacker,
-            ::println
+            animationEventListener
         )
     }
 
     val music by pack { Music(context) }
-    val sound by pack { Sound(context) }
+    //val sound by pack { Sound(context) }
     val objects by pack { Objects(context) }
     val tileSets by pack { TileSets(context, runtimeTextureAtlasPacker) }
 
@@ -43,7 +43,7 @@ class Assets(context: Context) : AssetPack(context) {
 }
 
 class Sound(context: Context) : AssetPack(context) {
-    val wind by prepare { context.resourcesVfs["sound/wind.mp3"].readAudioClipEx() }
+    val wind by prepare { context.resourcesVfs["sound/untitled.mp3"].readAudioClipEx() }
 }
 
 class Music(context: Context) : AssetPack(context) {

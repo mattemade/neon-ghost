@@ -11,6 +11,8 @@ import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.ParticleSimulator
 import com.littlekt.graphics.gl.PixmapTextureData
 import com.littlekt.input.InputMapController
+import com.littlekt.math.MutableVec2f
+import com.littlekt.math.Vec2f
 import com.littlekt.math.random
 import com.littlekt.util.seconds
 import io.itch.mattemade.blackcat.input.GameInput
@@ -78,7 +80,7 @@ class Enemy(
             },
             filter = Filter().apply {
                 categoryBits = ContactBits.ENEMY
-                maskBits = ContactBits.WALL
+                maskBits = ContactBits.WALL or ContactBits.REI_PUNCH
             },
             friction = 2f,
             userData = this
@@ -88,6 +90,8 @@ class Enemy(
     override val context: Map<Any, Body> = mapOf(Body::class to body)
 
     private val tempVec2 = Vec2()
+    private val tempVec2f = MutableVec2f()
+    private val tempVec2f2 = MutableVec2f()
     private val zeroVec2 = Vec2()
     private val tempColor = MutableColor()
 
@@ -95,6 +99,22 @@ class Enemy(
     private var wasPunching = false
     private var nextLeftPunch = true
     private var punchCooldown = 0f
+    private var hitCooldown = 0f
+
+    fun hit(from: Vec2) {
+        hitCooldown = 300f
+        val direction = tempVec2f.set(body.position.x, body.position.y).subtract(from.x, from.y)
+        tempVec2f2.set(100f, 0f)
+        val distance = direction.length()
+        val rotation = direction.angleTo(tempVec2f2)
+        println("distance: $distance")
+        //tempVec2f2.scale(distance).rotate(rotation)
+        tempVec2.set(tempVec2f2.x, tempVec2f2.y)
+        println("move: $tempVec2")
+        body.linearVelocity.set(tempVec2)
+        body.isAwake = true
+        //body.applyLinearImpulse(tempVec2, body.position, true)
+    }
 
     override fun update(dt: Duration, millis: Float, toBeat: Float) {
         if (punchCooldown > 0f) {
@@ -104,6 +124,10 @@ class Enemy(
                 currentMagicalAnimation.update(dt)
                 return
             }
+        }
+        if (hitCooldown > 0f) {
+            hitCooldown -= millis
+            return
         }
         val inverseBeat = 1f - toBeat
         val direction = tempVec2.set(player.x - x, player.y - y)

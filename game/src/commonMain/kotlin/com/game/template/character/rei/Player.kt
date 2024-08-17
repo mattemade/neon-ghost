@@ -2,6 +2,7 @@ package com.game.template.character.rei
 
 import com.game.template.Assets
 import com.game.template.character.DepthBasedRenderable
+import com.game.template.character.enemy.Enemy
 import com.game.template.world.ContactBits
 import com.littlekt.file.Vfs
 import com.littlekt.graphics.MutableColor
@@ -12,6 +13,7 @@ import com.littlekt.graphics.gl.PixmapTextureData
 import com.littlekt.input.InputMapController
 import com.littlekt.math.random
 import com.littlekt.util.seconds
+import com.soywiz.korma.geom.radians
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.utils.animation.SignallingAnimationPlayer
 import io.itch.mattemade.utils.releasing.HasContext
@@ -45,6 +47,9 @@ class Player(
     val pixelHeightInt = pixelHeight.toInt()
     private val physicalHw = 1f
     private val physicalHh = 1f
+    private val punchDistance = 24f
+    private val punchWidth = 24f
+    private val punchDepth = 20f
 
 
     private val body = world.createBody(
@@ -77,14 +82,43 @@ class Player(
                 categoryBits = ContactBits.REI
                 maskBits = ContactBits.WALL
             },
-            friction = 2f,
             userData = this
         )
-    ) ?: error("Cat fixture is null! Should not happen!")
+    ) ?: error("Fixture is null! Should not happen!")
+
+    private val tempVec2 = Vec2()
+
+    private val leftPunchTargets = mutableSetOf<Enemy>()
+    private val rightPunchTargets = mutableSetOf<Enemy>()
+    private val leftPunchFixture = body.createFixture(
+        FixtureDef(
+            shape = PolygonShape().apply {
+                setAsBox(punchWidth, punchDepth, center = tempVec2.set(-punchDistance, 0f), angle = 0f.radians)
+            },
+            filter = Filter().apply {
+                categoryBits = ContactBits.REI_PUNCH
+                maskBits = ContactBits.ENEMY
+            },
+            userData = leftPunchTargets,
+            isSensor = true
+        )
+    ) ?: error("Fixture is null! Should not happen!")
+    private val rightPunchFixture = body.createFixture(
+        FixtureDef(
+            shape = PolygonShape().apply {
+                setAsBox(punchWidth, punchDepth, center = tempVec2.set(punchDistance, 0f), angle = 0f.radians)
+            },
+            filter = Filter().apply {
+                categoryBits = ContactBits.REI_PUNCH
+                maskBits = ContactBits.ENEMY
+            },
+            userData = rightPunchTargets,
+            isSensor = true
+        )
+    ) ?: error("Fixture is null! Should not happen!")
 
     override val context: Map<Any, Body> = mapOf(Body::class to body)
 
-    private val tempVec2 = Vec2()
     private val zeroVec2 = Vec2()
     private val tempColor = MutableColor()
 
@@ -92,6 +126,20 @@ class Player(
     private var wasPunching = false
     private var nextLeftPunch = true
     private var punchCooldown = 0f
+
+    fun activatePunch() {
+        if (isFacingLeft) {
+            leftPunchTargets.forEach {
+                println("left punch $it")
+                it.hit(body.position)
+            }
+        } else {
+            rightPunchTargets.forEach {
+                println("right punch $it")
+                it.hit(body.position)
+            }
+        }
+    }
 
     override fun update(dt: Duration, millis: Float, toBeat: Float) {
         if (punchCooldown > 0f) {
@@ -219,7 +267,7 @@ class Player(
     private fun texturePositionY() = body.position.y - physicalHh - textureSizeInWorldUnits.y
 }
 
-private fun MutableColor.setArgb888(argb8888: Int):MutableColor {
+private fun MutableColor.setArgb888(argb8888: Int): MutableColor {
     a = ((argb8888 and 0xff000000.toInt()) ushr 24) / 255f
     b = ((argb8888 and 0x00ff0000) ushr 16) / 255f
     g = ((argb8888 and 0x0000ff00) ushr 8) / 255f//?

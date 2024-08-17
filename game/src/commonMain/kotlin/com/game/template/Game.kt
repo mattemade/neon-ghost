@@ -4,6 +4,7 @@ import com.game.template.character.DepthBasedRenderable
 import com.game.template.character.enemy.Enemy
 import com.game.template.character.rei.Player
 import com.game.template.world.Floor
+import com.game.template.world.GeneralContactListener
 import com.littlekt.Context
 import com.littlekt.ContextListener
 import com.littlekt.graph.node.resource.HAlign
@@ -22,6 +23,7 @@ import com.littlekt.graphics.gl.TexMagFilter
 import com.littlekt.graphics.gl.TexMinFilter
 import com.littlekt.graphics.slice
 import com.littlekt.graphics.toFloatBits
+import com.littlekt.input.InputMapProcessor
 import com.littlekt.input.InputProcessor
 import com.littlekt.input.Pointer
 import com.littlekt.math.geom.degrees
@@ -30,6 +32,7 @@ import com.littlekt.util.Scaler
 import com.littlekt.util.milliseconds
 import com.littlekt.util.seconds
 import com.littlekt.util.viewport.ScalingViewport
+import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.blackcat.input.bindInputs
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
@@ -41,17 +44,17 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
 
     var focused = false
         set(value) {
-            println("setting focus to $focused")
+            println("setting focus to $value")
             field = value
             if (!value && assets.isLoaded && assets.music.background.playing) {
                 println("Pausing audio")
                 //assets.music.background.pause()
-                context.audio.suspend()
+                //context.audio.suspend()
             } else if (value) {
-                context.audio.resume()
+                //context.audio.resume()
             }
         }
-    val assets = Assets(context).releasing()
+    val assets = Assets(context, ::onAnimationEvent).releasing()
     val inputController = context.bindInputs()
 
 
@@ -69,6 +72,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 }
             }
         }
+        setContactListener(GeneralContactListener())
     } }
     private val player by lazy {
         Player(Vec2(100f, 100f), world, assets, inputController, assets.objects.particleSimulator, context.vfs)
@@ -84,6 +88,16 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     val opaqueYellow = MutableColor(Color.YELLOW).also { it.a = 0.5f }
     private var fpsCheckTimeout = 5000f
     private var framesRenderedInPeriod = 0
+
+    private fun onAnimationEvent(event: String) {
+        if (!focused) {
+            return
+        }
+
+        when (event) {
+            "punch" -> player.activatePunch()
+        }
+    }
 
     override suspend fun Context.start() {
         val batch = SpriteBatch(context).releasing()
@@ -119,6 +133,16 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                     focused = true
                 }
                 return true
+            }
+        })
+        inputController.addInputMapProcessor(object: InputMapProcessor<GameInput> {
+            override fun onActionDown(inputType: GameInput): Boolean {
+                if (focused) {
+
+                } else {
+                    focused = true
+                }
+                return false
             }
         })
 
