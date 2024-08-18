@@ -83,7 +83,7 @@ class Player(
             },
             filter = Filter().apply {
                 categoryBits = ContactBits.REI
-                maskBits = ContactBits.WALL
+                maskBits = ContactBits.WALL or ContactBits.CAMERA or ContactBits.TRIGGER
             },
             userData = this
         )
@@ -308,6 +308,7 @@ class Player(
     }
 
     override fun render(batch: Batch) {
+        //println("player body: ${body.position.x}, ${body.position.y}")
         currentAnimation.currentKeyFrame?.let { frame ->
             val width = frame.width / Game.PPU
             val height = frame.height / Game.PPU

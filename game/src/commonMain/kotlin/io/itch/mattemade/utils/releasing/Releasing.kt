@@ -11,5 +11,7 @@ interface Releasing : Releasable {
     fun <T : Releasable, U : PreparableGameAsset<T>> U.releasing(): AutoDisposingPreparableGameAsset<T>
     fun <T : Releasable> managed(block: () -> T): T
     fun <K> K.registerAsContextDisposer(applicableTo: Any, block: K.(Any?) -> Unit): K
+    fun <K> K.rememberContext(clazz: Any): K
+    fun <T> T.rememberTo(releaseAction: (T) -> Unit): T
     fun <T : Releasable> forget(disposable: T)
 }

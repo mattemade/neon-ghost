@@ -105,7 +105,7 @@ class Enemy(
     private var nextLeftPunch = true
     private var punchCooldown = 0f
     private var hitCooldown = 0f
-    private var isAggressive = false
+    var isAggressive = false
 
     fun hit(from: Vec2, strong: Boolean) {
         hitCooldown = 300f
@@ -151,6 +151,7 @@ class Enemy(
         direction
             .scale(inverseBeat * inverseBeat * inverseBeat)
         val length = direction.length()
+        //println("length of move: $length")
         if (length > maxSpeed) {
             direction.scale(1f / length).scale(maxSpeed)
         }

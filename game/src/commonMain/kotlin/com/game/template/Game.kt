@@ -4,8 +4,10 @@ import com.game.template.character.DepthBasedRenderable
 import com.game.template.character.enemy.Enemy
 import com.game.template.character.rei.Player
 import com.game.template.tempo.UI
+import com.game.template.world.CameraMan
 import com.game.template.world.Floor
 import com.game.template.world.GeneralContactListener
+import com.game.template.world.Trigger
 import com.littlekt.Context
 import com.littlekt.ContextListener
 import com.littlekt.graph.node.resource.HAlign
@@ -14,7 +16,6 @@ import com.littlekt.graphics.Fonts
 import com.littlekt.graphics.FrameBuffer
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.SpriteBatch
-import com.littlekt.graphics.g2d.draw
 import com.littlekt.graphics.g2d.shape.ShapeRenderer
 import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
 import com.littlekt.graphics.gl.BlendFactor
@@ -37,14 +38,14 @@ import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.blackcat.input.bindInputs
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
-import kotlinx.coroutines.delay
 import org.jbox2d.common.Vec2
+import org.jbox2d.dynamics.Body
 import org.jbox2d.dynamics.World
-import org.jbox2d.internal.System_nanoTime
-import kotlin.time.Duration
+import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
 
-class Game(context: Context, private val onLowPerformance: () -> Unit) : ContextListener(context), Releasing by Self() {
+class Game(context: Context, private val onLowPerformance: () -> Unit) : ContextListener(context),
+    Releasing by Self() {
 
     var focused = false
         set(value) {
@@ -61,22 +62,25 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     val assets = Assets(context, ::onAnimationEvent).releasing()
     val inputController = context.bindInputs()
 
-    private val visibleWorldWidth = (virtualWidth / PPU).toInt()
-    private val visibleWorldHeight = (virtualHeight / PPU).toInt()
 
     private val floors = mutableListOf<Floor>()
-    private val world by lazy { World(gravityX = 0f, gravityY = 0f).apply {
-        val level = assets.level.testRoom
-        val mapHeight = level.height * level.tileHeight
-        level.layers.asSequence().filterIsInstance<TiledObjectLayer>().forEach {
-            if (it.name == "floor") {
-                it.objects.forEach {
-                    floors += Floor(this, it.bounds, mapHeight)
+    private val world by lazy {
+        World(gravityX = 0f, gravityY = 0f).apply {
+            val level = assets.level.testRoom
+            val mapHeight = level.height * level.tileHeight
+            level.layers.asSequence().filterIsInstance<TiledObjectLayer>().forEach {
+                if (it.name == "floor") {
+                    it.objects.forEach {
+                        floors += Floor(this, it.bounds, mapHeight)
+                    }
                 }
             }
+            setContactListener(GeneralContactListener(::onTriggerEvent))
+        }.registerAsContextDisposer(Body::class) {
+            println("destorying body $it")
+            destroyBody(it as Body)
         }
-        setContactListener(GeneralContactListener())
-    } }
+    }
     private val player by lazy {
         Player(
             Vec2(100f / PPU, 100f / PPU),
@@ -114,7 +118,28 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     }
 
 
-    private val depthBasedDrawables by lazy { mutableListOf<DepthBasedRenderable>(player, enemy1, enemy2) }
+    private val depthBasedDrawables by lazy {
+        mutableListOf<DepthBasedRenderable>(
+            player,
+            /*enemy1,
+            enemy2*/
+        )
+    }
+    private val enemies = mutableListOf<Enemy>()
+
+    private val cameraMan by lazy {
+        val tempVec2 = Vec2()
+        CameraMan(world).apply {
+            lookAt { tempVec2.set(player.x, visibleWorldHeight / 2f) }
+            //setRestricting(true)
+        }
+    }
+
+    private val triggers: MutableList<Trigger> by lazy {
+        assets.level.testRoom.layers.asSequence().filterIsInstance<TiledObjectLayer>().first { it.name == "trigger" }.objects.map {
+            Trigger(world, it.bounds, assets.level.testRoom.height * assets.level.testRoom.tileHeight, it.name)
+        }.toMutableList()
+    }
 
     private var audioReady = false
     val opaqueYellow = MutableColor(Color.YELLOW).also { it.a = 0.5f }
@@ -122,6 +147,34 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     private var framesRenderedInPeriod = 0
     private val worldStep = 1f / 60f
     private var worldAccumulator = 0f
+
+    private var triggeredEvents = mutableListOf<Trigger>()
+
+    private fun onTriggerEvent(trigger: Trigger) {
+        println("triggered ${trigger.name}")
+        triggeredEvents.add(trigger)
+    }
+
+    private fun processTriggers() {
+        triggeredEvents.forEach {
+            processTrigger(it)
+        }
+        triggeredEvents.clear()
+    }
+
+    private fun processTrigger(trigger: Trigger) {
+        when (trigger.name) {
+            "fight1" -> {
+                trigger.release()
+                triggers.remove(trigger)
+                cameraMan.lookAt(null)
+                cameraMan.restricting = true
+                enemies.add(createEnemy(assets.animation.punkAnimations, 1f))
+                enemies.add(createEnemy(assets.animation.guardAnimations, 3f))
+                depthBasedDrawables.addAll(enemies)
+            }
+        }
+    }
 
     private fun onAnimationEvent(event: String) {
         if (!focused) {
@@ -133,6 +186,23 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
         }
     }
 
+    private fun createEnemy(characterAnimations: CharacterAnimations, maxSpeed: Float): Enemy {
+        val offsetX = if (Random.nextBoolean()) - visibleWorldWidth / 2f - 0.2f else visibleWorldWidth / 2f + 0.2f
+        val enemy = Enemy(
+            Vec2(cameraMan.position.x + offsetX, player.y),
+            player,
+            world,
+            assets,
+            characterAnimations,
+            inputController,
+            assets.objects.particleSimulator,
+            context.vfs,
+            maxSpeed = maxSpeed
+        )
+        enemy.isAggressive = true
+        return enemy
+    }
+
     override suspend fun Context.start() {
         val batch = SpriteBatch(context).releasing()
         val postBatch = SpriteBatch(context).releasing()
@@ -141,14 +211,20 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
         val target = FrameBuffer(
             virtualWidth,
             virtualHeight,
-            listOf(FrameBuffer.TextureAttachment(minFilter = TexMinFilter.NEAREST, magFilter = TexMagFilter.NEAREST))
+            listOf(
+                FrameBuffer.TextureAttachment(
+                    minFilter = TexMinFilter.NEAREST,
+                    magFilter = TexMagFilter.NEAREST
+                )
+            )
         ).also {
             it.prepare(context)
         }
         val targetSlice = target.textures[0].slice()
-        val targetViewport = ScalingViewport(scaler = Scaler.Fit(), visibleWorldWidth, visibleWorldHeight).apply {
-            update(Game.virtualWidth, Game.virtualHeight, context, false)
-        }
+        val targetViewport =
+            ScalingViewport(scaler = Scaler.Fit(), visibleWorldWidth, visibleWorldHeight).apply {
+                update(Game.virtualWidth, Game.virtualHeight, context, false)
+            }
         val targetCamera = targetViewport.camera
         val postViewport = ScalingViewport(scaler = Scaler.Fit(), virtualWidth, virtualHeight)
         val postCamera = postViewport.camera
@@ -173,7 +249,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 return true
             }
         })
-        inputController.addInputMapProcessor(object: InputMapProcessor<GameInput> {
+        inputController.addInputMapProcessor(object : InputMapProcessor<GameInput> {
             override fun onActionDown(inputType: GameInput): Boolean {
                 if (focused) {
 
@@ -218,6 +294,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                     if (!assets.music.background.playing && !wasFocused) {
                         audio.setListenerPosition(virtualWidth / 2f, virtualHeight / 2f, -200f)
                         vfs.launch { assets.music.background.play(volume = 0.1f, loop = true) }
+                        triggers // just to initialize them
                     }
                     wasFocused = true
                 }
@@ -226,19 +303,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             val toBeat = (time % secondsPerBeat) / secondsPerBeat
             val toMeasure = (time % secondsPerMeasure) / secondsPerMeasure
 
-            target.begin()
-            targetViewport.apply(context)
-            targetCamera.position.x = visibleWorldWidth / 2f
-            targetCamera.position.y = visibleWorldHeight / 2f
-            targetCamera.update()
-            batch.begin(targetCamera.viewProjection)
-            //batch.setBlendFunction(BlendMode.Alpha)
-            if (!focused) {
-                Fonts.default.draw(batch, "CLICK TO FOCUS", 1.5f, 0.5f, align = HAlign.CENTER, scale = IPPU)
-            } else if (!assetsReady) {
-                Fonts.default.draw(batch, "LOADING", 1.5f, 0.5f, align = HAlign.CENTER, scale = IPPU)
-            } else {
-                assets.level.testRoom.render(batch, targetCamera, scale = IPPU)
+            if (focused && assetsReady) {
                 depthBasedDrawables.forEach { it.update(dt, millis, toBeat, toMeasure) }
                 //assets.objects.particleSimulator.update(dt)
                 worldAccumulator += dt.seconds
@@ -246,6 +311,42 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                     world.step(worldStep, 6, 2)
                     worldAccumulator -= worldStep
                 }
+                processTriggers()
+                cameraMan.update()
+            }
+
+            target.begin()
+            targetViewport.apply(context)
+            if (focused && assetsReady) {
+                targetCamera.position.set(cameraMan.position.x, cameraMan.position.y, 0f)
+            } else {
+                targetCamera.position.x = visibleWorldWidth / 2f
+                targetCamera.position.y = visibleWorldHeight / 2f
+            }
+            targetCamera.update()
+            batch.begin(targetCamera.viewProjection)
+            //batch.setBlendFunction(BlendMode.Alpha)
+            if (!focused) {
+                Fonts.default.draw(
+                    batch,
+                    "CLICK TO FOCUS",
+                    1.5f,
+                    0.5f,
+                    align = HAlign.CENTER,
+                    scale = IPPU
+                )
+            } else if (!assetsReady) {
+                Fonts.default.draw(
+                    batch,
+                    "LOADING",
+                    1.5f,
+                    0.5f,
+                    align = HAlign.CENTER,
+                    scale = IPPU
+                )
+            } else {
+                assets.level.testRoom.render(batch, targetCamera, scale = IPPU)
+
                 depthBasedDrawables.sortBy { it.depth }
                 depthBasedDrawables.forEach { it.render(batch) }
 
@@ -296,7 +397,13 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 height = virtualHeight.toFloat() * scale,
                 flipY = true,
             )
-            postShapeRenderer.circle(x = 0f - virtualWidth*scale / 2f + 200f*scale ,y = 0f - virtualHeight*scale / 2f+ 200f*scale, radius = 10f, thickness = 3, color = Color.BLUE.toFloatBits())
+            postShapeRenderer.circle(
+                x = 0f - virtualWidth * scale / 2f + 200f * scale,
+                y = 0f - virtualHeight * scale / 2f + 200f * scale,
+                radius = 10f,
+                thickness = 3,
+                color = Color.BLUE.toFloatBits()
+            )
 
             gl.enable(State.BLEND)
             postBatch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
@@ -342,9 +449,11 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
 
     companion object {
         const val PPU = 80f
-        const val IPPU = 1/80f
+        const val IPPU = 1 / 80f
 
         const val virtualWidth = 320//256
         const val virtualHeight = 240//224//240
+        const val visibleWorldWidth = (virtualWidth / PPU).toInt()
+        const val visibleWorldHeight = (virtualHeight / PPU).toInt()
     }
 }
