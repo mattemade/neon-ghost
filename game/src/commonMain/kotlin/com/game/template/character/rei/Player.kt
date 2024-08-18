@@ -6,6 +6,7 @@ import com.game.template.character.DepthBasedRenderable
 import com.game.template.character.enemy.Enemy
 import com.game.template.world.ContactBits
 import com.littlekt.file.Vfs
+import com.littlekt.graph.addDefaultUiInput
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.Batch
@@ -41,14 +42,14 @@ class Player(
     HasContext<Body>,
     DepthBasedRenderable {
 
-    private val textureSizeInWorldUnits = Vec2(60f / Game.PPU, 96f / Game.PPU)
+    //private val textureSizeInWorldUnits = Vec2(60f / Game.PPU, 96f / Game.PPU)
     val pixelWidth = 1f//textureSizeInWorldUnits.x
     val pixelWidthInt = pixelWidth.toInt()
     val pixelHeight = 1f//textureSizeInWorldUnits.y
     val pixelHeightInt = pixelHeight.toInt()
     private val physicalHw = 1f / Game.PPU
     private val physicalHh = 1f / Game.PPU
-    private val punchDistance = 24f / Game.PPU
+    private val punchDistance = 28f / Game.PPU
     private val punchWidth = 24f / Game.PPU
     private val punchDepth = 20f / Game.PPU
 
@@ -66,7 +67,9 @@ class Player(
     val y get() = body.position.y
     override val depth: Float get() = y
 
-    internal var currentAnimation: SignallingAnimationPlayer = assets.normalReiAnimations.walk
+    private val animations = assets.animation.normalReiAnimations
+
+    internal var currentAnimation: SignallingAnimationPlayer = animations.walk
         set(value) {
             if (field != value) {
                 value.restart()
@@ -128,21 +131,26 @@ class Player(
     private var nextLeftPunch = true
     private var punchCooldown = 0f
 
+    private var movingToBeat = true
+    private var lastBeatPosition = 0f
+    private var dashCooldown = 0f
+
+    private var activatePunch = false
     fun activatePunch() {
-        if (isFacingLeft) {
-            leftPunchTargets.forEach {
-                println("left punch $it")
-                it.hit(body.position)
-            }
-        } else {
-            rightPunchTargets.forEach {
-                println("right punch $it")
-                it.hit(body.position)
-            }
-        }
+        activatePunch = true
     }
 
     override fun update(dt: Duration, millis: Float, toBeat: Float) {
+        val xMovement = controller.axis(GameInput.HORIZONTAL)
+        val yMovement = controller.axis(GameInput.VERTICAL)
+        val anyKeyDown = controller.down(GameInput.ANY)
+        val matchBeat = toBeat >= 0.0f && toBeat <= 0.4f
+        if (toBeat < lastBeatPosition && !anyKeyDown && xMovement == 0f && yMovement == 0f) {
+            println("beat reset!")
+            movingToBeat = true
+        }
+        lastBeatPosition = toBeat
+
         if (punchCooldown > 0f) {
             body.linearVelocity.set(0f, 0f)
             punchCooldown -= millis
@@ -151,43 +159,76 @@ class Player(
                 return
             }
         }
-        val xMovement = controller.axis(GameInput.HORIZONTAL)
-        val yMovement = controller.axis(GameInput.VERTICAL)
+        if (dashCooldown > 0f) {
+            dashCooldown -= millis
+            if (dashCooldown > 0f) {
+                return
+            }
+            body.linearVelocity.set(0f, 0f)
+        }
+
+
+        if (anyKeyDown || xMovement != 0f || yMovement != 0f) {
+            lastBeatPosition = toBeat
+            if (movingToBeat && !matchBeat) {
+                println("not moving to beat! $toBeat")
+                movingToBeat = false
+            }
+        }
+
         if (xMovement != 0f || yMovement != 0f) {
             wasPunching = false
             nextLeftPunch = true
-            currentAnimation = assets.normalReiAnimations.walk
+            currentAnimation = animations.walk
             if (isFacingLeft && xMovement > 0f) {
                 isFacingLeft = false
             } else if (!isFacingLeft && xMovement < 0f) {
                 isFacingLeft = true
             }
+
+            if (movingToBeat) {
+                println("dash to beat!")
+                dashCooldown = 200f
+                body.linearVelocity.set(xMovement / 4f * millis, yMovement / 4f * millis)
+            }
+            body.isAwake = true
         } else if (!wasPunching) {
-            currentAnimation = assets.normalReiAnimations.idle
+            currentAnimation = animations.idle
         }
-        body.linearVelocity.set(xMovement / 10f * millis, yMovement / 10f * millis)
-        body.isAwake = true
+
+        if (dashCooldown <= 0f) {
+            // it will also stop the character if no movement is requested
+            body.linearVelocity.set(xMovement / 10f * millis, yMovement / 10f * millis)
+        }
 
         if (controller.pressed(GameInput.ATTACK) || controller.pressed(GameInput.JUMP) || controller.justTouched) {
-            punchCooldown = if (wasPunching) 600f else 900f
+            punchCooldown = 300f//if (wasPunching) 600f else 900f
             currentAnimation = if (nextLeftPunch) {
-                if (wasPunching) {
-                    assets.normalReiAnimations.quickLeftPunch
-                } else {
-                    assets.normalReiAnimations.leftPunch
-                }
+                animations.leftPunch
             } else {
-                if (wasPunching) {
-                    assets.normalReiAnimations.quickRightPunch
-                } else {
-                    assets.normalReiAnimations.rightPunch
-                }
+                animations.rightPunch
             }
             wasPunching = true
             nextLeftPunch = !nextLeftPunch
             activateParticles()
         }
+
         currentAnimation.update(dt)
+
+        if (activatePunch) {
+            activatePunch = false
+            if (isFacingLeft) {
+                leftPunchTargets.forEach {
+                    println("left punch $it")
+                    it.hit(body.position, movingToBeat && matchBeat)
+                }
+            } else {
+                rightPunchTargets.forEach {
+                    println("right punch $it")
+                    it.hit(body.position, movingToBeat && matchBeat)
+                }
+            }
+        }
     }
 
     private fun activateParticles() {
@@ -200,46 +241,41 @@ class Player(
             rolloffFactor = 0.01f
         )*/
         currentAnimation.currentKeyFrame?.let { slice ->
+            val width = slice.width
+            val height = slice.height
             val textureData = slice.texture.textureData
             if (textureData is PixmapTextureData) {
-                val xOffset = texturePositionX()
-                val yOffset = texturePositionY()
-                val midHeight = slice.height / 2
+                val xOffset = texturePositionX(width.toFloat())
+                val yOffset = texturePositionY(height.toFloat())
+                val midHeight = height / 2
                 var firstMeaningfulX = 0
-                val width = slice.x + slice.width
-                val height = slice.y + slice.height
-                for (sliceX in slice.x until width step pixelWidthInt) {
-                    for (sliceY in slice.y until height step pixelHeightInt) {
+                val endX = slice.x + width
+                val endY = slice.y + height
+                for (sliceX in slice.x until endX step pixelWidthInt) {
+                    for (sliceY in slice.y until endY step pixelHeightInt) {
                         val x = sliceX - slice.x
                         val y = sliceY - slice.y
-                        val pixelColor = textureData.pixmap.get(x, y)
+                        val pixelColor = textureData.pixmap.get(sliceX, sliceY)
                         if (pixelColor != 0) {
                             if (firstMeaningfulX == 0) {
                                 firstMeaningfulX = x
                             }
                             particleSimulator.alloc(
                                 Textures.white,
-                                xOffset + textureSizeInWorldUnits.x * 2 - x / Game.PPU,
+                                xOffset + width * 2 - x / Game.PPU,
                                 yOffset + y / Game.PPU
                             )
                                 .apply {
-                                    //alpha = 1f
                                     scale(Game.IPPU)
                                     delay =
-                                        ((textureSizeInWorldUnits.x * Game.PPU - x) / 7.5f + 1f + (-0.2f..0.2f).random()).seconds
+                                        ((width - x) / 7.5f + 1f + (-0.2f..0.2f).random()).seconds
                                     color.setRgba8888(pixelColor)
                                     xDelta = (0.4f + (-0.25f..0.25f).random()) / Game.PPU
                                     yDelta =
-                                        (midHeight - y) / 500f / Game.PPU + (-0.45f..0.45f).random() / Game.PPU//0f//-(-1.15f..1.15f).random()
-                                    //alphaDelta = 0.5f
+                                        (midHeight - y) / 500f / Game.PPU + (-0.45f..0.45f).random() / Game.PPU
                                     life = 4f.seconds
-                                    //scaleDelta = 0f
                                     friction = 1.03f
-                                    //fadeOutSpeed = 0.01f
                                     alphaDelta = -0.005f
-                                    /*onUpdate = {
-                                            it.color.a /= 1.05f
-                                        }*/
                                 }
                         }
                     }
@@ -250,22 +286,24 @@ class Player(
 
     override fun render(batch: Batch) {
         currentAnimation.currentKeyFrame?.let { frame ->
-            val positionX = texturePositionX()
-            val positionY = texturePositionY()
+            val width = frame.width / Game.PPU
+            val height = frame.height / Game.PPU
+            val positionX = texturePositionX(width)
+            val positionY = texturePositionY(height)
             //println("player at $positionX, $positionY")
             batch.draw(
                 frame,
                 positionX,
                 positionY,
-                width = textureSizeInWorldUnits.x,
-                height = textureSizeInWorldUnits.y,
+                width = width,
+                height = height,
                 flipX = isFacingLeft
             )
         }
     }
 
-    private fun texturePositionX() = body.position.x - physicalHw - textureSizeInWorldUnits.x / 2f
-    private fun texturePositionY() = body.position.y - physicalHh - textureSizeInWorldUnits.y
+    private fun texturePositionX(width: Float) = body.position.x - physicalHw - width / 2f
+    private fun texturePositionY(height: Float) = body.position.y - physicalHh - height
 }
 
 private fun MutableColor.setArgb888(argb8888: Int): MutableColor {

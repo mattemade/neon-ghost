@@ -76,14 +76,43 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
         setContactListener(GeneralContactListener())
     } }
     private val player by lazy {
-        Player(Vec2(100f / PPU, 100f / PPU), world, assets, inputController, assets.objects.particleSimulator, context.vfs)
+        Player(
+            Vec2(100f / PPU, 100f / PPU),
+            world,
+            assets,
+            inputController,
+            assets.objects.particleSimulator,
+            context.vfs
+        )
     }
-    private val enemy by lazy {
-        Enemy(Vec2(200f / PPU, 200f / PPU), player, world, assets, inputController, assets.objects.particleSimulator, context.vfs)
+    private val enemy1 by lazy {
+        Enemy(
+            Vec2(200f / PPU, 200f / PPU),
+            player,
+            world,
+            assets,
+            assets.animation.punkAnimations,
+            inputController,
+            assets.objects.particleSimulator,
+            context.vfs
+        )
+    }
+    private val enemy2 by lazy {
+        Enemy(
+            Vec2(300f / PPU, 200f / PPU),
+            player,
+            world,
+            assets,
+            assets.animation.guardAnimations,
+            inputController,
+            assets.objects.particleSimulator,
+            context.vfs,
+            maxSpeed = 2f
+        )
     }
 
 
-    private val depthBasedDrawables by lazy { mutableListOf<DepthBasedRenderable>(player, enemy) }
+    private val depthBasedDrawables by lazy { mutableListOf<DepthBasedRenderable>(player, enemy1, enemy2) }
 
     private var audioReady = false
     val opaqueYellow = MutableColor(Color.YELLOW).also { it.a = 0.5f }
@@ -200,9 +229,9 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             batch.begin(targetCamera.viewProjection)
             //batch.setBlendFunction(BlendMode.Alpha)
             if (!focused) {
-                Fonts.default.draw(batch, "CLICK TO FOCUS", 1.5f, 0.5f, align = HAlign.CENTER)
+                Fonts.default.draw(batch, "CLICK TO FOCUS", 1.5f, 0.5f, align = HAlign.CENTER, scale = IPPU)
             } else if (!assetsReady) {
-                Fonts.default.draw(batch, "LOADING", 1.5f, 0.5f, align = HAlign.CENTER)
+                Fonts.default.draw(batch, "LOADING", 1.5f, 0.5f, align = HAlign.CENTER, scale = IPPU)
             } else {
                 assets.level.testRoom.render(batch, targetCamera, scale = IPPU)
                 depthBasedDrawables.forEach { it.update(dt, millis, toBeat) }

@@ -1,0 +1,3 @@
+9 frames like ../sheet.png
+9 for 5000
+repeat

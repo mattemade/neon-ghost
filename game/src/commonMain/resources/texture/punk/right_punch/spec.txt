@@ -1,4 +1,5 @@
 10 frames like ../sheet.png
+7 for 300
 9 for 200
 signal punch
 9 for 400

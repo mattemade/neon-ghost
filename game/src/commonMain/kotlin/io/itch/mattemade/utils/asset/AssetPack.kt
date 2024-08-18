@@ -83,5 +83,10 @@ open class AssetPack(protected val context: Context, private val defaultAnimatio
     }
 
     fun <T : AssetPack> pack(order: Int = 0, action: suspend () -> T): PreparableGameAsset<T> =
-        createProvider(order).prepare { action().packed(order).releasing() }
+        createProvider(order).prepare {
+            val assetPack = action()
+            assetPack.orderedProviders.fastValueForEach { it.forEach { it.update() } }
+            assetPack.packed(order).releasing()
+            //action().packed(order).releasing()
+        }
 }

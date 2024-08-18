@@ -17,22 +17,17 @@ import io.itch.mattemade.utils.atlas.RuntimeTextureAtlasPacker
 class Assets(context: Context, animationEventListener: (String) -> Unit) : AssetPack(context) {
     val runtimeTextureAtlasPacker = RuntimeTextureAtlasPacker(context).releasing()
 
-    val normalReiAnimations by pack {
-        ReiAnimations.Normal(
+/*    val normalReiAnimations by pack {
+        CharacterAnimations(
             context,
             runtimeTextureAtlasPacker,
+            "rei/normal",
             animationEventListener
         )
-    }
-    val magicalReiAnimations by pack {
-        ReiAnimations.Magical(
-            context,
-            runtimeTextureAtlasPacker,
-            animationEventListener
-        )
-    }
-
+    }*/
+    val animation by pack { Animations(context, runtimeTextureAtlasPacker, animationEventListener) }
     val music by pack { Music(context) }
+
     //val sound by pack { Sound(context) }
     val objects by pack { Objects(context) }
     val tileSets by pack { TileSets(context, runtimeTextureAtlasPacker) }
@@ -41,6 +36,7 @@ class Assets(context: Context, animationEventListener: (String) -> Unit) : Asset
 
     val level by pack(2) { Levels(context, atlas) }
 }
+
 
 class Sound(context: Context) : AssetPack(context) {
     val wind by prepare { context.resourcesVfs["sound/untitled.mp3"].readAudioClipEx() }
@@ -51,7 +47,12 @@ class Music(context: Context) : AssetPack(context) {
 }
 
 class Levels(context: Context, atlas: TextureAtlas? = null) : AssetPack(context) {
-    val testRoom by prepare { context.resourcesVfs["level/level.tmj"].readTiledMap(atlas, tilesetBorder = 0) }
+    val testRoom by prepare {
+        context.resourcesVfs["level/level.tmj"].readTiledMap(
+            atlas,
+            tilesetBorder = 0
+        )
+    }
     //val testRoom by prepare { context.resourcesVfs["brick-and-concrete/test-room.tmj"].readTiledMap() }
 }
 
@@ -59,46 +60,66 @@ class TileSets(context: Context, private val packer: RuntimeTextureAtlasPacker) 
     AssetPack(context) {
     private fun String.pack(): PreparableGameAsset<TextureSlice> =
         preparePlain { packer.pack(this, pathInfo.baseName).await() }
+
     val wall by "level/Outside-Wall 48_48.png".pack()
     val light by "level/Outside-Light 150_150.png".pack()
     val window by "level/Outside-Window 48_48.png".pack()
 }
 
-sealed class ReiAnimations(
+class Animations(
+    context: Context,
+    runtimeTextureAtlasPacker: RuntimeTextureAtlasPacker, callback: (String) -> Unit
+): AssetPack(context, callback) {
+    val normalReiAnimations by pack {
+        CharacterAnimations(
+            context,
+            runtimeTextureAtlasPacker,
+            "rei/normal",
+            callback
+        )
+    }
+    val magicalReiAnimations by pack {
+        CharacterAnimations(
+            context,
+            runtimeTextureAtlasPacker,
+            "rei/magical",
+            callback
+        )
+    }
+    val punkAnimations by pack {
+        CharacterAnimations(
+            context,
+            runtimeTextureAtlasPacker,
+            "punk",
+            callback
+        )
+    }
+    val guardAnimations by pack {
+        CharacterAnimations(
+            context,
+            runtimeTextureAtlasPacker,
+            "guard",
+            callback
+        )
+    }
+}
+
+class CharacterAnimations(
     context: Context,
     runtimeTextureAtlasPacker: RuntimeTextureAtlasPacker,
-    mode: String,
+    character: String,
     callback: (String) -> Unit
 ) :
     AssetPack(context, callback) {
-    //val idle by "texture/player/idle".prepareAnimationPlayer()
-    //val idle by "texture/sailor/idle".prepareAnimationPlayer()
-    val walk by "texture/rei/$mode/walk".prepareAnimationPlayer(runtimeTextureAtlasPacker)
-    val idle by "texture/rei/$mode/idle".prepareAnimationPlayer(runtimeTextureAtlasPacker)
-    val leftPunch by "texture/rei/$mode/left_punch".prepareAnimationPlayer(runtimeTextureAtlasPacker)
-    val quickLeftPunch by "texture/rei/$mode/quick_left_punch".prepareAnimationPlayer(
+    val walk by "texture/$character/walk".prepareAnimationPlayer(runtimeTextureAtlasPacker)
+    val idle by "texture/$character/idle".prepareAnimationPlayer(runtimeTextureAtlasPacker)
+    val hit by "texture/$character/hit".prepareAnimationPlayer(runtimeTextureAtlasPacker)
+    val leftPunch by "texture/$character/left_punch".prepareAnimationPlayer(
         runtimeTextureAtlasPacker
     )
-    val rightPunch by "texture/rei/$mode/right_punch".prepareAnimationPlayer(
+    val rightPunch by "texture/$character/right_punch".prepareAnimationPlayer(
         runtimeTextureAtlasPacker
     )
-    val quickRightPunch by "texture/rei/$mode/quick_right_punch".prepareAnimationPlayer(
-        runtimeTextureAtlasPacker
-    )
-
-    class Normal(
-        context: Context,
-        runtimeTextureAtlasPacker: RuntimeTextureAtlasPacker,
-        callback: (String) -> Unit
-    ) :
-        ReiAnimations(context, runtimeTextureAtlasPacker, "normal", callback)
-
-    class Magical(
-        context: Context,
-        runtimeTextureAtlasPacker: RuntimeTextureAtlasPacker,
-        callback: (String) -> Unit
-    ) :
-        ReiAnimations(context, runtimeTextureAtlasPacker, "magical", callback)
 }
 
 
