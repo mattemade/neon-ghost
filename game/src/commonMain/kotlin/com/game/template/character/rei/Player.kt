@@ -130,8 +130,8 @@ class Player(
     private var nextLeftPunch = true
     private var punchCooldown = 0f
 
-    var movingToBeatUnlocked = true
     var movingToBeat = false
+    var movingOffBeat = false
     private var lastBeatPosition = 0f
     private var dashCooldown = 0f
 
@@ -140,15 +140,18 @@ class Player(
         activatePunch = true
     }
 
-    override fun update(dt: Duration, millis: Float, toBeat: Float) {
+    private var keepMoving = false
+
+    override fun update(dt: Duration, millis: Float, toBeat: Float, toMeasure: Float) {
         val xMovement = controller.axis(GameInput.HORIZONTAL)
         val yMovement = controller.axis(GameInput.VERTICAL)
-        val anyKeyDown = controller.down(GameInput.ANY)
-        val matchBeat = toBeat >= 0.0f && toBeat <= 0.3f || toBeat > 0.9f
-        if (toBeat < lastBeatPosition && !anyKeyDown && xMovement == 0f && yMovement == 0f) {
-            println("beat reset!")
+        val moving = xMovement != 0f || yMovement != 0f
+        val anyAction = controller.down(GameInput.ANY_ACTION)
+        val matchBeat = toBeat < 0.2f || toBeat > 0.9f || toMeasure < 0.075f || toMeasure > 0.9625f
+
+        if (toBeat < lastBeatPosition && movingOffBeat) {
             movingToBeat = false
-            movingToBeatUnlocked = true
+            movingOffBeat = false
         }
         lastBeatPosition = toBeat
 
@@ -159,26 +162,26 @@ class Player(
                 currentAnimation.update(dt)
                 return
             }
+            movingToBeat = false
         }
         if (dashCooldown > 0f) {
             dashCooldown -= millis
             if (dashCooldown > 0f) {
                 return
             }
-            body.linearVelocity.set(0f, 0f)
+            //body.linearVelocity.set(0f, 0f)
         }
 
 
-        if (anyKeyDown || xMovement != 0f || yMovement != 0f) {
-            lastBeatPosition = toBeat
-            if (movingToBeatUnlocked && !matchBeat) {
-                println("not moving to beat! $toBeat")
+/*        if (anyAction || moving) {
+            if (!matchBeat) {
+                println("not moving to beat! $toBeat, $toMeasure")
                 movingToBeat = false
-                movingToBeatUnlocked = false
+                movingOffBeat = true
             }
-        }
+        }*/
 
-        if (xMovement != 0f || yMovement != 0f) {
+        if (moving) {
             wasPunching = false
             nextLeftPunch = true
             currentAnimation = animations.walk
@@ -188,24 +191,39 @@ class Player(
                 isFacingLeft = true
             }
 
-            if (movingToBeatUnlocked) {
+
+            if (matchBeat && !keepMoving) {
                 println("dash to beat!")
                 movingToBeat = true
                 dashCooldown = 200f
                 body.linearVelocity.set(xMovement * 2.5f, yMovement * 2.5f)
+            } else {
+                if (keepMoving) {
+                    // was moving before, and continuing to move off-beat
+                    if (movingToBeat) {
+                        movingToBeat = false
+                    }
+                } else {
+                    // just started moving, but not dashing - so it was off-beat
+                    movingOffBeat = true
+                    movingToBeat = false
+                }
+                // it will also stop the character if no movement is requested
+                body.linearVelocity.set(xMovement, yMovement)
             }
             body.isAwake = true
-        } else if (!wasPunching) {
-            currentAnimation = animations.idle
-        }
-
-        if (dashCooldown <= 0f) {
-            // it will also stop the character if no movement is requested
-            body.linearVelocity.set(xMovement, yMovement)
+            keepMoving = true
+        } else {
+            if (!wasPunching) {
+                currentAnimation = animations.idle
+            }
+            keepMoving = false
+            body.linearVelocity.set(0f, 0f)
         }
 
         if (controller.pressed(GameInput.ATTACK) || controller.pressed(GameInput.JUMP) || controller.justTouched) {
             punchCooldown = 300f//if (wasPunching) 600f else 900f
+            body.linearVelocity.set(0f, 0f)
             currentAnimation = if (nextLeftPunch) {
                 animations.leftPunch
             } else {
@@ -213,14 +231,15 @@ class Player(
             }
             wasPunching = true
             nextLeftPunch = !nextLeftPunch
-            activateParticles()
+            //activateParticles()
         }
 
-        currentAnimation.update(dt)
+        currentAnimation.update(dt) // will trigger animation callbacks
 
         if (activatePunch) {
             activatePunch = false
-            movingToBeat = movingToBeatUnlocked && matchBeat
+            movingToBeat = matchBeat
+            movingOffBeat = !matchBeat
             if (isFacingLeft) {
                 leftPunchTargets.forEach {
                     println("left punch $it")

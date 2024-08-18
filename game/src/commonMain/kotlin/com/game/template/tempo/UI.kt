@@ -28,14 +28,14 @@ class UI(private val context: Context) : Releasing by Self() {
     private val tempVec2f = MutableVec2f(0f)
     private val tempVec2fb = MutableVec2f(0f)
 
-    fun render(toMeasure: Float, movingToBeatUnlocked: Boolean, movingToBeat: Boolean) {
+    fun render(toMeasure: Float, movingToBeat: Boolean, movingOffbeat: Boolean) {
         viewport.apply(context)
         batch.begin(camera.viewProjection)
         shapeRenderer.filledCircle(center, 15f, color = Color.WHITE.toFloatBits())
         shapeRenderer.filledCircle(
             center,
             13f,
-            color = (if (movingToBeat) Color.DARK_GREEN else if (movingToBeatUnlocked) Color.DARK_YELLOW else Color.DARK_RED).toFloatBits()
+            color = (if (movingToBeat) Color.DARK_GREEN else if (movingOffbeat) Color.DARK_RED else Color.DARK_YELLOW).toFloatBits()
         )
         for (i in 0 until 4) {
             tempVec2f.set(15f, 0f).rotate((PI_F * i / 2f).radians).add(center)

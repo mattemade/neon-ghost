@@ -224,6 +224,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             }
             val millis = dt.milliseconds
             val toBeat = (time % secondsPerBeat) / secondsPerBeat
+            val toMeasure = (time % secondsPerMeasure) / secondsPerMeasure
 
             target.begin()
             targetViewport.apply(context)
@@ -238,8 +239,8 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 Fonts.default.draw(batch, "LOADING", 1.5f, 0.5f, align = HAlign.CENTER, scale = IPPU)
             } else {
                 assets.level.testRoom.render(batch, targetCamera, scale = IPPU)
-                depthBasedDrawables.forEach { it.update(dt, millis, toBeat) }
-                assets.objects.particleSimulator.update(dt)
+                depthBasedDrawables.forEach { it.update(dt, millis, toBeat, toMeasure) }
+                //assets.objects.particleSimulator.update(dt)
                 worldAccumulator += dt.seconds
                 while (worldAccumulator >= worldStep) {
                     world.step(worldStep, 6, 2)
@@ -257,7 +258,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
 
                 gl.enable(State.BLEND)
                 batch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
-                assets.objects.particleSimulator.draw(batch)
+                //assets.objects.particleSimulator.draw(batch)
                 /*shapeRenderer.filledRectangle(
                     virtualWidth/2f,
                     0f,
@@ -272,8 +273,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             batch.flush()
             batch.end()
             if (assetsReady) {
-                val toMeasure = (time % secondsPerMeasure) / secondsPerMeasure
-                ui.render(toMeasure, player.movingToBeatUnlocked, player.movingToBeat)
+                ui.render(toMeasure, player.movingToBeat, player.movingOffBeat)
             }
             target.end()
 

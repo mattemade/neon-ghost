@@ -126,7 +126,7 @@ class Enemy(
         //body.applyLinearImpulse(tempVec2, body.position, true)
     }
 
-    override fun update(dt: Duration, millis: Float, toBeat: Float) {
+    override fun update(dt: Duration, millis: Float, toBeat: Float, toMeasure: Float) {
         if (punchCooldown > 0f) {
             body.linearVelocity.set(0f, 0f)
             punchCooldown -= millis
