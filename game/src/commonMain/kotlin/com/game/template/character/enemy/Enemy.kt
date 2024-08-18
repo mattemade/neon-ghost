@@ -105,6 +105,7 @@ class Enemy(
     private var nextLeftPunch = true
     private var punchCooldown = 0f
     private var hitCooldown = 0f
+    private var isAggressive = false
 
     fun hit(from: Vec2, strong: Boolean) {
         hitCooldown = 300f
@@ -144,10 +145,11 @@ class Enemy(
         val inverseBeat = 1f - toBeat
         val direction = tempVec2f2.set(player.x - x, player.y - y)
         val distance = tempVec2f2.length()
+        if (distance < 1.5f) {
+            isAggressive = true
+        }
         direction
-            .scale(millis)
             .scale(inverseBeat * inverseBeat * inverseBeat)
-            .scale(0.1f)
         val length = direction.length()
         if (length > maxSpeed) {
             direction.scale(1f / length).scale(maxSpeed)
@@ -162,7 +164,7 @@ class Enemy(
             }
         }
 
-        if (direction.x == 0f && direction.y == 0f || distance < 0.5f) {
+        if (direction.x == 0f && direction.y == 0f || distance < 0.5f || !isAggressive) {
             currentMagicalAnimation = animations.idle
             body.linearVelocity.set(0f, 0f)
         } else if (speed != 0f) {

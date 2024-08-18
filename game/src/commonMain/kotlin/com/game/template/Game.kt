@@ -3,6 +3,7 @@ package com.game.template
 import com.game.template.character.DepthBasedRenderable
 import com.game.template.character.enemy.Enemy
 import com.game.template.character.rei.Player
+import com.game.template.tempo.UI
 import com.game.template.world.Floor
 import com.game.template.world.GeneralContactListener
 import com.littlekt.Context
@@ -36,8 +37,11 @@ import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.blackcat.input.bindInputs
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
+import kotlinx.coroutines.delay
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.World
+import org.jbox2d.internal.System_nanoTime
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 class Game(context: Context, private val onLowPerformance: () -> Unit) : ContextListener(context), Releasing by Self() {
@@ -57,8 +61,6 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     val assets = Assets(context, ::onAnimationEvent).releasing()
     val inputController = context.bindInputs()
 
-    private val virtualWidth = 320//256
-    private val virtualHeight = 240//224//240
     private val visibleWorldWidth = (virtualWidth / PPU).toInt()
     private val visibleWorldHeight = (virtualHeight / PPU).toInt()
 
@@ -145,16 +147,18 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
         }
         val targetSlice = target.textures[0].slice()
         val targetViewport = ScalingViewport(scaler = Scaler.Fit(), visibleWorldWidth, visibleWorldHeight).apply {
-            update(this@Game.virtualWidth, this@Game.virtualHeight, context, false)
+            update(Game.virtualWidth, Game.virtualHeight, context, false)
         }
         val targetCamera = targetViewport.camera
         val postViewport = ScalingViewport(scaler = Scaler.Fit(), virtualWidth, virtualHeight)
         val postCamera = postViewport.camera
+        val ui = UI(context)
         var rotation = 0.radians
         var rotationTimer = 0.milliseconds
         val bpm = 138.6882f//128.5714f
         val secondsPerBeat = 60f / bpm
         val doubleSecondsPerBeat = secondsPerBeat * 2f
+        val secondsPerMeasure = secondsPerBeat * 4
         var time = 0f - 0.2f
 
         var wasFocused = false
@@ -267,6 +271,10 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             }
             batch.flush()
             batch.end()
+            if (assetsReady) {
+                val toMeasure = (time % secondsPerMeasure) / secondsPerMeasure
+                ui.render(toMeasure, player.movingToBeatUnlocked, player.movingToBeat)
+            }
             target.end()
 
 
@@ -311,7 +319,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 rotation += 1.degrees
             }
 
-            framesRenderedInPeriod++
+            /*framesRenderedInPeriod++
             fpsCheckTimeout -= millis
             if (fpsCheckTimeout < 0f) {
                 if (framesRenderedInPeriod < 190) { // average is less than 38 fps
@@ -319,7 +327,14 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 }
                 fpsCheckTimeout = 5000f
                 framesRenderedInPeriod = 0
-            }
+            }*/
+
+            /*val delay = 1000000000f / 15f
+            val currentTime = System_nanoTime()
+            while (System_nanoTime() - currentTime < delay) {
+
+            }*/
+
         }
 
         onDispose(::release)
@@ -328,5 +343,8 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     companion object {
         const val PPU = 80f
         const val IPPU = 1/80f
+
+        const val virtualWidth = 320//256
+        const val virtualHeight = 240//224//240
     }
 }

@@ -6,7 +6,6 @@ import com.game.template.character.DepthBasedRenderable
 import com.game.template.character.enemy.Enemy
 import com.game.template.world.ContactBits
 import com.littlekt.file.Vfs
-import com.littlekt.graph.addDefaultUiInput
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.Batch
@@ -131,7 +130,8 @@ class Player(
     private var nextLeftPunch = true
     private var punchCooldown = 0f
 
-    private var movingToBeat = true
+    var movingToBeatUnlocked = true
+    var movingToBeat = false
     private var lastBeatPosition = 0f
     private var dashCooldown = 0f
 
@@ -144,10 +144,11 @@ class Player(
         val xMovement = controller.axis(GameInput.HORIZONTAL)
         val yMovement = controller.axis(GameInput.VERTICAL)
         val anyKeyDown = controller.down(GameInput.ANY)
-        val matchBeat = toBeat >= 0.0f && toBeat <= 0.4f
+        val matchBeat = toBeat >= 0.0f && toBeat <= 0.3f || toBeat > 0.9f
         if (toBeat < lastBeatPosition && !anyKeyDown && xMovement == 0f && yMovement == 0f) {
             println("beat reset!")
-            movingToBeat = true
+            movingToBeat = false
+            movingToBeatUnlocked = true
         }
         lastBeatPosition = toBeat
 
@@ -170,9 +171,10 @@ class Player(
 
         if (anyKeyDown || xMovement != 0f || yMovement != 0f) {
             lastBeatPosition = toBeat
-            if (movingToBeat && !matchBeat) {
+            if (movingToBeatUnlocked && !matchBeat) {
                 println("not moving to beat! $toBeat")
                 movingToBeat = false
+                movingToBeatUnlocked = false
             }
         }
 
@@ -186,10 +188,11 @@ class Player(
                 isFacingLeft = true
             }
 
-            if (movingToBeat) {
+            if (movingToBeatUnlocked) {
                 println("dash to beat!")
+                movingToBeat = true
                 dashCooldown = 200f
-                body.linearVelocity.set(xMovement / 4f * millis, yMovement / 4f * millis)
+                body.linearVelocity.set(xMovement * 2.5f, yMovement * 2.5f)
             }
             body.isAwake = true
         } else if (!wasPunching) {
@@ -198,7 +201,7 @@ class Player(
 
         if (dashCooldown <= 0f) {
             // it will also stop the character if no movement is requested
-            body.linearVelocity.set(xMovement / 10f * millis, yMovement / 10f * millis)
+            body.linearVelocity.set(xMovement, yMovement)
         }
 
         if (controller.pressed(GameInput.ATTACK) || controller.pressed(GameInput.JUMP) || controller.justTouched) {
@@ -217,15 +220,16 @@ class Player(
 
         if (activatePunch) {
             activatePunch = false
+            movingToBeat = movingToBeatUnlocked && matchBeat
             if (isFacingLeft) {
                 leftPunchTargets.forEach {
                     println("left punch $it")
-                    it.hit(body.position, movingToBeat && matchBeat)
+                    it.hit(body.position, movingToBeat)
                 }
             } else {
                 rightPunchTargets.forEach {
                     println("right punch $it")
-                    it.hit(body.position, movingToBeat && matchBeat)
+                    it.hit(body.position, movingToBeat)
                 }
             }
         }
