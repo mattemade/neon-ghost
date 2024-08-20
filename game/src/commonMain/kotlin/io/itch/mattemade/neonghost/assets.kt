@@ -2,6 +2,8 @@ package io.itch.mattemade.neonghost
 
 import com.littlekt.Context
 import com.littlekt.PreparableGameAsset
+import com.littlekt.Releasable
+import com.littlekt.audio.AudioStreamEx
 import com.littlekt.file.vfs.baseName
 import com.littlekt.file.vfs.pathInfo
 import com.littlekt.file.vfs.readAudioClipEx
@@ -43,8 +45,11 @@ class Sound(context: Context) : AssetPack(context) {
 }
 
 class Music(context: Context) : AssetPack(context) {
-    val background by prepare { context.resourcesVfs["sound/untitled.mp3"].readAudioStreamEx() }
+    val background by prepare { context.resourcesVfs["sound/untitled.mp3"].readAudioStreamEx().bpm(138.6882f) }
 }
+
+data class StreamBpm(val stream: AudioStreamEx, val bpm: Float) : Releasable by stream
+private fun AudioStreamEx.bpm(value: Float) = StreamBpm(this, value)
 
 class Levels(context: Context, atlas: TextureAtlas? = null) : AssetPack(context) {
     val testRoom by prepare {
@@ -110,6 +115,12 @@ class Animations(
             callback
         )
     }
+    val ghostGrayAnimations by pack {
+        GhostAnimations(context, "gray", runtimeTextureAtlasPacker)
+    }
+/*    val ghostColorAnimations by pack {
+        GhostAnimations(context, "color", runtimeTextureAtlasPacker)
+    }*/
 }
 
 class CharacterAnimations(
@@ -131,6 +142,13 @@ class CharacterAnimations(
     )
 }
 
+class GhostAnimations(context: Context, type: String, packer: RuntimeTextureAtlasPacker) :
+    AssetPack(context) {
+
+    val idle by "texture/ghost/$type/idle".prepareAnimationPlayer(packer)
+    val fly by "texture/ghost/$type/fly".prepareAnimationPlayer(packer)
+    val cast by "texture/ghost/$type/cast".prepareAnimationPlayer(packer)
+}
 
 class Objects(context: Context) : AssetPack(context) {
     val particleSimulator by preparePlain {

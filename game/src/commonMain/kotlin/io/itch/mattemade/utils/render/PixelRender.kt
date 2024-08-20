@@ -1,16 +1,12 @@
 package io.itch.mattemade.utils.render
 
-import io.itch.mattemade.neonghost.Game.Companion.virtualHeight
-import io.itch.mattemade.neonghost.Game.Companion.virtualWidth
 import com.littlekt.Context
 import com.littlekt.graphics.Camera
+import com.littlekt.graphics.Color
 import com.littlekt.graphics.FrameBuffer
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.SpriteBatch
-import com.littlekt.graphics.g2d.shape.ShapeRenderer
-import com.littlekt.graphics.gl.TexMagFilter
-import com.littlekt.graphics.gl.TexMinFilter
-import com.littlekt.graphics.slice
+import com.littlekt.graphics.gl.ClearBufferMask
 import com.littlekt.util.Scaler
 import com.littlekt.util.viewport.ScalingViewport
 import io.itch.mattemade.utils.releasing.Releasing
@@ -24,7 +20,8 @@ class PixelRender(
     worldHeight: Int,
     private val preRenderCall: (dt: Duration, camera: Camera) -> Unit,
     private val renderCall: (dt: Duration, camera: Camera, batch: Batch) -> Unit,
-): Releasing by Self() {
+    private val clear: Boolean = false,
+) : Releasing by Self() {
 
     private val batch = SpriteBatch(context).releasing()
     private val targetViewport =
@@ -36,6 +33,10 @@ class PixelRender(
     fun render(dt: Duration) {
         preRenderCall(dt, targetCamera)
         target.begin()
+        if (clear) {
+            context.gl.clear(ClearBufferMask.COLOR_BUFFER_BIT)
+            context.gl.clearColor(Color.CLEAR)
+        }
         targetViewport.apply(context)
         batch.begin(targetCamera.viewProjection)
         renderCall(dt, targetCamera, batch)

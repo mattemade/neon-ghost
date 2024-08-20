@@ -26,6 +26,7 @@ import com.littlekt.input.InputMapController
 import com.littlekt.util.milliseconds
 import com.littlekt.util.seconds
 import io.itch.mattemade.blackcat.input.GameInput
+import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
 import io.itch.mattemade.utils.render.PixelRender
@@ -40,6 +41,7 @@ class InGame(
     private val context: Context,
     private val assets: Assets,
     private val inputController: InputMapController<GameInput>,
+    private val choreographer: Choreographer,
     private val onGameOver: () -> Unit,
 ) : Releasing by Self() {
 
@@ -51,7 +53,8 @@ class InGame(
         Game.visibleWorldWidth,
         Game.visibleWorldHeight,
         ::updateWorld,
-        ::renderWorld
+        ::renderWorld,
+        clear = true
     ).releasing()
     private val uiRenderer = PixelRender(
         context,
@@ -126,7 +129,6 @@ class InGame(
             }.toMutableList()
     }
 
-    val opaqueYellow = MutableColor(Color.YELLOW).also { it.a = 0.5f }
     private val worldStep = 1f / 60f
     private var worldAccumulator = 0f
 
@@ -210,23 +212,13 @@ class InGame(
     }
 
     private fun gameOver() {
-        assets.music.background.stop()
         onGameOver()
     }
 
-    private val bpm = 138.6882f//128.5714f
-    private val secondsPerBeat = 60f / bpm
-    private val doubleSecondsPerBeat = secondsPerBeat * 2f
-    private val secondsPerMeasure = secondsPerBeat * 4
-    private var time = -0.2f
-    private var toBeat = (time % secondsPerBeat) / secondsPerBeat
-    private var toMeasure = (time % secondsPerMeasure) / secondsPerMeasure
+    private var time = 0f
 
     init {
-        if (!assets.music.background.playing) {
-            context.audio.setListenerPosition(virtualWidth / 2f, virtualHeight / 2f, -200f)
-            context.vfs.launch { assets.music.background.play(volume = 0.1f, loop = true) }
-        }
+        choreographer.play(assets.music.background)
         triggers // to initialize
     }
 
@@ -253,10 +245,8 @@ class InGame(
     private fun updateWorld(dt: Duration, camera: Camera) {
         val millis = dt.milliseconds
         time += dt.seconds
-        toBeat = (time % secondsPerBeat) / secondsPerBeat
-        toMeasure = (time % secondsPerMeasure) / secondsPerMeasure
 
-        depthBasedDrawables.forEach { it.update(dt, millis, toBeat, toMeasure) }
+        depthBasedDrawables.forEach { it.update(dt, millis, choreographer.toBeat, choreographer.toMeasure) }
         if (deadEnemies.isNotEmpty()) {
             enemies.removeAll(deadEnemies)
             depthBasedDrawables.removeAll(deadEnemies)
@@ -274,6 +264,7 @@ class InGame(
             worldAccumulator -= worldStep
         }
         processTriggers()
+        depthBasedDrawables.sortBy { it.depth }
         cameraMan.update()
 
         camera.position.set(cameraMan.position.x, cameraMan.position.y, 0f)
@@ -281,21 +272,7 @@ class InGame(
 
     private fun renderWorld(dt: Duration, camera: Camera, batch: Batch) {
         assets.level.testRoom.render(batch, camera, scale = IPPU)
-
-        depthBasedDrawables.sortBy { it.depth }
         depthBasedDrawables.forEach { it.render(batch) }
-
-        if (time % doubleSecondsPerBeat < secondsPerBeat) {
-            opaqueYellow.set(Color.RED)
-        } else {
-            opaqueYellow.set(Color.GREEN)
-        }
-        opaqueYellow.a = 1f - (time % secondsPerBeat) / secondsPerBeat
-
-        context.gl.enable(State.BLEND)
-        batch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
-        batch.setToPreviousBlendFunction()
-        context.gl.disable(State.BLEND)
     }
 
     private fun updateUi(dt: Duration, camera: Camera) {
@@ -304,7 +281,7 @@ class InGame(
     }
 
     private fun renderUi(dt: Duration, camera: Camera, batch: Batch) {
-        ui.render(toMeasure, player.movingToBeat, player.movingOffBeat)
+        ui.render(choreographer.toMeasure, player.movingToBeat, player.movingOffBeat)
     }
 
     fun updateAndRender(dt: Duration) {

@@ -17,6 +17,8 @@ import com.littlekt.input.Pointer
 import com.littlekt.util.milliseconds
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.blackcat.input.bindInputs
+import io.itch.mattemade.neonghost.scene.GhostOverlay
+import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
 import io.itch.mattemade.utils.render.DirectRender
@@ -26,13 +28,11 @@ import kotlin.time.Duration
 class Game(context: Context, private val onLowPerformance: () -> Unit) : ContextListener(context),
     Releasing by Self() {
 
+    private val choreographer = Choreographer(context)
     var focused = false
         set(value) {
-            println("setting focus to $value")
             field = value
-            if (!value && assets.isLoaded && assets.music.background.playing) {
-                println("Pausing audio")
-                //assets.music.background.pause()
+            if (!value && assets.isLoaded && choreographer.isActive) {
                 context.audio.suspend()
             } else if (value) {
                 context.audio.resume()
@@ -41,6 +41,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     val assets = Assets(context, ::onAnimationEvent).releasing()
     val inputController = context.bindInputs()
     var inGame: InGame? = null
+    val ghostOverlay by lazy { GhostOverlay(context, assets, choreographer) }
     val directRender = DirectRender(context, virtualWidth, virtualHeight, ::update, ::render)
     var offsetX = 0f
     var offsetY = 0f
@@ -51,7 +52,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     private var framesRenderedInPeriod = 0
 
     private fun restartGame() {
-        inGame = InGame(context, assets, inputController, ::restartGame)
+        inGame = InGame(context, assets, inputController, choreographer, ::restartGame)
     }
 
     private fun onAnimationEvent(event: String) {
@@ -109,7 +110,9 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 if (inGame == null) {
                     restartGame()
                 }
+                choreographer.update(dt)
                 inGame?.updateAndRender(dt)
+                ghostOverlay.updateAndRender(dt)
             }
 
             directRender.render(dt)
@@ -175,6 +178,16 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                     flipY = true,
                 )
             }
+            batch.draw(
+                ghostOverlay.texture,
+                x = offsetX,
+                y = offsetY,
+                originX = 0f,
+                originY = 0f,
+                width = virtualWidth.toFloat() * scale,
+                height = virtualHeight.toFloat() * scale,
+                flipY = true,
+            )
 
             context.gl.disable(State.BLEND)
         }
