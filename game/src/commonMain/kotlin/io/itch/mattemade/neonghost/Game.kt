@@ -11,6 +11,7 @@ import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.gl.BlendFactor
 import com.littlekt.graphics.gl.ClearBufferMask
 import com.littlekt.graphics.gl.State
+import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapProcessor
 import com.littlekt.input.InputProcessor
 import com.littlekt.input.Pointer
@@ -167,6 +168,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             batch.setBlendFunction(BlendFactor.ONE, BlendFactor.ONE)
 
             inGame?.texture?.let {
+                batch.useDefaultShader()
                 batch.draw(
                     it,
                     x = offsetX,
@@ -178,6 +180,9 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                     flipY = true,
                 )
             }
+
+            batch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.DST_ALPHA)
+            batch.shader = assets.shaders.test
             batch.draw(
                 ghostOverlay.texture,
                 x = offsetX,
@@ -186,12 +191,15 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 originY = 0f,
                 width = virtualWidth.toFloat() * scale,
                 height = virtualHeight.toFloat() * scale,
-                flipY = true,
+                colorBits = slightlyTransparentWhite.toFloatBits(),
+                flipY = true
             )
 
             context.gl.disable(State.BLEND)
         }
     }
+
+    private val slightlyTransparentWhite = Color.WHITE.withAlpha(0.5f)
 
     companion object {
         const val PPU = 80f

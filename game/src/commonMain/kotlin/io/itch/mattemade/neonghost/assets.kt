@@ -13,26 +13,31 @@ import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.ParticleSimulator
 import com.littlekt.graphics.g2d.TextureAtlas
 import com.littlekt.graphics.g2d.TextureSlice
+import com.littlekt.graphics.shader.FragmentShader
+import com.littlekt.graphics.shader.ShaderProgram
+import com.littlekt.graphics.shader.VertexShader
+import io.itch.mattemade.neonghost.shader.createTestShader
 import io.itch.mattemade.utils.asset.AssetPack
 import io.itch.mattemade.utils.atlas.RuntimeTextureAtlasPacker
 
 class Assets(context: Context, animationEventListener: (String) -> Unit) : AssetPack(context) {
     val runtimeTextureAtlasPacker = RuntimeTextureAtlasPacker(context).releasing()
 
-/*    val normalReiAnimations by pack {
-        CharacterAnimations(
-            context,
-            runtimeTextureAtlasPacker,
-            "rei/normal",
-            animationEventListener
-        )
-    }*/
+    /*    val normalReiAnimations by pack {
+            CharacterAnimations(
+                context,
+                runtimeTextureAtlasPacker,
+                "rei/normal",
+                animationEventListener
+            )
+        }*/
     val animation by pack { Animations(context, runtimeTextureAtlasPacker, animationEventListener) }
     val music by pack { Music(context) }
 
     //val sound by pack { Sound(context) }
     val objects by pack { Objects(context) }
     val tileSets by pack { TileSets(context, runtimeTextureAtlasPacker) }
+    val shaders by pack { Shaders(context) }
 
     val atlas by prepare(1) { runtimeTextureAtlasPacker.packAtlas() }
 
@@ -45,10 +50,13 @@ class Sound(context: Context) : AssetPack(context) {
 }
 
 class Music(context: Context) : AssetPack(context) {
-    val background by prepare { context.resourcesVfs["sound/untitled.mp3"].readAudioStreamEx().bpm(138.6882f) }
+    val background by prepare {
+        context.resourcesVfs["sound/untitled.mp3"].readAudioStreamEx().bpm(138.6882f)
+    }
 }
 
 data class StreamBpm(val stream: AudioStreamEx, val bpm: Float) : Releasable by stream
+
 private fun AudioStreamEx.bpm(value: Float) = StreamBpm(this, value)
 
 class Levels(context: Context, atlas: TextureAtlas? = null) : AssetPack(context) {
@@ -74,7 +82,7 @@ class TileSets(context: Context, private val packer: RuntimeTextureAtlasPacker) 
 class Animations(
     context: Context,
     runtimeTextureAtlasPacker: RuntimeTextureAtlasPacker, callback: (String) -> Unit
-): AssetPack(context, callback) {
+) : AssetPack(context, callback) {
     val normalReiAnimations by pack {
         CharacterAnimations(
             context,
@@ -118,9 +126,9 @@ class Animations(
     val ghostGrayAnimations by pack {
         GhostAnimations(context, "gray", runtimeTextureAtlasPacker)
     }
-/*    val ghostColorAnimations by pack {
-        GhostAnimations(context, "color", runtimeTextureAtlasPacker)
-    }*/
+    /*    val ghostColorAnimations by pack {
+            GhostAnimations(context, "color", runtimeTextureAtlasPacker)
+        }*/
 }
 
 class CharacterAnimations(
@@ -162,4 +170,16 @@ class Objects(context: Context) : AssetPack(context) {
             }
         }
     }
+}
+
+class Shaders(context: Context) : AssetPack(context) {
+    private fun <V : VertexShader, F : FragmentShader> String.readShader(shaderFromSource: (String, String) -> ShaderProgram<V, F>): PreparableGameAsset<ShaderProgram<V, F>> =
+        preparePlain {
+            val vertex = context.resourcesVfs["shader/${this}.vert.glsl"].readString()
+            val fragment = context.resourcesVfs["shader/${this}.frag.glsl"].readString()
+
+            shaderFromSource(vertex, fragment).apply { prepare(context) }
+        }
+
+    val test by "test".readShader(::createTestShader)
 }

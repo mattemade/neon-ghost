@@ -5,6 +5,7 @@ import com.littlekt.graphics.Camera
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.gl.BlendFactor
 import com.littlekt.graphics.gl.State
+import com.littlekt.graphics.slice
 import com.littlekt.math.MutableVec2f
 import com.littlekt.util.seconds
 import io.itch.mattemade.neonghost.Assets
@@ -33,7 +34,8 @@ class GhostOverlay(
         Game.visibleWorldHeight,
         ::updateWorld,
         ::renderWorld,
-        clear = true
+        clear = true,
+        blending = true
     ).releasing()
     val texture = sharedFrameBuffer.textures[0]
     private val ghostAnimations = assets.animation.ghostGrayAnimations
@@ -66,8 +68,6 @@ class GhostOverlay(
 
     private fun renderWorld(dt: Duration, camera: Camera, batch: Batch) {
         currentAnimation.currentKeyFrame?.let { frame ->
-            context.gl.enable(State.BLEND)
-            batch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
             val width = frame.width * Game.IPPU
             val height = frame.height * Game.IPPU
             batch.draw(
@@ -78,8 +78,6 @@ class GhostOverlay(
                 height = height,
                 flipX = isFacingLeft,
             )
-            batch.setToPreviousBlendFunction()
-            context.gl.disable(State.BLEND)
         }
     }
 

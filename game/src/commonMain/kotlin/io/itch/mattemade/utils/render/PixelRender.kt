@@ -6,7 +6,9 @@ import com.littlekt.graphics.Color
 import com.littlekt.graphics.FrameBuffer
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.SpriteBatch
+import com.littlekt.graphics.gl.BlendFactor
 import com.littlekt.graphics.gl.ClearBufferMask
+import com.littlekt.graphics.gl.State
 import com.littlekt.util.Scaler
 import com.littlekt.util.viewport.ScalingViewport
 import io.itch.mattemade.utils.releasing.Releasing
@@ -21,6 +23,7 @@ class PixelRender(
     private val preRenderCall: (dt: Duration, camera: Camera) -> Unit,
     private val renderCall: (dt: Duration, camera: Camera, batch: Batch) -> Unit,
     private val clear: Boolean = false,
+    private val blending: Boolean = false
 ) : Releasing by Self() {
 
     private val batch = SpriteBatch(context).releasing()
@@ -39,7 +42,15 @@ class PixelRender(
         }
         targetViewport.apply(context)
         batch.begin(targetCamera.viewProjection)
+        if (blending) {
+            context.gl.enable(State.BLEND)
+            batch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
+        }
         renderCall(dt, targetCamera, batch)
+        if (blending) {
+            batch.setToPreviousBlendFunction()
+            context.gl.disable(State.BLEND)
+        }
         batch.end()
         target.end()
     }
