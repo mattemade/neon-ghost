@@ -1,7 +1,7 @@
 package io.itch.mattemade.utils.render
 
-import com.game.template.Game.Companion.virtualHeight
-import com.game.template.Game.Companion.virtualWidth
+import io.itch.mattemade.neonghost.Game.Companion.virtualHeight
+import io.itch.mattemade.neonghost.Game.Companion.virtualWidth
 import com.littlekt.Context
 import com.littlekt.graphics.Camera
 import com.littlekt.graphics.FrameBuffer

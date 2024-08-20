@@ -1,7 +1,7 @@
 package io.itch.mattemade.utils.asset
 
 import co.touchlab.stately.collections.ConcurrentMutableList
-import com.game.template.Assets
+import io.itch.mattemade.neonghost.Assets
 import com.littlekt.AssetProvider
 import com.littlekt.Context
 import com.littlekt.PreparableGameAsset
