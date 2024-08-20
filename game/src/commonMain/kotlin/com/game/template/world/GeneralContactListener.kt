@@ -1,6 +1,7 @@
 package com.game.template.world
 
 import com.game.template.character.enemy.Enemy
+import com.game.template.character.rei.Player
 import org.jbox2d.callbacks.ContactImpulse
 import org.jbox2d.callbacks.ContactListener
 import org.jbox2d.collision.Manifold
@@ -11,6 +12,11 @@ class GeneralContactListener(private val triggerCallback: (Trigger) -> Unit) : C
         if (contact.ofCategory(ContactBits.REI_PUNCH)) {
             contact.getUserData<Enemy>()?.let { enemy ->
                 contact.getUserData<MutableSet<Enemy>>()?.add(enemy)
+            }
+        }
+        if (contact.ofCategory(ContactBits.ENEMY_PUNCH)) {
+            contact.getUserData<Player>()?.let { player ->
+                contact.getUserData<MutableSet<Player>>()?.add(player)
             }
         }
         if (contact.ofCategory(ContactBits.TRIGGER)) {
@@ -24,6 +30,11 @@ class GeneralContactListener(private val triggerCallback: (Trigger) -> Unit) : C
         if (contact.ofCategory(ContactBits.REI_PUNCH)) {
             contact.getUserData<Enemy>()?.let { enemy ->
                 contact.getUserData<MutableSet<Enemy>>()?.remove(enemy)
+            }
+        }
+        if (contact.ofCategory(ContactBits.ENEMY_PUNCH)) {
+            contact.getUserData<Player>()?.let { player ->
+                contact.getUserData<MutableSet<Player>>()?.remove(player)
             }
         }
     }

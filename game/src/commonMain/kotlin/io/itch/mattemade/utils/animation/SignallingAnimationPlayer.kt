@@ -1,6 +1,5 @@
 package io.itch.mattemade.utils.animation
 
-import com.littlekt.graphics.Texture
 import com.littlekt.graphics.g2d.TextureSlice
 import kotlin.time.Duration
 
@@ -15,6 +14,7 @@ class SignallingAnimationPlayer(
     private val size = animationPlayerSequence.size
     private var totalFramesInPrevioselyPlayedAnimations = 0
     private var currentAnimationPlayer: AnimationPlayerSpec? = null
+    private var directCallback: ((String) -> Unit)? = null
     val duration: Duration =
         animationPlayerSequence.map { it.duration }.reduce { acc, duration -> acc + duration }
 
@@ -38,9 +38,10 @@ class SignallingAnimationPlayer(
                 }
                 it.player.onFrameChange = { frameIndex ->
                     signals[totalFramesInPrevioselyPlayedAnimations + frameIndex]?.let { signal ->
-                        callback?.invoke(
-                            signal
-                        )
+                        println("signal from player: $signal")
+                        println("when direct callback is: $directCallback")
+                        callback?.invoke(signal)
+                        directCallback?.invoke(signal)
                     }
                 }
                 // restart changes frame to 0, and should be called after the onFrameChange callback is ready
@@ -49,7 +50,10 @@ class SignallingAnimationPlayer(
         } else null
     }
 
-    fun update(dt: Duration) {
+    fun update(dt: Duration, directCallback: ((String) -> Unit)? = null) {
+        if (directCallback != null) {
+            this.directCallback = directCallback
+        }
         currentAnimationPlayer?.player?.update(dt)
         precalculatedCurrentKeyFrame = currentAnimationPlayer?.player?.currentKeyFrame
         while (currentAnimationPlayerIndex < size && precalculatedCurrentKeyFrame == null) {
@@ -69,5 +73,7 @@ class SignallingAnimationPlayer(
     val currentKeyFrame: TextureSlice?
         get() = precalculatedCurrentKeyFrame
 
+    fun copy(): SignallingAnimationPlayer =
+        SignallingAnimationPlayer(animationPlayerSequence, animationPlayerFrames, signals, callback)
 
 }

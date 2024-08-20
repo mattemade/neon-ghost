@@ -39,7 +39,8 @@ import kotlin.time.Duration
 class InGame(
     private val context: Context,
     private val assets: Assets,
-    private val inputController: InputMapController<GameInput>
+    private val inputController: InputMapController<GameInput>,
+    private val onGameOver: () -> Unit,
 ) : Releasing by Self() {
 
     private val sharedFrameBuffer =
@@ -62,7 +63,7 @@ class InGame(
     ).releasing()
     val texture = sharedFrameBuffer.textures[0]
 
-    val ui = UI(context)
+    val ui by lazy { UI(context, player) }
 
     private val floors = mutableListOf<Floor>()
     private val world by lazy {
@@ -89,7 +90,9 @@ class InGame(
             assets,
             inputController,
             assets.objects.particleSimulator,
-            context.vfs
+            context.vfs,
+            initialHealth = 10,
+            ::gameOver
         )
     }
 
@@ -101,6 +104,7 @@ class InGame(
         )
     }
     private val enemies = mutableListOf<Enemy>()
+    private val deadEnemies = mutableListOf<Enemy>()
 
     private val cameraMan by lazy {
         val tempVec2 = Vec2()
@@ -141,24 +145,48 @@ class InGame(
     }
 
     private fun processTrigger(trigger: Trigger) {
+        trigger.release()
+        triggers.remove(trigger)
         when (trigger.name) {
-            "fight1" -> {
-                trigger.release()
-                triggers.remove(trigger)
-                cameraMan.lookAt(null)
-                cameraMan.restricting = true
-                enemies.add(createEnemy(assets.animation.punkAnimations, 1f))
-                enemies.add(createEnemy(assets.animation.guardAnimations, 3f))
-                depthBasedDrawables.addAll(enemies)
-            }
+            "fight1" -> spawnEnemies(1)
+            "fight2" -> spawnEnemies(2)
+            "fight3" -> spawnEnemies(3)
         }
     }
 
-    private fun createEnemy(characterAnimations: CharacterAnimations, maxSpeed: Float): Enemy {
+    private fun spawnEnemies(count: Int = 1) {
+        cameraMan.lookAt(null)
+        cameraMan.restricting = true
+        when (count) {
+            1 -> {
+                createEnemy(assets.animation.punkAnimations, 1f, 5)
+                createEnemy(assets.animation.punkAnimations, 1f, 5)
+            }
+            2 -> {
+                createEnemy(assets.animation.guardAnimations, 3f, 8)
+                createEnemy(assets.animation.guardAnimations, 3f, 8)
+                createEnemy(assets.animation.guardAnimations, 3f, 8)
+            }
+            3 -> {
+                createEnemy(assets.animation.punkAnimations, 1f, 5)
+                createEnemy(assets.animation.punkAnimations, 1f, 5)
+                createEnemy(assets.animation.guardAnimations, 3f, 8)
+                createEnemy(assets.animation.guardAnimations, 3f, 8)
+                createEnemy(assets.animation.officerAnimations, 5f, 20)
+            }
+        }
+        createEnemy(assets.animation.punkAnimations, 1f, 5)
+        /*createEnemy(assets.animation.guardAnimations, 3f, 8)
+        createEnemy(assets.animation.punkAnimations, 1f, 5)
+        createEnemy(assets.animation.officerAnimations, 5f, 20)*/
+    }
+
+    private fun createEnemy(characterAnimations: CharacterAnimations, difficulty: Float, health: Int): Enemy {
         val offsetX =
-            if (Random.nextBoolean()) -Game.visibleWorldWidth / 2f - 0.2f else Game.visibleWorldWidth / 2f + 0.2f
+            if (Random.nextBoolean()) -Game.visibleWorldWidth / 2f - 0.5f else Game.visibleWorldWidth / 2f + 0.5f
+        val offsetY = Game.visibleWorldHeight * 4f / 5f - Random.nextFloat() * Game.visibleWorldHeight / 3f
         val enemy = Enemy(
-            Vec2(cameraMan.position.x + offsetX, player.y),
+            Vec2(cameraMan.position.x + offsetX, offsetY),
             player,
             world,
             assets,
@@ -166,10 +194,24 @@ class InGame(
             inputController,
             assets.objects.particleSimulator,
             context.vfs,
-            maxSpeed = maxSpeed
+            difficulty = difficulty,
+            initialHeath = health,
+            ::onEnemyDeath
         )
+        enemies.add(enemy)
+        depthBasedDrawables.add(enemy)
+        ui.showHealth(enemy)
         enemy.isAggressive = true
         return enemy
+    }
+
+    private fun onEnemyDeath(enemy: Enemy) {
+        deadEnemies += enemy
+    }
+
+    private fun gameOver() {
+        assets.music.background.stop()
+        onGameOver()
     }
 
     private val bpm = 138.6882f//128.5714f
@@ -188,6 +230,26 @@ class InGame(
         triggers // to initialize
     }
 
+    private fun makeCameraLookAtPlayer(delay: Float) {
+        val started = time
+        val shouldBeAtPlayerAt = time + delay
+        val position = Vec2()
+        val startPositionX = cameraMan.position.x
+        cameraMan.lookAt {
+            if (time >= shouldBeAtPlayerAt) {
+                position.set(player.x, Game.visibleWorldHeight / 2f)
+            } else {
+                val passed = time - started
+                position.set(startPositionX + (player.x - startPositionX) * interpolate(passed / delay), Game.visibleWorldHeight / 2f)
+            }
+            position
+        }
+
+        cameraMan.restricting = false
+    }
+
+    private fun interpolate(value: Float): Float = 3 * value * value - 2 * value * value * value
+
     private fun updateWorld(dt: Duration, camera: Camera) {
         val millis = dt.milliseconds
         time += dt.seconds
@@ -195,6 +257,16 @@ class InGame(
         toMeasure = (time % secondsPerMeasure) / secondsPerMeasure
 
         depthBasedDrawables.forEach { it.update(dt, millis, toBeat, toMeasure) }
+        if (deadEnemies.isNotEmpty()) {
+            enemies.removeAll(deadEnemies)
+            depthBasedDrawables.removeAll(deadEnemies)
+            ui.stopShowingHealth(deadEnemies)
+            deadEnemies.forEach { it.release() }
+            deadEnemies.clear()
+            if (enemies.size == 0) {
+                makeCameraLookAtPlayer(2f)
+            }
+        }
         //assets.objects.particleSimulator.update(dt)
         worldAccumulator += dt.seconds
         while (worldAccumulator >= worldStep) {
@@ -235,16 +307,13 @@ class InGame(
         ui.render(toMeasure, player.movingToBeat, player.movingOffBeat)
     }
 
-    fun resize(width: Int, height: Int) {
-
-    }
-
     fun updateAndRender(dt: Duration) {
         worldRender.render(dt)
         uiRenderer.render(dt)
     }
 
     fun onAnimationEvent(event: String) {
+        println("general animation event: $event")
         when (event) {
             "punch" -> player.activatePunch()
         }

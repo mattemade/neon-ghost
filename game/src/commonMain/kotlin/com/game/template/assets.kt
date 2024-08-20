@@ -102,6 +102,14 @@ class Animations(
             callback
         )
     }
+    val officerAnimations by pack {
+        CharacterAnimations(
+            context,
+            runtimeTextureAtlasPacker,
+            "officer",
+            callback
+        )
+    }
 }
 
 class CharacterAnimations(
@@ -114,6 +122,7 @@ class CharacterAnimations(
     val walk by "texture/$character/walk".prepareAnimationPlayer(runtimeTextureAtlasPacker)
     val idle by "texture/$character/idle".prepareAnimationPlayer(runtimeTextureAtlasPacker)
     val hit by "texture/$character/hit".prepareAnimationPlayer(runtimeTextureAtlasPacker)
+    val prepare by "texture/$character/prepare".prepareAnimationPlayer(runtimeTextureAtlasPacker)
     val leftPunch by "texture/$character/left_punch".prepareAnimationPlayer(
         runtimeTextureAtlasPacker
     )

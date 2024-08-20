@@ -1,8 +1,8 @@
-10 frames like ../sheet.png
+9 frames like ../sheet.png
 7 for 300
-9 for 200
-signal punch
-9 for 400
+8 for 200
+signal enemyPunch
+8 for 400
 repeat 1
 7 for 5000
 repeat

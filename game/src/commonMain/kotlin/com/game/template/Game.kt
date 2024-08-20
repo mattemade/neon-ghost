@@ -40,7 +40,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
         }
     val assets = Assets(context, ::onAnimationEvent).releasing()
     val inputController = context.bindInputs()
-    val inGame by lazy { InGame(context, assets, inputController) }
+    var inGame: InGame? = null
     val directRender = DirectRender(context, virtualWidth, virtualHeight, ::update, ::render)
     var offsetX = 0f
     var offsetY = 0f
@@ -50,11 +50,15 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     private var fpsCheckTimeout = 5000f
     private var framesRenderedInPeriod = 0
 
+    private fun restartGame() {
+        inGame = InGame(context, assets, inputController, ::restartGame)
+    }
+
     private fun onAnimationEvent(event: String) {
         if (!focused) {
             return
         }
-        inGame.onAnimationEvent(event)
+        inGame?.onAnimationEvent(event)
     }
 
     override suspend fun Context.start() {
@@ -102,7 +106,10 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                 assetsReady = audioReady && assets.isLoaded
             }
             if (focused && assetsReady) {
-                inGame.updateAndRender(dt)
+                if (inGame == null) {
+                    restartGame()
+                }
+                inGame?.updateAndRender(dt)
             }
 
             directRender.render(dt)
@@ -156,16 +163,19 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             context.gl.enable(State.BLEND)
             batch.setBlendFunction(BlendFactor.ONE, BlendFactor.ONE)
 
-            batch.draw(
-                inGame.texture,
-                x = offsetX,
-                y = offsetY,
-                originX = 0f,
-                originY = 0f,
-                width = virtualWidth.toFloat() * scale,
-                height = virtualHeight.toFloat() * scale,
-                flipY = true,
-            )
+            inGame?.texture?.let {
+                batch.draw(
+                    it,
+                    x = offsetX,
+                    y = offsetY,
+                    originX = 0f,
+                    originY = 0f,
+                    width = virtualWidth.toFloat() * scale,
+                    height = virtualHeight.toFloat() * scale,
+                    flipY = true,
+                )
+            }
+
             context.gl.disable(State.BLEND)
         }
     }
