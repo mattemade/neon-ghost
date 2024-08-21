@@ -192,6 +192,7 @@ class InGame(
         when (event) {
             "changeMusic" -> changeMusic()
             "launchGhost" -> ghostOverlay.activate()
+            "transform" -> player.transform()
         }
     }
 

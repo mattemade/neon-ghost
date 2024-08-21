@@ -77,7 +77,7 @@ class Player(
     val y get() = body.position.y
     override val depth: Float get() = y
 
-    private val animations = assets.animation.normalReiAnimations
+    private var animations = assets.animation.normalReiAnimations
 
     internal var currentAnimation: SignallingAnimationPlayer = animations.walk
         set(value) {
@@ -355,7 +355,13 @@ class Player(
         }
     }
 
+
+    fun transform() {
+        animations = assets.animation.magicalReiAnimations
+    }
+
     private var shaperRenderer: ShapeRenderer? = null
+
 
     override fun render(batch: Batch) {
         currentAnimation.currentKeyFrame?.let { frame ->
