@@ -55,8 +55,10 @@ class EventExecutor(
         }
     }
 
-    fun choose(key: String) {
+    fun selectOption(key: String) {
         currentChoice += key
+        ui.hideOptions()
+        advance()
     }
 
     private fun executeItem() {
@@ -129,9 +131,11 @@ class EventExecutor(
             advance()
             return
         }
-        // TODO: ask ui to present options to choose from
-
-        advance()
+        val options = this.split(";").map {
+            val split = it.split(":", limit = 2)
+            split[0].trim() to split[1].trim()
+        }
+        ui.showOptions(options)
     }
 
     private fun String?.updateRequirements() {

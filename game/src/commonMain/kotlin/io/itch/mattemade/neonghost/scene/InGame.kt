@@ -41,6 +41,7 @@ class InGame(
     private val level: TiledMap,
     private val inputController: InputMapController<GameInput>,
     private val choreographer: Choreographer,
+    private val ghostOverlay: GhostOverlay,
     eventState: MutableMap<String, Int>,
     private val onGameOver: () -> Unit,
 ) : Releasing by Self() {
@@ -66,7 +67,17 @@ class InGame(
     ).releasing()
     val texture = sharedFrameBuffer.textures[0]
 
-    private val ui by lazy { UI(context, assets, player, inputController, ::advanceDialog, ::activateInteraction) }
+    private val ui by lazy {
+        UI(
+            context,
+            assets,
+            player,
+            inputController,
+            ::advanceDialog,
+            ::activateInteraction,
+            ::selectOption
+        )
+    }
 
     private val eventExecutor by lazy {
         EventExecutor(
@@ -84,8 +95,13 @@ class InGame(
     private fun advanceDialog() {
         eventExecutor.advance()
     }
+
     private fun activateInteraction(trigger: Trigger) {
         eventExecutor.execute(trigger)
+    }
+
+    private fun selectOption(key: String) {
+        eventExecutor.selectOption(key)
     }
 
 
@@ -173,12 +189,17 @@ class InGame(
 
     private fun onTriggerEventCallback(event: String) {
         println("event triggered ${event}")
+        when (event) {
+            "changeMusic" -> changeMusic()
+            "launchGhost" -> ghostOverlay.activate()
+        }
     }
 
     private fun enterTrigger(trigger: Trigger) {
         println("triggered ${trigger.name}")
         enterTriggers.add(trigger)
     }
+
     private fun exitTrigger(trigger: Trigger) {
         println("exit from trigger ${trigger.name}")
         if (enterTriggers.contains(trigger)) {
@@ -259,14 +280,18 @@ class InGame(
         inputController.addInputMapProcessor(object : InputMapProcessor<GameInput> {
             override fun onActionDown(inputType: GameInput): Boolean {
                 if (inputType == GameInput.START) {
-                    choreographer.play(if (music) assets.music.background else assets.music.background1c)
-                    music = !music
+                    changeMusic()
                 }
 
                 return false
             }
         })
         triggers // to initialize
+    }
+
+    private fun changeMusic() {
+        choreographer.play(if (music) assets.music.background else assets.music.background1c)
+        music = !music
     }
 
     private fun updateWorld(dt: Duration, camera: Camera) {

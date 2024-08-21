@@ -371,7 +371,7 @@ class Player(
                 height = height,
                 flipX = isFacingLeft
             )
-            if (shaperRenderer == null) {
+            /*if (shaperRenderer == null) {
                 shaperRenderer = ShapeRenderer(batch)
             }
 
@@ -396,7 +396,7 @@ class Player(
                 width = physicalHw,
                 height = physicalHh,
                 color = Color.BLUE.toFloatBits(),
-            )
+            )*/
         }
     }
 

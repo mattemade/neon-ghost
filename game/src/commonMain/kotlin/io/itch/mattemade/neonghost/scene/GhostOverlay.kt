@@ -46,7 +46,7 @@ class GhostOverlay(
 
     private var time = 0f
     private var isFacingLeft = false
-
+    private var isActive = false
 
     private val halfScreenWidth = Game.visibleWorldWidth / 2f
     private val halfScreenHeight = Game.visibleWorldHeight / 2f
@@ -82,6 +82,13 @@ class GhostOverlay(
     }
 
     fun updateAndRender(dt: Duration) {
+        if (!isActive) {
+            return
+        }
         worldRender.render(dt)
+    }
+
+    fun activate() {
+        isActive = true
     }
 }

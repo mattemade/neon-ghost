@@ -284,7 +284,7 @@ class Enemy(
                 flipX = isFacingLeft
             )
         }
-        if (shaperRenderer == null) {
+        /*if (shaperRenderer == null) {
             shaperRenderer = ShapeRenderer(batch)
         }
 
@@ -308,7 +308,7 @@ class Enemy(
             width = physicalWidth,
             height = physicalHeight,
             color = Color.BLUE.toFloatBits(),
-        )
+        )*/
     }
 
     private fun texturePositionX(width: Float) = body.position.x - width / 2f

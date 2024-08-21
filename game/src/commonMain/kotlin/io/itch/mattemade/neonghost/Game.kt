@@ -61,6 +61,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             assets.level.testRoom,
             inputController,
             choreographer,
+            ghostOverlay,
             eventState,
             ::restartGame
         )

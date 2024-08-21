@@ -85,6 +85,7 @@ class MonoSpaceTextDrawer(
             else -> throw IllegalArgumentException("Provide a correct vAlign instead of $vAlign")
         }
         var drawnCharacters = 0
+        val rows = text.size
         text.forEachIndexed { row, line ->
             val lineStartX = startPositionX + (textBoxWidth - line.length.drawingWidth) / 2f
             line.forEachIndexed { column, char ->
@@ -94,7 +95,7 @@ class MonoSpaceTextDrawer(
                         batch.draw(
                             letter,
                             (lineStartX + column * (drawingLetterWidth + drawingHorizontalSpacing)),
-                            (startPositionY + textBoxHeight - row * (drawingLetterHeight + drawingVerticalSpacing)),
+                            (startPositionY + textBoxHeight - (rows - row - 1) * (drawingLetterHeight + drawingVerticalSpacing)),
                             drawingLetterWidth,
                             drawingLetterHeight
                         )

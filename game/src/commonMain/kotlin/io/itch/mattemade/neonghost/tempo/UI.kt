@@ -34,6 +34,7 @@ class UI(
     private val controller: InputMapController<GameInput>,
     private val advanceDialogue: () -> Unit,
     private val activateInteraction: (Trigger) -> Unit,
+    private val selectOption: (String) -> Unit,
 ) : Releasing by Self() {
 
     private val batch = SpriteBatch(context).releasing()
@@ -71,6 +72,7 @@ class UI(
     private val dialogArrow = assets.texture.dialogueArrow
     private val interactionTitleWidth = 120f
     private val interactionTitleHeight = 28f
+    private val optionsHeight = 28f
 
     private var activePortrait: String? = null
     private var isPortraitLeft: Boolean = false
@@ -82,7 +84,9 @@ class UI(
             field = value
             availableInteractionName = value?.name?.uppercase()?.let { listOf(it) }
         }
-    //var activeInteraction: Pair<String, Map<String, String>>? = null
+    var activeOptions: List<Pair<List<String>, String>>? = null
+    var readyToSelectOption = false
+    var activeOption = 0
 
     fun render(toMeasure: Float, movingToBeat: Boolean, movingOffbeat: Boolean) {
         viewport.apply(context)
@@ -151,7 +155,7 @@ class UI(
                 0f,//dialogPadding,
                 0f,//dialogPadding,
                 Game.virtualWidth.toFloat(),// - dialogPadding * 2f,
-                dialogHeight + dialogPadding*2f,//dialogHeight,
+                dialogHeight + dialogPadding*2f + if (activeOptions != null) optionsHeight else 0f,//dialogHeight,
                 color = Color.BLACK.toFloatBits()
             )
 
@@ -183,13 +187,41 @@ class UI(
                 vAlign = VAlign.TOP
             )
 
-            batch.draw(
-                dialogArrow,
-                Game.virtualWidth / 2f - dialogArrow.width / 2f,
-                dialogPadding + dialogHeight - portraitPadding - dialogArrow.height,
-                width = dialogArrow.width.toFloat(),
-                height = dialogArrow.height.toFloat()
-            )
+            activeOptions?.let { options ->
+                val count = options.size
+                val widthPerOption = (Game.virtualWidth - portraitPadding * 2f) / count
+                val y = (dialogHeight + dialogPadding * 2f).screenSpacePixelPerfect
+                options.forEachIndexed { index, pair ->
+                    val text = pair.first
+                    val x = (portraitPadding + widthPerOption/2f + index * widthPerOption).screenSpacePixelPerfect
+                    textDrawer.drawText(
+                        batch,
+                        text,
+                        x,
+                        y,
+                        vAlign = VAlign.TOP
+                    )
+
+                    if (index == activeOption) {
+                        batch.draw(
+                            dialogArrow,
+                            x - dialogArrow.width / 2f,
+                            dialogPadding + dialogHeight - portraitPadding - dialogArrow.height,
+                            width = dialogArrow.width.toFloat(),
+                            height = dialogArrow.height.toFloat()
+                        )
+                    }
+                }
+
+            } ?: run {
+                batch.draw(
+                    dialogArrow,
+                    Game.virtualWidth / 2f - dialogArrow.width / 2f,
+                    dialogPadding + dialogHeight - portraitPadding - dialogArrow.height,
+                    width = dialogArrow.width.toFloat(),
+                    height = dialogArrow.height.toFloat()
+                )
+            }
         }
 
         batch.end()
@@ -251,6 +283,25 @@ class UI(
 
     fun update(dt: Duration) {
         activeLines?.let {
+            activeOptions?.let { options ->
+                val xMovement = controller.axis(GameInput.HORIZONTAL)
+                if (readyToSelectOption && xMovement != 0f) {
+                    readyToSelectOption = false
+                    activeOption += if (xMovement < 0f) -1 else 1
+                    if (activeOption < 0) {
+                        activeOption = options.size - 1
+                    } else if (activeOption >= options.size) {
+                        activeOption = 0
+                    }
+                }
+                if (xMovement == 0f) {
+                    readyToSelectOption = true
+                }
+                if (controller.pressed(GameInput.ANY_ACTION)) {
+                    selectOption(options[activeOption].second)
+                    return
+                }
+            }
             if (controller.pressed(GameInput.ANY_ACTION)) {
                 advanceDialogue()
                 return
@@ -263,5 +314,16 @@ class UI(
                 return
             }
         }
+
+    }
+
+    fun hideOptions() {
+        activeOptions = null
+    }
+
+    fun showOptions(options: List<Pair<String, String>>) {
+        activeOptions = options.map { listOf(it.first.uppercase()) to it.second }
+        activeOption = 0
+        readyToSelectOption = true
     }
 }
