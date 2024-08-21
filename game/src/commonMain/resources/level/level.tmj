@@ -254,12 +254,12 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:transformation sequence\ntrigger transform\nplayer stop\nstate 1\n"
+                         "value":"terminal<:transformation sequence...\ntrigger transform\nplayer stop\nterminal<:transformation sequence... compolete\nstate 1\n"
                         }, 
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"terminal<:transformation complete\n"
+                         "value":"terminal<:transformation sequence... complete\n"
                         }, 
                         {
                          "name":"type",
