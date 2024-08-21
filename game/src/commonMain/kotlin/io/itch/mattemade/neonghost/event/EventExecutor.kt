@@ -48,6 +48,7 @@ class EventExecutor(
             activeEvent = null
             currentChoice.clear()
             currentRequirements.clear()
+            ui.stopDialog()
             onEventFinished()
         } else {
             executeItem()
@@ -69,28 +70,32 @@ class EventExecutor(
         val subject = split[0]
         val action = split.getOrNull(1)
         when (subject) {
-            "player" -> action.checkingChoice()?.executeForPlayer()
-            "fight" -> action.checkingChoice()?.executeFight()
-            "state" -> action.checkingChoice()?.executeState()
-            "trigger" -> action.checkingChoice()?.executeTrigger()
-            "camera" -> action.checkingChoice()?.executeCamera()
-            "choose" -> action.checkingChoice()?.executeChoose()
+            "player" -> action.checkingChoice().executeForPlayer()
+            "fight" -> action.checkingChoice().executeFight()
+            "state" -> action.checkingChoice().executeState()
+            "trigger" -> action.checkingChoice().executeTrigger()
+            "camera" -> action.checkingChoice().executeCamera()
+            "choose" -> action.checkingChoice().executeChoose()
             "choice" -> action.updateRequirements()
-            else -> item.executeDialogueLine()
+            else -> item.checkingChoice().executeDialogueLine()
         }
     }
 
     private fun String?.checkingChoice(): String? =
         takeIf { currentRequirements.isEmpty() || currentChoice.containsAll(currentRequirements) }
 
-    private fun String.executeForPlayer() {
+    private fun String?.executeForPlayer() {
         when (this) {
             "stop" -> player.stopBody(resetAnimationToIdle = true)
         }
         advance()
     }
 
-    private fun String.executeFight() {
+    private fun String?.executeFight() {
+        if (this == null) {
+            advance()
+            return
+        }
         this.split(",").forEach {
             when (it.trim().lowercase()) {
                 "punk" -> spawnEnemy(EnemySpec(assets.animation.punkAnimations, 1f, 5))
@@ -99,36 +104,50 @@ class EventExecutor(
             }
         }
         isFighting = true
+        ui.stopDialog()
         lockCamera()
     }
 
-    private fun String.executeState() {
+    private fun String?.executeState() {
+        if (this == null) {
+            advance()
+            return
+        }
         eventState[activeEventName] = this.toInt()
         advance()
     }
 
-    private fun String.executeTrigger() {
-        onTrigger(this)
+    private fun String?.executeTrigger() {
+        if (this != null) {
+            onTrigger(this)
+        }
         advance()
     }
 
-    private fun String.executeChoose() {
+    private fun String?.executeChoose() {
+        if (this.isNullOrBlank()) {
+            advance()
+            return
+        }
         // TODO: ask ui to present options to choose from
 
         advance()
     }
 
     private fun String?.updateRequirements() {
-        if (this == null) {
-            currentRequirements.clear()
-        } else {
+        currentRequirements.clear()
+        if (this != null) {
             currentRequirements.addAll(this.split(",").map { it.trim() })
         }
 
         advance()
     }
 
-    private fun String.executeCamera() {
+    private fun String?.executeCamera() {
+        if (this == null) {
+            advance()
+            return
+        }
         when (this) {
             "lock" -> lockCamera()
             "follow" -> makeCameraFollowPlayer()
@@ -139,8 +158,8 @@ class EventExecutor(
         cameraMan.lookAt(withinSeconds = 2f) { it.set(player.x, Game.visibleWorldHeight / 2f) }
     }
 
-    private fun String.executeDialogueLine() {
-        if (this.isBlank()) {
+    private fun String?.executeDialogueLine() {
+        if (this.isNullOrBlank()) {
             advance()
             return
         }

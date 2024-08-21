@@ -1,6 +1,7 @@
 package io.itch.mattemade.neonghost.tempo
 
 import com.littlekt.Context
+import com.littlekt.graph.node.resource.VAlign
 import com.littlekt.graphics.Color
 import com.littlekt.graphics.g2d.SpriteBatch
 import com.littlekt.graphics.g2d.shape.ShapeRenderer
@@ -13,18 +14,26 @@ import com.littlekt.math.geom.radians
 import com.littlekt.util.Scaler
 import com.littlekt.util.viewport.ScalingViewport
 import io.itch.mattemade.blackcat.input.GameInput
+import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.character.enemy.Enemy
 import io.itch.mattemade.neonghost.character.rei.Player
+import io.itch.mattemade.neonghost.pixelPerfectPosition
+import io.itch.mattemade.neonghost.screenSpacePixelPerfect
+import io.itch.mattemade.neonghost.world.Trigger
+import io.itch.mattemade.utils.drawing.DelayedTextDrawer
+import io.itch.mattemade.utils.drawing.MonoSpaceTextDrawer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
 import kotlin.time.Duration
 
 class UI(
     private val context: Context,
+    private val assets: Assets,
     private val player: Player,
     private val controller: InputMapController<GameInput>,
-    private val advanceDialogue: () -> Unit
+    private val advanceDialogue: () -> Unit,
+    private val activateInteraction: (Trigger) -> Unit,
 ) : Releasing by Self() {
 
     private val batch = SpriteBatch(context).releasing()
@@ -34,6 +43,19 @@ class UI(
     private val camera = viewport.camera.apply {
         position.set(Game.virtualWidth / 2f, Game.virtualHeight / 2f, 0f)
     }
+    val textDrawer = MonoSpaceTextDrawer(
+        font = assets.texture.fontWhite,
+        alphabet = ('A'..'Z').joinToString(separator = "") + ".,'0123456789:",
+        fontLetterWidth = 5,
+        fontLetterHeight = 9,
+        fontHorizontalSpacing = 1,
+        fontVerticalSpacing = 0,
+        fontHorizontalPadding = 1,
+    )
+    private val delayedTextDrawer = DelayedTextDrawer(
+        textDrawer,
+        { 16f }
+    )
     private val center = Vec2f(16f, 16f)
     private val tempVec2f = MutableVec2f(0f)
     private val tempVec2fb = MutableVec2f(0f)
@@ -43,10 +65,24 @@ class UI(
     private val healthBarPadding = 2f
     private val maxHealthSlots = 5
     private val health = Array<Enemy?>(maxHealthSlots) { null }
+    private val portraitPadding = 4f
+    private val dialogPadding = 4f
+    private val dialogHeight = 48f + portraitPadding * 2f
+    private val dialogArrow = assets.texture.dialogueArrow
+    private val interactionTitleWidth = 120f
+    private val interactionTitleHeight = 28f
 
     private var activePortrait: String? = null
     private var isPortraitLeft: Boolean = false
-    private var activeLine: String? = null
+    private var activeLines: List<String>? = null
+
+    private var availableInteractionName: List<String>? = null
+    var availableInteraction: Trigger? = null
+        set(value) {
+            field = value
+            availableInteractionName = value?.name?.uppercase()?.let { listOf(it) }
+        }
+    //var activeInteraction: Pair<String, Map<String, String>>? = null
 
     fun render(toMeasure: Float, movingToBeat: Boolean, movingOffbeat: Boolean) {
         viewport.apply(context)
@@ -92,6 +128,68 @@ class UI(
                     Color.RED
                 )
             }
+        }
+
+        availableInteractionName?.let {
+            shapeRenderer.filledRectangle(
+                (Game.virtualWidth - interactionTitleWidth) / 2f,
+                dialogPadding,
+                interactionTitleWidth,
+                interactionTitleHeight,
+                color = Color.BLACK.toFloatBits()
+            )
+            textDrawer.drawText(
+                batch,
+                it,
+                (Game.virtualWidth / 2f).screenSpacePixelPerfect,
+                (dialogPadding + interactionTitleHeight / 2f).screenSpacePixelPerfect + 0.5f,
+            )
+        }
+
+        activeLines?.let { lines ->
+            shapeRenderer.filledRectangle(
+                0f,//dialogPadding,
+                0f,//dialogPadding,
+                Game.virtualWidth.toFloat(),// - dialogPadding * 2f,
+                dialogHeight + dialogPadding*2f,//dialogHeight,
+                color = Color.BLACK.toFloatBits()
+            )
+
+            var paddingLeft = 0f
+            var paddingRight = 0f
+            activePortrait?.let { portraitName ->
+                assets.texture.portraits[portraitName]?.let { portrait ->
+                    if (isPortraitLeft) {
+                        paddingLeft = portrait.width + portraitPadding * 2f
+                    } else {
+                        paddingRight = portrait.width + portraitPadding * 2f
+                    }
+                    batch.draw(
+                        portrait,
+                        if (isPortraitLeft) dialogPadding + portraitPadding else Game.virtualWidth - portrait.width - portraitPadding - dialogPadding,
+                        dialogPadding + (dialogHeight - portrait.height) / 2f,
+                        width = portrait.width.toFloat(),
+                        height = portrait.height.toFloat(),
+                        flipX = !isPortraitLeft
+                    )
+                }
+            }
+
+            textDrawer.drawText(
+                batch,
+                lines,
+                (Game.virtualWidth / 2f).screenSpacePixelPerfect,
+                (dialogPadding + portraitPadding).screenSpacePixelPerfect,
+                vAlign = VAlign.TOP
+            )
+
+            batch.draw(
+                dialogArrow,
+                Game.virtualWidth / 2f - dialogArrow.width / 2f,
+                dialogPadding + dialogHeight - portraitPadding - dialogArrow.height,
+                width = dialogArrow.width.toFloat(),
+                height = dialogArrow.height.toFloat()
+            )
         }
 
         batch.end()
@@ -140,21 +238,29 @@ class UI(
     }
 
     fun showDialogLine(portrait: String, isLeft: Boolean, text: String) {
-        // TODO show UI
-        println("$portrait $isLeft $text")
         activePortrait = portrait
         isPortraitLeft = isLeft
-        activeLine = text
+        activeLines = text.uppercase().split("\\")
 
     }
 
+    fun stopDialog() {
+        activePortrait = null
+        activeLines = null
+    }
+
     fun update(dt: Duration) {
-        activeLine?.let {
+        activeLines?.let {
             if (controller.pressed(GameInput.ANY_ACTION)) {
-                println("skipping ${it}")
-                activePortrait = null
-                activeLine = null
                 advanceDialogue()
+                return
+            }
+        }
+        availableInteraction?.let {
+            if (controller.pressed(GameInput.ANY_ACTION)) {
+                println("interactiong with ${it.name}")
+                activateInteraction(it)
+                return
             }
         }
     }

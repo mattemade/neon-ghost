@@ -222,5 +222,8 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     }
 }
 
+val Float.screenSpacePixelPerfect: Float
+    get() = this.toInt().toFloat()
+
 val Float.pixelPerfectPosition: Float
     get() = (this * Game.PPU).toInt().toFloat() * Game.IPPU

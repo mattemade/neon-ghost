@@ -66,7 +66,7 @@ class InGame(
     ).releasing()
     val texture = sharedFrameBuffer.textures[0]
 
-    private val ui by lazy { UI(context, player, inputController, ::advanceDialog) }
+    private val ui by lazy { UI(context, assets, player, inputController, ::advanceDialog, ::activateInteraction) }
 
     private val eventExecutor by lazy {
         EventExecutor(
@@ -83,6 +83,9 @@ class InGame(
     private val isInDialogue: Boolean get() = eventExecutor.isInDialogue
     private fun advanceDialog() {
         eventExecutor.advance()
+    }
+    private fun activateInteraction(trigger: Trigger) {
+        eventExecutor.execute(trigger)
     }
 
 
@@ -186,25 +189,26 @@ class InGame(
     }
 
     private fun processTriggers() {
+        /*
+         TODO: there is a bug
+         if player engages into a fight while standing on interaction point,
+         it won't be cleared from the triggers list, even if player moves out of it
+         to mitigate: do not place interaction points near fight triggers!!!!
+         */
         if (eventExecutor.isInDialogue || eventExecutor.isFighting) {
             return
         }
         enterTriggers.forEach {
             when (it.properties["type"]?.string) {
                 "trigger" -> eventExecutor.execute(it)
-                "interaction" -> {
-                    // TODO: add interaction UI
-                    println("adds interaction with ${it.name}")
-                }
+                "interaction" -> ui.availableInteraction = it
+
             }
         }
         enterTriggers.clear()
         exitTriggers.forEach {
             when (it.properties["type"]?.string) {
-                "interaction" -> {
-                    // TODO: remove interaction UI
-                    println("removes interaction with ${it.name}")
-                }
+                "interaction" -> ui.availableInteraction = null
             }
         }
         exitTriggers.clear()

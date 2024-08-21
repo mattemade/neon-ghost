@@ -34,7 +34,6 @@ class Assets(context: Context, animationEventListener: (String) -> Unit) : Asset
 
     private val atlas by prepare(1) { runtimeTextureAtlasPacker.packAtlas() }
 
-    val textDrawer by preparePlain {  }
     val level by pack(2) { Levels(context, atlas) }
 }
 
@@ -46,6 +45,11 @@ class Textures(context: Context, private val packer: RuntimeTextureAtlasPacker) 
     val dialogueArrow by "texture/dialogue/arrow.png".pack()
     val white by "texture/misc/white.png".pack()
     val fontWhite by "texture/dialogue/font_white.png".pack()
+    val portraits by preparePlain {
+        listOf("rei", "terminal", "punk").associateWith {
+            packer.pack("texture/portrait/$it.png").await()
+        }
+    }
 }
 
 class Sound(context: Context) : AssetPack(context) {

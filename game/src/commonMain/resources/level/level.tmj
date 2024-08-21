@@ -107,7 +107,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"player stop\npunk>:Hey, stop!\nstate 1\nfight punk,punk,guard\npunk>:I will remember you!\n"
+                         "value":"player stop\npunk>:Are you ready?\n\nchoose Yes, ready; No, not_ready\nchoice ready\npunk>:Let me see that!\nchoice not_ready\npunk>:Well, you better be!\nchoice\n\npunk>:Come on, guys!\\Here we go!\n\nstate 1\nfight punk,punk\n"
                         }, 
                         {
                          "name":"type",
@@ -118,18 +118,18 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":384,
+                 "x":144,
                  "y":96
                 }, 
                 {
                  "height":21.6666666666667,
                  "id":10,
-                 "name":"interaction1",
+                 "name":"use terminal",
                  "properties":[
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:nothing to see here\nstate 1\n"
+                         "value":"terminal<:nothing to see here\n"
                         }, 
                         {
                          "name":"type",
@@ -146,7 +146,7 @@
                 {
                  "height":21.6667,
                  "id":11,
-                 "name":"interaction2",
+                 "name":"use terminal",
                  "properties":[
                         {
                          "name":"0",
@@ -156,7 +156,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"terminal<:Life system support: OFFLINEReserve generator: ON\n"
+                         "value":"terminal<:Life system support: OFFLINE\\Reserve generator: ON\n"
                         }, 
                         {
                          "name":"type",
@@ -178,7 +178,12 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"punk>:Oh, this is that girl!\nrei<:Shit...\npunk>:Come on, guys, let's kick her ass!\nrei<:Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\npunk>:Shut up and take this\npunk>:Are you ready?\n\nchoose Yes, ready; No, not_ready\nchoice ready\npunk>:Let me see that!\nchoice not_ready\npunk>:Well, you better be!\nchoose end\n\npunk>:Come on, guys!\\Here we go!\n\ntrigger fight1"
+                         "value":"player stop\nrei<:I hope I won't see them again\nstate 1"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"player stop\nrei<:Why are you going back?\nstate 2"
                         }, 
                         {
                          "name":"type",

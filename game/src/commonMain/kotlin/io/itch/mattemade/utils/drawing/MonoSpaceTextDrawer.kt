@@ -2,12 +2,11 @@ package io.itch.mattemade.utils.drawing
 
 import com.littlekt.graph.node.resource.HAlign
 import com.littlekt.graph.node.resource.VAlign
-import com.littlekt.graphics.Texture
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.TextureSlice
 
 class MonoSpaceTextDrawer(
-    private val font: Texture,
+    private val font: TextureSlice,
     private val alphabet: String,
     private val fontLetterWidth: Int,
     private val fontLetterHeight: Int,
