@@ -29,7 +29,6 @@ class Assets(context: Context, animationEventListener: (String) -> Unit) : Asset
     val animation by pack { Animations(context, runtimeTextureAtlasPacker, animationEventListener) }
     val sound by pack { Sound(context) }
     val music by pack { Music(context) }
-    val script by pack { Script(context) }
     val objects by pack { Objects(context) }
     val shader by pack { Shaders(context) }
 
@@ -37,10 +36,6 @@ class Assets(context: Context, animationEventListener: (String) -> Unit) : Asset
 
     val textDrawer by preparePlain {  }
     val level by pack(2) { Levels(context, atlas) }
-}
-
-class Script(context: Context): AssetPack(context) {
-    val test1 by preparePlain { context.vfs["dialogue/test1.txt"].readLines() }
 }
 
 class Textures(context: Context, private val packer: RuntimeTextureAtlasPacker) :
@@ -90,6 +85,7 @@ class TileSets(context: Context, private val packer: RuntimeTextureAtlasPacker) 
     val wall by "level/Outside-Wall 48_48.png".pack()
     val light by "level/Outside-Light 150_150.png".pack()
     val window by "level/Outside-Window 48_48.png".pack()
+    val terminalTile by "level/terminal_tile.png".pack()
 }
 
 class Animations(

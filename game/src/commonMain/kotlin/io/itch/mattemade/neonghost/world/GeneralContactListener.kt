@@ -7,7 +7,10 @@ import org.jbox2d.callbacks.ContactListener
 import org.jbox2d.collision.Manifold
 import org.jbox2d.dynamics.contacts.Contact
 
-class GeneralContactListener(private val triggerCallback: (Trigger) -> Unit) : ContactListener {
+class GeneralContactListener(
+    private val triggerEnterCallback: (Trigger) -> Unit,
+    private val triggerExitCallback: (Trigger) -> Unit
+) : ContactListener {
     override fun beginContact(contact: Contact) {
         if (contact.ofCategory(ContactBits.REI_PUNCH)) {
             contact.getUserData<Enemy>()?.let { enemy ->
@@ -21,7 +24,7 @@ class GeneralContactListener(private val triggerCallback: (Trigger) -> Unit) : C
         }
         if (contact.ofCategory(ContactBits.TRIGGER)) {
             contact.getUserData<Trigger>()?.let { trigger ->
-                triggerCallback(trigger)
+                triggerEnterCallback(trigger)
             }
         }
     }
@@ -35,6 +38,11 @@ class GeneralContactListener(private val triggerCallback: (Trigger) -> Unit) : C
         if (contact.ofCategory(ContactBits.ENEMY_PUNCH)) {
             contact.getUserData<Player>()?.let { player ->
                 contact.getUserData<MutableSet<Player>>()?.remove(player)
+            }
+        }
+        if (contact.ofCategory(ContactBits.TRIGGER)) {
+            contact.getUserData<Trigger>()?.let { trigger ->
+                triggerExitCallback(trigger)
             }
         }
     }

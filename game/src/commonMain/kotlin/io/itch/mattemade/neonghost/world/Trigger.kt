@@ -1,13 +1,12 @@
 package io.itch.mattemade.neonghost.world
 
+import com.littlekt.graphics.g2d.tilemap.tiled.TiledMap
 import io.itch.mattemade.neonghost.Game
 import com.littlekt.math.Rect
 import com.littlekt.math.Vec2f
-import io.itch.mattemade.utils.releasing.HasContext
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
 import org.jbox2d.collision.shapes.PolygonShape
-import org.jbox2d.dynamics.Body
 import org.jbox2d.dynamics.BodyDef
 import org.jbox2d.dynamics.BodyType
 import org.jbox2d.dynamics.Filter
@@ -19,6 +18,7 @@ class Trigger(
     val rect: Rect,
     mapHeight: Int,
     val name: String,
+    val properties: Map<String, TiledMap.Property>,
 ): Releasing by Self() {
 
     val renderPath = mutableListOf<Vec2f>()

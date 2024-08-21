@@ -38,8 +38,6 @@ class SignallingAnimationPlayer(
                 }
                 it.player.onFrameChange = { frameIndex ->
                     signals[totalFramesInPrevioselyPlayedAnimations + frameIndex]?.let { signal ->
-                        println("signal from player: $signal")
-                        println("when direct callback is: $directCallback")
                         callback?.invoke(signal)
                         directCallback?.invoke(signal)
                     }

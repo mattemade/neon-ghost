@@ -170,7 +170,6 @@ class Enemy(
     }
 
     private fun onAnimationEvent(event: String) {
-        println("event: $event")
         when (event) {
             "enemyPunch" -> {
                 if (isFacingLeft && leftPunchTargets.isNotEmpty() || !isFacingLeft && rightPunchTargets.isNotEmpty()) {
@@ -243,7 +242,6 @@ class Enemy(
         direction
             .scale(inverseBeat * inverseBeat * inverseBeat)
         val length = direction.length()
-        //println("length of move: $length")
         val maxSpeed = 2f + (difficulty - 1f) * 0.5f
         //if (length > maxSpeed) {
             direction.setLength(maxSpeed).scale(inverseBeat * inverseBeat * inverseBeat)
@@ -277,7 +275,6 @@ class Enemy(
             val height = frame.height / Game.PPU
             val positionX = texturePositionX(width)
             val positionY = texturePositionY(height)
-            //println("player at $positionX, $positionY")
             batch.draw(
                 frame,
                 positionX,

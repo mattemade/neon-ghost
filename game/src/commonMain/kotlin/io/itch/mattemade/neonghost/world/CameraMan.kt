@@ -1,7 +1,9 @@
 package io.itch.mattemade.neonghost.world
 
+import com.littlekt.util.seconds
 import io.itch.mattemade.neonghost.Game
 import com.soywiz.korma.geom.Angle
+import io.itch.mattemade.neonghost.pixelPerfectPosition
 import org.jbox2d.collision.shapes.ChainShape
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyDef
@@ -9,11 +11,11 @@ import org.jbox2d.dynamics.BodyType
 import org.jbox2d.dynamics.Filter
 import org.jbox2d.dynamics.FixtureDef
 import org.jbox2d.dynamics.World
+import kotlin.time.Duration
 
 class CameraMan(world: World, initialPosition: Vec2) {
 
-    private var observing: (() -> Vec2)? = null
-    var smooth: Boolean = false
+    private var observing: ((Vec2) -> Unit)? = null
 
     val position: Vec2
         get() = body.position
@@ -44,23 +46,44 @@ class CameraMan(world: World, initialPosition: Vec2) {
         )
     ) ?: error("cameraman fixture is null!")
 
-    private val tempVec2 = Vec2()
-    fun update() {
-        observing?.invoke()?.let {
-            body.setTransform(it, Angle.ZERO)
-            if (smooth) {
-                val distance = tempVec2.set(it).subLocal(body.position).length()
 
-            } else {
+    private val tempVec2 = Vec2()
+    private val startPosition = Vec2()
+    private var time = 0f
+    private var startedLooking = 0f
+    private var shouldBeAtSubjectAt = 0f
+    fun update(dt: Duration) {
+        time += dt.seconds
+        observing?.let {
+            it.invoke(tempVec2)
+            if (time < shouldBeAtSubjectAt) {
+                val delay = shouldBeAtSubjectAt - startedLooking
+                val passed = time - startedLooking
+                tempVec2.set(
+                    startPosition.x + (tempVec2.x - startPosition.x) * interpolate(passed / delay),
+                    startPosition.y + (tempVec2.y - startPosition.y) * interpolate(passed / delay)
+                )
             }
+            tempVec2.set(tempVec2.x.pixelPerfectPosition, tempVec2.y.pixelPerfectPosition)
+            body.setTransform(tempVec2, Angle.ZERO)
         }
     }
+    private fun interpolate(value: Float): Float = 3 * value * value - 2 * value * value * value
 
-    fun lookAt(something: (() -> Vec2)?) {
+    fun lookAt(withinSeconds: Float = 0f, something: ((Vec2) -> Unit)?) {
+        if (something == null) {
+            shouldBeAtSubjectAt = 0f
+            restricting = true
+        } else {
+            startedLooking = time
+            shouldBeAtSubjectAt = time + withinSeconds
+            startPosition.set(body.position)
+            restricting = false
+        }
         observing = something
     }
 
-    var restricting: Boolean = false
+    private var restricting: Boolean = false
         get() = fixture.filterData.categoryBits != 0
         set(value) {
             if (field != value) {

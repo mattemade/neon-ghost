@@ -23,7 +23,8 @@ import kotlin.time.Duration
 class UI(
     private val context: Context,
     private val player: Player,
-    private val controller: InputMapController<GameInput>
+    private val controller: InputMapController<GameInput>,
+    private val advanceDialogue: () -> Unit
 ) : Releasing by Self() {
 
     private val batch = SpriteBatch(context).releasing()
@@ -43,11 +44,9 @@ class UI(
     private val maxHealthSlots = 5
     private val health = Array<Enemy?>(maxHealthSlots) { null }
 
-    private var activeScript: List<String>? = null
-    private var activeScriptPosition = 0
-
-    val isInDialogue: Boolean
-        get() = activeScript != null
+    private var activePortrait: String? = null
+    private var isPortraitLeft: Boolean = false
+    private var activeLine: String? = null
 
     fun render(toMeasure: Float, movingToBeat: Boolean, movingOffbeat: Boolean) {
         viewport.apply(context)
@@ -140,23 +139,22 @@ class UI(
         }
     }
 
-    fun launchScript(script: List<String>) {
-        println("UI got $script")
-        activeScript = script
+    fun showDialogLine(portrait: String, isLeft: Boolean, text: String) {
+        // TODO show UI
+        println("$portrait $isLeft $text")
+        activePortrait = portrait
+        isPortraitLeft = isLeft
+        activeLine = text
+
     }
 
     fun update(dt: Duration) {
-        activeScript?.let { script ->
+        activeLine?.let {
             if (controller.pressed(GameInput.ANY_ACTION)) {
-                println("skipping ${script[activeScriptPosition]}")
-                // if text is not fully displayed, display it fully
-                // TODO
-                // else move to the next block of text
-                activeScriptPosition++
-                if (activeScriptPosition == script.size) {
-                    activeScriptPosition = 0
-                    activeScript = null
-                }
+                println("skipping ${it}")
+                activePortrait = null
+                activeLine = null
+                advanceDialogue()
             }
         }
     }

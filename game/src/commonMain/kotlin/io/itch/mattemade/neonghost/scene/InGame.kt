@@ -7,17 +7,18 @@ import com.littlekt.graphics.g2d.tilemap.tiled.TiledMap
 import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
 import com.littlekt.input.InputMapController
 import com.littlekt.input.InputMapProcessor
+import com.littlekt.util.datastructure.BiMap
 import com.littlekt.util.milliseconds
 import com.littlekt.util.seconds
 import com.soywiz.kds.fastCastTo
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.neonghost.Assets
-import io.itch.mattemade.neonghost.CharacterAnimations
 import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.Game.Companion.IPPU
 import io.itch.mattemade.neonghost.character.DepthBasedRenderable
 import io.itch.mattemade.neonghost.character.enemy.Enemy
 import io.itch.mattemade.neonghost.character.rei.Player
+import io.itch.mattemade.neonghost.event.EventExecutor
 import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.neonghost.tempo.UI
 import io.itch.mattemade.neonghost.world.CameraMan
@@ -40,6 +41,7 @@ class InGame(
     private val level: TiledMap,
     private val inputController: InputMapController<GameInput>,
     private val choreographer: Choreographer,
+    eventState: MutableMap<String, Int>,
     private val onGameOver: () -> Unit,
 ) : Releasing by Self() {
 
@@ -64,8 +66,25 @@ class InGame(
     ).releasing()
     val texture = sharedFrameBuffer.textures[0]
 
-    private val ui by lazy { UI(context, player, inputController) }
-    private val isInDialogue: Boolean get() = ui.isInDialogue
+    private val ui by lazy { UI(context, player, inputController, ::advanceDialog) }
+
+    private val eventExecutor by lazy {
+        EventExecutor(
+            assets,
+            player,
+            ui,
+            cameraMan,
+            eventState,
+            ::createEnemy,
+            ::onTriggerEventCallback,
+            ::onEventFinished
+        )
+    }
+    private val isInDialogue: Boolean get() = eventExecutor.isInDialogue
+    private fun advanceDialog() {
+        eventExecutor.advance()
+    }
+
 
     private val levelHeight by lazy { level.height * level.tileHeight }
     private val floors = mutableListOf<Floor>()
@@ -79,7 +98,7 @@ class InGame(
                     }
                 }
             }
-            setContactListener(GeneralContactListener(::onTriggerEvent))
+            setContactListener(GeneralContactListener(::enterTrigger, ::exitTrigger))
         }.registerAsContextDisposer(Body::class) {
             println("destorying body $it")
             destroyBody(it as Body)
@@ -118,84 +137,81 @@ class InGame(
     private val cameraMan by lazy {
         val tempVec2 = Vec2(playerSpawnPosition.x, Game.visibleWorldHeight / 2f)
         CameraMan(world, tempVec2).apply {
-            lookAt { tempVec2.set(player.x, Game.visibleWorldHeight / 2f) }
-            //setRestricting(true)
+            lookAt { it.set(player.x, Game.visibleWorldHeight / 2f) }
         }
     }
 
-    private val triggers: MutableList<Trigger> by lazy {
+    private val triggers: BiMap<String, Trigger> by lazy {
+        val result = BiMap<String, Trigger>()
         level.layers.asSequence().filterIsInstance<TiledObjectLayer>()
-            .first { it.name == "trigger" }.objects.map {
-                Trigger(
-                    world,
-                    it.bounds,
-                    levelHeight,
-                    it.name
+            .first { it.name == "trigger" }.objects.forEach {
+                result.put(
+                    it.name, Trigger(
+                        world,
+                        it.bounds,
+                        levelHeight,
+                        it.name,
+                        it.properties
+                    )
                 )
-            }.toMutableList()
+            }
+        result
     }
 
     private val worldStep = 1f / 60f
     private var worldAccumulator = 0f
 
-    private var triggeredEvents = mutableListOf<Trigger>()
+    private var enterTriggers = mutableSetOf<Trigger>()
+    private var exitTriggers = mutableSetOf<Trigger>()
 
-    private fun onTriggerEvent(trigger: Trigger) {
+    private fun onEventFinished() {
+
+    }
+
+    private fun onTriggerEventCallback(event: String) {
+        println("event triggered ${event}")
+    }
+
+    private fun enterTrigger(trigger: Trigger) {
         println("triggered ${trigger.name}")
-        triggeredEvents.add(trigger)
+        enterTriggers.add(trigger)
+    }
+    private fun exitTrigger(trigger: Trigger) {
+        println("exit from trigger ${trigger.name}")
+        if (enterTriggers.contains(trigger)) {
+            enterTriggers.remove(trigger)
+        } else {
+            exitTriggers.add(trigger)
+        }
     }
 
     private fun processTriggers() {
-        triggeredEvents.forEach {
-            processTrigger(it)
+        if (eventExecutor.isInDialogue || eventExecutor.isFighting) {
+            return
         }
-        triggeredEvents.clear()
-    }
-
-    private fun processTrigger(trigger: Trigger) {
-        trigger.release()
-        triggers.remove(trigger)
-        when (trigger.name) {
-            "dialogue1" -> ui.launchScript(assets.script.test1)
-            "fight1" -> spawnEnemies(1)
-            "fight2" -> spawnEnemies(2)
-            "fight3" -> spawnEnemies(3)
-        }
-    }
-
-    private fun spawnEnemies(count: Int = 1) {
-        cameraMan.lookAt(null)
-        cameraMan.restricting = true
-        when (count) {
-            1 -> {
-                createEnemy(assets.animation.punkAnimations, 1f, 5)
-                createEnemy(assets.animation.punkAnimations, 1f, 5)
-            }
-
-            2 -> {
-                createEnemy(assets.animation.guardAnimations, 3f, 8)
-                createEnemy(assets.animation.guardAnimations, 3f, 8)
-                createEnemy(assets.animation.guardAnimations, 3f, 8)
-            }
-
-            3 -> {
-                createEnemy(assets.animation.punkAnimations, 1f, 5)
-                createEnemy(assets.animation.punkAnimations, 1f, 5)
-                createEnemy(assets.animation.guardAnimations, 3f, 8)
-                createEnemy(assets.animation.guardAnimations, 3f, 8)
-                createEnemy(assets.animation.officerAnimations, 5f, 20)
+        enterTriggers.forEach {
+            when (it.properties["type"]?.string) {
+                "trigger" -> eventExecutor.execute(it)
+                "interaction" -> {
+                    // TODO: add interaction UI
+                    println("adds interaction with ${it.name}")
+                }
             }
         }
-        createEnemy(assets.animation.punkAnimations, 1f, 5)
-        /*createEnemy(assets.animation.guardAnimations, 3f, 8)
-        createEnemy(assets.animation.punkAnimations, 1f, 5)
-        createEnemy(assets.animation.officerAnimations, 5f, 20)*/
+        enterTriggers.clear()
+        exitTriggers.forEach {
+            when (it.properties["type"]?.string) {
+                "interaction" -> {
+                    // TODO: remove interaction UI
+                    println("removes interaction with ${it.name}")
+                }
+            }
+        }
+        exitTriggers.clear()
     }
 
     private fun createEnemy(
-        characterAnimations: CharacterAnimations,
-        difficulty: Float,
-        health: Int
+        enemySpec: EventExecutor.EnemySpec
     ): Enemy {
         val offsetX =
             if (Random.nextBoolean()) -Game.visibleWorldWidth / 2f - 0.5f else Game.visibleWorldWidth / 2f + 0.5f
@@ -206,12 +222,12 @@ class InGame(
             player,
             world,
             assets,
-            characterAnimations,
+            enemySpec.characterAnimations,
             inputController,
             assets.objects.particleSimulator,
             context.vfs,
-            difficulty = difficulty,
-            initialHeath = health,
+            difficulty = enemySpec.difficulty,
+            initialHeath = enemySpec.health,
             canAct = { !isInDialogue },
             ::onEnemyDeath
         )
@@ -233,9 +249,10 @@ class InGame(
     private var time = 0f
 
     private var music = false
+
     init {
         choreographer.play(assets.music.background)
-        inputController.addInputMapProcessor(object: InputMapProcessor<GameInput> {
+        inputController.addInputMapProcessor(object : InputMapProcessor<GameInput> {
             override fun onActionDown(inputType: GameInput): Boolean {
                 if (inputType == GameInput.START) {
                     choreographer.play(if (music) assets.music.background else assets.music.background1c)
@@ -247,29 +264,6 @@ class InGame(
         })
         triggers // to initialize
     }
-
-    private fun makeCameraLookAtPlayer(delay: Float) {
-        val started = time
-        val shouldBeAtPlayerAt = time + delay
-        val position = Vec2()
-        val startPositionX = cameraMan.position.x
-        cameraMan.lookAt {
-            if (time >= shouldBeAtPlayerAt) {
-                position.set(player.x, Game.visibleWorldHeight / 2f)
-            } else {
-                val passed = time - started
-                position.set(
-                    startPositionX + (player.x - startPositionX) * interpolate(passed / delay),
-                    Game.visibleWorldHeight / 2f
-                )
-            }
-            position
-        }
-
-        cameraMan.restricting = false
-    }
-
-    private fun interpolate(value: Float): Float = 3 * value * value - 2 * value * value * value
 
     private fun updateWorld(dt: Duration, camera: Camera) {
         val millis = dt.milliseconds
@@ -290,7 +284,7 @@ class InGame(
             deadEnemies.forEach { it.release() }
             deadEnemies.clear()
             if (enemies.size == 0) {
-                makeCameraLookAtPlayer(2f)
+                eventExecutor.advance()
             }
         }
         //assets.objects.particleSimulator.update(dt)
@@ -301,7 +295,7 @@ class InGame(
         }
         processTriggers()
         depthBasedDrawables.sortBy { it.depth }
-        cameraMan.update()
+        cameraMan.update(dt)
 
         camera.position.set(cameraMan.position.x, cameraMan.position.y, 0f)
     }
@@ -327,7 +321,6 @@ class InGame(
     }
 
     fun onAnimationEvent(event: String) {
-        println("general animation event: $event")
         when (event) {
             "punch" -> player.activatePunch()
         }

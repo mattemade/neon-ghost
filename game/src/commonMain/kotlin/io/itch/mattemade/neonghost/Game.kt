@@ -52,6 +52,8 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     private var fpsCheckTimeout = 5000f
     private var framesRenderedInPeriod = 0
 
+    private val eventState = mutableMapOf<String, Int>()
+
     private fun restartGame() {
         inGame = InGame(
             context,
@@ -59,6 +61,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             assets.level.testRoom,
             inputController,
             choreographer,
+            eventState,
             ::restartGame
         )
     }
@@ -218,3 +221,6 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
         const val visibleWorldHeight = (virtualHeight / PPU).toInt()
     }
 }
+
+val Float.pixelPerfectPosition: Float
+    get() = (this * Game.PPU).toInt().toFloat() * Game.IPPU

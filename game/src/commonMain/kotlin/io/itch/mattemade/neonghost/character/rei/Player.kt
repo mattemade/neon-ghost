@@ -22,6 +22,7 @@ import com.littlekt.util.seconds
 import com.soywiz.korma.geom.Angle
 import com.soywiz.korma.geom.radians
 import io.itch.mattemade.blackcat.input.GameInput
+import io.itch.mattemade.neonghost.pixelPerfectPosition
 import io.itch.mattemade.utils.animation.SignallingAnimationPlayer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
@@ -174,11 +175,12 @@ class Player(
         body.isAwake = true
     }
 
-    private fun stopBody() {
+    fun stopBody(resetAnimationToIdle: Boolean = false) {
+        if (resetAnimationToIdle) {
+            currentAnimation = animations.idle
+        }
         body.linearVelocity.set(0f, 0f)
         tempVec2.set(body.position)
-        tempVec2.x = (tempVec2.x * Game.PPU).toInt().toFloat() * Game.IPPU
-        tempVec2.y = (tempVec2.y * Game.PPU).toInt().toFloat() * Game.IPPU
         body.setTransform(tempVec2, Angle.ZERO)
     }
 
@@ -230,17 +232,7 @@ class Player(
                 return
             }
             movingToBeat = false
-            //body.linearVelocity.set(0f, 0f)
         }
-
-
-/*        if (anyAction || moving) {
-            if (!matchBeat) {
-                println("not moving to beat! $toBeat, $toMeasure")
-                movingToBeat = false
-                movingOffBeat = true
-            }
-        }*/
 
         if (moving) {
             wasPunching = false
@@ -254,7 +246,6 @@ class Player(
 
 
             if (matchBeat && !keepMoving) {
-                println("dash to beat!")
                 movingToBeat = true
                 dashCooldown = 200f
                 body.linearVelocity.set(xMovement * 2.5f, yMovement * 2.5f)
@@ -302,12 +293,10 @@ class Player(
             movingOffBeat = !matchBeat
             if (isFacingLeft) {
                 leftPunchTargets.forEach {
-                    println("left punch $it")
                     it.hit(body.position, movingToBeat)
                 }
             } else {
                 rightPunchTargets.forEach {
-                    println("right punch $it")
                     it.hit(body.position, movingToBeat)
                 }
             }
@@ -315,7 +304,6 @@ class Player(
     }
 
     private fun activateParticles() {
-        println("position: ${body.position.x}")
         /*assets.sound.wind.play(
             volume = 0.5f,
             positionX = body.position.x,
@@ -370,13 +358,11 @@ class Player(
     private var shaperRenderer: ShapeRenderer? = null
 
     override fun render(batch: Batch) {
-        //println("player body: ${body.position.x}, ${body.position.y}")
         currentAnimation.currentKeyFrame?.let { frame ->
             val width = frame.width / Game.PPU
             val height = frame.height / Game.PPU
-            val positionX = texturePositionX(width)
-            val positionY = texturePositionY(height)
-            //println("player at $positionX, $positionY")
+            val positionX = texturePositionX(width).pixelPerfectPosition
+            val positionY = texturePositionY(height).pixelPerfectPosition
             batch.draw(
                 frame,
                 positionX,

@@ -36,7 +36,7 @@
         }, 
         {
          "data":[0, 0, 0, 0, 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 67, 0, 0, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -103,11 +103,93 @@
                  "height":144,
                  "id":9,
                  "name":"fight1",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"player stop\npunk>:Hey, stop!\nstate 1\nfight punk,punk,guard\npunk>:I will remember you!\n"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":48,
                  "x":384,
+                 "y":96
+                }, 
+                {
+                 "height":21.6666666666667,
+                 "id":10,
+                 "name":"interaction1",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"terminal<:nothing to see here\nstate 1\n"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":288,
+                 "y":96
+                }, 
+                {
+                 "height":21.6667,
+                 "id":11,
+                 "name":"interaction2",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"terminal<:Life system support: ON\\Main generator: ON\\Reserve generator: OFF\n\nchoose Turn off, off; Exit, exit\nchoice off\nterminal<:Turning life system support off...\nterminal<:Life system support: OFFLINE\\Main generator: OFF\\Reserve generator: OFF\ntrigger launchGhost\nstate 1\nchoice\n\n"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"terminal<:Life system support: OFFLINEReserve generator: ON\n"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":480,
+                 "y":96
+                }, 
+                {
+                 "height":144,
+                 "id":12,
+                 "name":"dialogue1",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"punk>:Oh, this is that girl!\nrei<:Shit...\npunk>:Come on, guys, let's kick her ass!\nrei<:Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\npunk>:Shut up and take this\npunk>:Are you ready?\n\nchoose Yes, ready; No, not_ready\nchoice ready\npunk>:Let me see that!\nchoice not_ready\npunk>:Well, you better be!\nchoose end\n\npunk>:Come on, guys!\\Here we go!\n\ntrigger fight1"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":528,
                  "y":96
                 }],
          "opacity":1,
@@ -129,7 +211,7 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":384,
+                 "x":240,
                  "y":144
                 }, 
                 {
@@ -141,7 +223,7 @@
                  "visible":true,
                  "width":48,
                  "x":480,
-                 "y":96
+                 "y":192
                 }, 
                 {
                  "height":0,
@@ -160,8 +242,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":9,
- "nextobjectid":10,
+ "nextlayerid":10,
+ "nextobjectid":13,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -178,6 +260,10 @@
         {
          "firstgid":39,
          "source":"Outside-Window 48_48.tsj"
+        }, 
+        {
+         "firstgid":67,
+         "source":"terminal_tile.tsj"
         }],
  "tilewidth":48,
  "type":"map",
