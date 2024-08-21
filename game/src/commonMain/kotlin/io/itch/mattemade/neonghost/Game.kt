@@ -1,6 +1,5 @@
 package io.itch.mattemade.neonghost
 
-import io.itch.mattemade.neonghost.scene.InGame
 import com.littlekt.Context
 import com.littlekt.ContextListener
 import com.littlekt.graph.node.resource.HAlign
@@ -19,6 +18,7 @@ import com.littlekt.util.milliseconds
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.blackcat.input.bindInputs
 import io.itch.mattemade.neonghost.scene.GhostOverlay
+import io.itch.mattemade.neonghost.scene.InGame
 import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
@@ -53,7 +53,14 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     private var framesRenderedInPeriod = 0
 
     private fun restartGame() {
-        inGame = InGame(context, assets, inputController, choreographer, ::restartGame)
+        inGame = InGame(
+            context,
+            assets,
+            assets.level.testRoom,
+            inputController,
+            choreographer,
+            ::restartGame
+        )
     }
 
     private fun onAnimationEvent(event: String) {
@@ -158,8 +165,8 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             Fonts.default.draw(
                 batch,
                 "LOADING",
-                1.5f* PPU,
-                0.5f* PPU,
+                1.5f * PPU,
+                0.5f * PPU,
                 align = HAlign.CENTER,
                 scale = scale.toFloat()
             )
@@ -182,7 +189,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             }
 
             batch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.DST_ALPHA)
-            batch.shader = assets.shaders.test
+            batch.shader = assets.shader.test
             batch.draw(
                 ghostOverlay.texture,
                 x = offsetX,

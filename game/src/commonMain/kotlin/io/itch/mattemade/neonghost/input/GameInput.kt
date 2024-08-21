@@ -18,8 +18,8 @@ enum class GameInput {
     JUMP,
     ATTACK,
 
-    PAUSE,
-    RESTART,
+    START,
+    SELECT,
     ANY,
     ANY_ACTION,
 }
@@ -49,8 +49,8 @@ fun Context.bindInputs(): InputMapController<GameInput> =
         addBinding(GameInput.JUMP, listOf(Key.SPACE, Key.K, Key.Z).any().action(), buttons = listOf(GameButton.XBOX_A).any().action())
         addBinding(GameInput.ATTACK, listOf(Key.SHIFT_LEFT, Key.J, Key.X).any().action(), buttons = listOf(GameButton.XBOX_X).any().action())
 
-        addBinding(GameInput.PAUSE, listOf(Key.P).any(), buttons = listOf(GameButton.START).any())
-        addBinding(GameInput.RESTART, listOf(Key.R), buttons = listOf(GameButton.SELECT))
+        addBinding(GameInput.START, listOf(Key.ENTER).any(), buttons = listOf(GameButton.START).any())
+        addBinding(GameInput.SELECT, listOf(Key.R), buttons = listOf(GameButton.SELECT))
 
         addBinding(GameInput.ANY, anyKey, buttons = anyButton)
         addBinding(GameInput.ANY_ACTION, anyActionKey, buttons = anyActionButton)

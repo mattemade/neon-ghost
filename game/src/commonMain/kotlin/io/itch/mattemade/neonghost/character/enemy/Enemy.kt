@@ -15,6 +15,7 @@ import com.littlekt.graphics.g2d.shape.ShapeRenderer
 import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapController
 import com.littlekt.math.MutableVec2f
+import com.soywiz.korma.geom.Angle
 import com.soywiz.korma.geom.radians
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.utils.animation.SignallingAnimationPlayer
@@ -41,6 +42,7 @@ class Enemy(
     private val vfs: Vfs,
     private val difficulty: Float = 1f,
     val initialHeath: Int = 3,
+    private val canAct: () -> Boolean,
     private val onDeath: (Enemy) -> Unit,
 ) : Releasing by Self(),
     DepthBasedRenderable {
@@ -178,7 +180,20 @@ class Enemy(
         }
     }
 
+    private fun stopBody() {
+        body.linearVelocity.set(0f, 0f)
+        tempVec2.set(body.position)
+        tempVec2.x = (tempVec2.x * Game.PPU).toInt().toFloat() * Game.IPPU
+        tempVec2.y = (tempVec2.y * Game.PPU).toInt().toFloat() * Game.IPPU
+        body.setTransform(tempVec2, Angle.ZERO)
+    }
+
     override fun update(dt: Duration, millis: Float, toBeat: Float, toMeasure: Float) {
+        if (!canAct()) {
+            stopBody()
+            currentMagicalAnimation.update(dt)
+            return
+        }
         if (hitCooldown > 0f) {
             punchCooldown = 0f
             hitCooldown -= millis
@@ -193,7 +208,7 @@ class Enemy(
             return
         }
         if (punchCooldown > 0f) {
-            body.linearVelocity.set(0f, 0f)
+            stopBody()
             punchCooldown -= millis
             if (punchCooldown > 0f) {
                 currentMagicalAnimation.update(dt, ::onAnimationEvent)
@@ -245,7 +260,7 @@ class Enemy(
 
         if (direction.x == 0f && direction.y == 0f || !isAggressive) {
             currentMagicalAnimation = idle
-            body.linearVelocity.set(0f, 0f)
+            stopBody()
         } else if (speed != 0f) {
             currentMagicalAnimation = walk
             body.linearVelocity.set(direction.x, direction.y)

@@ -1,6 +1,7 @@
 package io.itch.mattemade.neonghost.tempo
 
 import com.littlekt.Context
+import com.littlekt.audio.AudioClipEx
 import com.littlekt.audio.AudioStreamEx
 import com.littlekt.util.seconds
 import io.itch.mattemade.neonghost.Assets
@@ -21,15 +22,16 @@ class Choreographer(private val context: Context) {
     var toMeasure = 0f
         private set
 
-    private var currentlyPlaying: AudioStreamEx? = null
+    private var currentlyPlaying: AudioClipEx? = null
+    private var currentlyPlayingId: Int = 0
     val isActive: Boolean
         get() = currentlyPlaying != null
 
     fun play(music: StreamBpm) {
-        currentlyPlaying?.stop()
-        context.vfs.launch { music.stream.play(volume = 0.1f, loop = true) }
+        currentlyPlaying?.stop(currentlyPlayingId)
+        currentlyPlayingId = music.stream.play(volume = 0.1f, referenceDistance = 10000f, loop = true)
         currentlyPlaying = music.stream
-        time = -0.2f
+        time = music.offset
         secondsPerBeat = 60f / music.bpm
         doubleSecondsPerBeat = secondsPerBeat * 2f
         secondsPerMeasure = secondsPerBeat * 4

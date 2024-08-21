@@ -56,7 +56,7 @@ class GhostOverlay(
 
         val prevX = ghostPosition.x
         ghostPosition.set(
-            halfScreenWidth + halfScreenWidth * cos(time * 0.75f),
+            halfScreenWidth + halfScreenWidth * cos(time * 0.6f),
             halfScreenHeight + halfScreenHeight * sin(time * 1.5f)
         )
         if (isFacingLeft != ghostPosition.x < prevX) {

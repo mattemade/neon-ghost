@@ -44,6 +44,7 @@ class Player(
     private val particleSimulator: ParticleSimulator,
     private val vfs: Vfs,
     val initialHealth: Int,
+    private val canAct: () -> Boolean,
     val gameOver: () -> Unit
 ) : Releasing by Self(),
     DepthBasedRenderable {
@@ -182,6 +183,11 @@ class Player(
     }
 
     override fun update(dt: Duration, millis: Float, toBeat: Float, toMeasure: Float) {
+        if (!canAct()) {
+            stopBody()
+            currentAnimation.update(dt)
+            return
+        }
         val xMovement = controller.axis(GameInput.HORIZONTAL)
         val yMovement = controller.axis(GameInput.VERTICAL)
         val moving = xMovement != 0f || yMovement != 0f
@@ -338,7 +344,7 @@ class Player(
                                 firstMeaningfulX = x
                             }
                             particleSimulator.alloc(
-                                Textures.white,
+                                assets.texture.white,
                                 xOffset + width * 2 - x / Game.PPU,
                                 yOffset + y / Game.PPU
                             )

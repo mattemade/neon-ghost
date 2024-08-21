@@ -10,7 +10,7 @@ import org.jbox2d.dynamics.Filter
 import org.jbox2d.dynamics.FixtureDef
 import org.jbox2d.dynamics.World
 
-class CameraMan(world: World) {
+class CameraMan(world: World, initialPosition: Vec2) {
 
     private var observing: (() -> Vec2)? = null
     var smooth: Boolean = false
@@ -22,7 +22,7 @@ class CameraMan(world: World) {
         BodyDef(
             type = BodyType.STATIC,
         ).apply {
-            position.set(Game.visibleWorldWidth / 2f, Game.visibleWorldHeight / 2f)
+            position.set(initialPosition)
         })
     private val fixture = body.createFixture(
         FixtureDef(

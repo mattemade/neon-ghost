@@ -1,32 +1,29 @@
 package io.itch.mattemade.neonghost.scene
 
+import com.littlekt.Context
+import com.littlekt.graphics.Camera
+import com.littlekt.graphics.g2d.Batch
+import com.littlekt.graphics.g2d.tilemap.tiled.TiledMap
+import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
+import com.littlekt.input.InputMapController
+import com.littlekt.input.InputMapProcessor
+import com.littlekt.util.milliseconds
+import com.littlekt.util.seconds
+import com.soywiz.kds.fastCastTo
+import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.CharacterAnimations
 import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.Game.Companion.IPPU
-import io.itch.mattemade.neonghost.Game.Companion.virtualHeight
-import io.itch.mattemade.neonghost.Game.Companion.virtualWidth
 import io.itch.mattemade.neonghost.character.DepthBasedRenderable
 import io.itch.mattemade.neonghost.character.enemy.Enemy
 import io.itch.mattemade.neonghost.character.rei.Player
+import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.neonghost.tempo.UI
 import io.itch.mattemade.neonghost.world.CameraMan
 import io.itch.mattemade.neonghost.world.Floor
 import io.itch.mattemade.neonghost.world.GeneralContactListener
 import io.itch.mattemade.neonghost.world.Trigger
-import com.littlekt.Context
-import com.littlekt.graphics.Camera
-import com.littlekt.graphics.Color
-import com.littlekt.graphics.MutableColor
-import com.littlekt.graphics.g2d.Batch
-import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
-import com.littlekt.graphics.gl.BlendFactor
-import com.littlekt.graphics.gl.State
-import com.littlekt.input.InputMapController
-import com.littlekt.util.milliseconds
-import com.littlekt.util.seconds
-import io.itch.mattemade.blackcat.input.GameInput
-import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
 import io.itch.mattemade.utils.render.PixelRender
@@ -40,6 +37,7 @@ import kotlin.time.Duration
 class InGame(
     private val context: Context,
     private val assets: Assets,
+    private val level: TiledMap,
     private val inputController: InputMapController<GameInput>,
     private val choreographer: Choreographer,
     private val onGameOver: () -> Unit,
@@ -66,13 +64,14 @@ class InGame(
     ).releasing()
     val texture = sharedFrameBuffer.textures[0]
 
-    val ui by lazy { UI(context, player) }
+    private val ui by lazy { UI(context, player, inputController) }
+    private val isInDialogue: Boolean get() = ui.isInDialogue
 
+    private val levelHeight by lazy { level.height * level.tileHeight }
     private val floors = mutableListOf<Floor>()
     private val world by lazy {
         World(gravityX = 0f, gravityY = 0f).apply {
-            val level = assets.level.testRoom
-            val mapHeight = level.height * level.tileHeight
+            val mapHeight = levelHeight
             level.layers.asSequence().filterIsInstance<TiledObjectLayer>().forEach {
                 if (it.name == "floor") {
                     it.objects.forEach {
@@ -86,15 +85,22 @@ class InGame(
             destroyBody(it as Body)
         }
     }
+    private val playerSpawnPosition by lazy {
+        val placement = level.layer("spawn").fastCastTo<TiledObjectLayer>().objects.first()
+        val x = placement.bounds.x + placement.bounds.width / 2f
+        val y = levelHeight - (placement.bounds.y - placement.bounds.height / 2f)
+        Vec2(x * Game.IPPU, y * Game.IPPU)
+    }
     private val player by lazy {
         Player(
-            Vec2(100f / Game.PPU, 100f / Game.PPU),
+            playerSpawnPosition,
             world,
             assets,
             inputController,
             assets.objects.particleSimulator,
             context.vfs,
             initialHealth = 10,
+            canAct = { !isInDialogue },
             ::gameOver
         )
     }
@@ -110,20 +116,20 @@ class InGame(
     private val deadEnemies = mutableListOf<Enemy>()
 
     private val cameraMan by lazy {
-        val tempVec2 = Vec2()
-        CameraMan(world).apply {
+        val tempVec2 = Vec2(playerSpawnPosition.x, Game.visibleWorldHeight / 2f)
+        CameraMan(world, tempVec2).apply {
             lookAt { tempVec2.set(player.x, Game.visibleWorldHeight / 2f) }
             //setRestricting(true)
         }
     }
 
     private val triggers: MutableList<Trigger> by lazy {
-        assets.level.testRoom.layers.asSequence().filterIsInstance<TiledObjectLayer>()
+        level.layers.asSequence().filterIsInstance<TiledObjectLayer>()
             .first { it.name == "trigger" }.objects.map {
                 Trigger(
                     world,
                     it.bounds,
-                    assets.level.testRoom.height * assets.level.testRoom.tileHeight,
+                    levelHeight,
                     it.name
                 )
             }.toMutableList()
@@ -150,6 +156,7 @@ class InGame(
         trigger.release()
         triggers.remove(trigger)
         when (trigger.name) {
+            "dialogue1" -> ui.launchScript(assets.script.test1)
             "fight1" -> spawnEnemies(1)
             "fight2" -> spawnEnemies(2)
             "fight3" -> spawnEnemies(3)
@@ -164,11 +171,13 @@ class InGame(
                 createEnemy(assets.animation.punkAnimations, 1f, 5)
                 createEnemy(assets.animation.punkAnimations, 1f, 5)
             }
+
             2 -> {
                 createEnemy(assets.animation.guardAnimations, 3f, 8)
                 createEnemy(assets.animation.guardAnimations, 3f, 8)
                 createEnemy(assets.animation.guardAnimations, 3f, 8)
             }
+
             3 -> {
                 createEnemy(assets.animation.punkAnimations, 1f, 5)
                 createEnemy(assets.animation.punkAnimations, 1f, 5)
@@ -183,10 +192,15 @@ class InGame(
         createEnemy(assets.animation.officerAnimations, 5f, 20)*/
     }
 
-    private fun createEnemy(characterAnimations: CharacterAnimations, difficulty: Float, health: Int): Enemy {
+    private fun createEnemy(
+        characterAnimations: CharacterAnimations,
+        difficulty: Float,
+        health: Int
+    ): Enemy {
         val offsetX =
             if (Random.nextBoolean()) -Game.visibleWorldWidth / 2f - 0.5f else Game.visibleWorldWidth / 2f + 0.5f
-        val offsetY = Game.visibleWorldHeight * 4f / 5f - Random.nextFloat() * Game.visibleWorldHeight / 3f
+        val offsetY =
+            Game.visibleWorldHeight * 4f / 5f - Random.nextFloat() * Game.visibleWorldHeight / 3f
         val enemy = Enemy(
             Vec2(cameraMan.position.x + offsetX, offsetY),
             player,
@@ -198,6 +212,7 @@ class InGame(
             context.vfs,
             difficulty = difficulty,
             initialHeath = health,
+            canAct = { !isInDialogue },
             ::onEnemyDeath
         )
         enemies.add(enemy)
@@ -217,8 +232,19 @@ class InGame(
 
     private var time = 0f
 
+    private var music = false
     init {
         choreographer.play(assets.music.background)
+        inputController.addInputMapProcessor(object: InputMapProcessor<GameInput> {
+            override fun onActionDown(inputType: GameInput): Boolean {
+                if (inputType == GameInput.START) {
+                    choreographer.play(if (music) assets.music.background else assets.music.background1c)
+                    music = !music
+                }
+
+                return false
+            }
+        })
         triggers // to initialize
     }
 
@@ -232,7 +258,10 @@ class InGame(
                 position.set(player.x, Game.visibleWorldHeight / 2f)
             } else {
                 val passed = time - started
-                position.set(startPositionX + (player.x - startPositionX) * interpolate(passed / delay), Game.visibleWorldHeight / 2f)
+                position.set(
+                    startPositionX + (player.x - startPositionX) * interpolate(passed / delay),
+                    Game.visibleWorldHeight / 2f
+                )
             }
             position
         }
@@ -246,7 +275,14 @@ class InGame(
         val millis = dt.milliseconds
         time += dt.seconds
 
-        depthBasedDrawables.forEach { it.update(dt, millis, choreographer.toBeat, choreographer.toMeasure) }
+        depthBasedDrawables.forEach {
+            it.update(
+                dt,
+                millis,
+                choreographer.toBeat,
+                choreographer.toMeasure
+            )
+        }
         if (deadEnemies.isNotEmpty()) {
             enemies.removeAll(deadEnemies)
             depthBasedDrawables.removeAll(deadEnemies)
@@ -271,11 +307,12 @@ class InGame(
     }
 
     private fun renderWorld(dt: Duration, camera: Camera, batch: Batch) {
-        assets.level.testRoom.render(batch, camera, scale = IPPU)
+        level.render(batch, camera, scale = IPPU)
         depthBasedDrawables.forEach { it.render(batch) }
     }
 
     private fun updateUi(dt: Duration, camera: Camera) {
+        ui.update(dt)
         camera.position.x = Game.virtualWidth / 2f
         camera.position.y = Game.virtualHeight / 2f
     }

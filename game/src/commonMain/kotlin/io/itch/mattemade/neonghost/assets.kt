@@ -3,6 +3,7 @@ package io.itch.mattemade.neonghost
 import com.littlekt.Context
 import com.littlekt.PreparableGameAsset
 import com.littlekt.Releasable
+import com.littlekt.audio.AudioClipEx
 import com.littlekt.audio.AudioStreamEx
 import com.littlekt.file.vfs.baseName
 import com.littlekt.file.vfs.pathInfo
@@ -21,43 +22,55 @@ import io.itch.mattemade.utils.asset.AssetPack
 import io.itch.mattemade.utils.atlas.RuntimeTextureAtlasPacker
 
 class Assets(context: Context, animationEventListener: (String) -> Unit) : AssetPack(context) {
-    val runtimeTextureAtlasPacker = RuntimeTextureAtlasPacker(context).releasing()
+    private val runtimeTextureAtlasPacker = RuntimeTextureAtlasPacker(context).releasing()
+    private val tileSets by pack { TileSets(context, runtimeTextureAtlasPacker) }
 
-    /*    val normalReiAnimations by pack {
-            CharacterAnimations(
-                context,
-                runtimeTextureAtlasPacker,
-                "rei/normal",
-                animationEventListener
-            )
-        }*/
+    val texture by pack { Textures(context, runtimeTextureAtlasPacker) }
     val animation by pack { Animations(context, runtimeTextureAtlasPacker, animationEventListener) }
+    val sound by pack { Sound(context) }
     val music by pack { Music(context) }
-
-    //val sound by pack { Sound(context) }
+    val script by pack { Script(context) }
     val objects by pack { Objects(context) }
-    val tileSets by pack { TileSets(context, runtimeTextureAtlasPacker) }
-    val shaders by pack { Shaders(context) }
+    val shader by pack { Shaders(context) }
 
-    val atlas by prepare(1) { runtimeTextureAtlasPacker.packAtlas() }
+    private val atlas by prepare(1) { runtimeTextureAtlasPacker.packAtlas() }
 
+    val textDrawer by preparePlain {  }
     val level by pack(2) { Levels(context, atlas) }
 }
 
+class Script(context: Context): AssetPack(context) {
+    val test1 by preparePlain { context.vfs["dialogue/test1.txt"].readLines() }
+}
+
+class Textures(context: Context, private val packer: RuntimeTextureAtlasPacker) :
+    AssetPack(context) {
+    private fun String.pack(): PreparableGameAsset<TextureSlice> =
+        preparePlain { packer.pack(this).await() }
+
+    val dialogueArrow by "texture/dialogue/arrow.png".pack()
+    val white by "texture/misc/white.png".pack()
+    val fontWhite by "texture/dialogue/font_white.png".pack()
+}
 
 class Sound(context: Context) : AssetPack(context) {
-    val wind by prepare { context.resourcesVfs["sound/untitled.mp3"].readAudioClipEx() }
+    //val wind by prepare { context.resourcesVfs["sound/untitled.mp3"].readAudioClipEx() }
+    val speech1 by prepare { context.resourcesVfs["sound/speech1.mp3"].readAudioClipEx() }
 }
 
 class Music(context: Context) : AssetPack(context) {
     val background by prepare {
-        context.resourcesVfs["sound/untitled.mp3"].readAudioStreamEx().bpm(138.6882f)
+        context.resourcesVfs["sound/magical girl 3b.mp3"].readAudioClipEx().asTrack(150f, -0.1f)
+        //context.resourcesVfs["sound/untitled.mp3"].readAudioStreamEx().bpm(138.6882f, -0.2f)
+    }
+    val background1c by prepare {
+        context.resourcesVfs["sound/magical girl 1c.mp3"].readAudioClipEx().asTrack(129.97198f, -0.1f)
     }
 }
 
-data class StreamBpm(val stream: AudioStreamEx, val bpm: Float) : Releasable by stream
+data class StreamBpm(val stream: AudioClipEx, val bpm: Float, val offset: Float) : Releasable by stream
 
-private fun AudioStreamEx.bpm(value: Float) = StreamBpm(this, value)
+private fun AudioClipEx.asTrack(bpm: Float, offset: Float) = StreamBpm(this, bpm, offset)
 
 class Levels(context: Context, atlas: TextureAtlas? = null) : AssetPack(context) {
     val testRoom by prepare {
