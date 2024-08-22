@@ -28,6 +28,7 @@ import org.jbox2d.dynamics.BodyType
 import org.jbox2d.dynamics.Filter
 import org.jbox2d.dynamics.FixtureDef
 import org.jbox2d.dynamics.World
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.time.Duration
 
@@ -59,7 +60,7 @@ class Enemy(
     var health = initialHeath
         private set
 
-    private val body = world.createBody(
+    val body = world.createBody(
         BodyDef(
             type = BodyType.DYNAMIC,
             userData = this,
@@ -95,7 +96,7 @@ class Enemy(
             },
             filter = Filter().apply {
                 categoryBits = ContactBits.ENEMY
-                maskBits = ContactBits.WALL or ContactBits.REI_PUNCH or ContactBits.ENEMY
+                maskBits = ContactBits.WALL or ContactBits.REI_PUNCH or ContactBits.ENEMY or ContactBits.GHOST_AOE
             },
             friction = 2f,
             userData = this
@@ -145,14 +146,14 @@ class Enemy(
     private var hitCooldown = 0f
     var isAggressive = false
 
-    fun hit(from: Vec2, strong: Boolean) {
+    fun hit(from: Vec2, strength: Int) {
         if (health == 0) {
             return
         }
-        health -= 1
+        health = max(0, health - strength)
         hitCooldown = if (health == 0) 500f else 300f
         currentMagicalAnimation = hit
-        if (strong || health == 0) {
+        if (strength > 1 || health == 0) {
             val direction = tempVec2f.set(body.position.x, body.position.y).subtract(from.x, from.y)
             val force = if (health == 0) 3f else 5f / difficulty
             tempVec2f2.set(force, 0f)

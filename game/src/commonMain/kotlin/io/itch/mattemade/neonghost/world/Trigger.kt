@@ -28,7 +28,6 @@ class Trigger(
         ).apply {
             position.set(rect.x + rect.width / 2f, mapHeight - rect.y + rect.height / 2f).mulLocal(
                 Game.IPPU)
-            println("trigger $name at ${position.x}, ${position.y}, height: ${rect.height / Game.PPU}")
         }).apply {
         createFixture(
             FixtureDef(

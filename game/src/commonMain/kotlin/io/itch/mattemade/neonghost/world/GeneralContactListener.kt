@@ -1,10 +1,16 @@
 package io.itch.mattemade.neonghost.world
 
+import com.littlekt.math.MutableVec2f
+import com.littlekt.math.Vec2f
+import com.littlekt.math.geom.cos
+import com.littlekt.math.geom.sin
 import io.itch.mattemade.neonghost.character.enemy.Enemy
 import io.itch.mattemade.neonghost.character.rei.Player
+import io.itch.mattemade.neonghost.scene.GhostOverlay
 import org.jbox2d.callbacks.ContactImpulse
 import org.jbox2d.callbacks.ContactListener
 import org.jbox2d.collision.Manifold
+import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.contacts.Contact
 
 class GeneralContactListener(
@@ -27,8 +33,14 @@ class GeneralContactListener(
                 triggerEnterCallback(trigger)
             }
         }
+        if (contact.ofCategory(ContactBits.GHOST_AOE)) {
+            contact.getUserData<Enemy>()?.let { enemy ->
+                contact.getUserData<GhostBody>()?.targetEnemies?.add(enemy)
+            }
+        }
     }
 
+    private val tempVec2f = MutableVec2f()
     override fun endContact(contact: Contact) {
         if (contact.ofCategory(ContactBits.REI_PUNCH)) {
             contact.getUserData<Enemy>()?.let { enemy ->
@@ -45,7 +57,27 @@ class GeneralContactListener(
                 triggerExitCallback(trigger)
             }
         }
+        if (contact.ofCategory(ContactBits.GHOST_AOE)) {
+            contact.getUserData<Enemy>()?.let { enemy ->
+                contact.getUserData<GhostBody>()?.let { ghostBody ->
+                    tempVec2f.set(enemy.body.position)
+                        .subtract(ghostBody.body.position.x, ghostBody.body.position.y)
+                    val distance = tempVec2f.length()
+                    val angle = tempVec2f.angleTo(Vec2f.X_AXIS)
+                    val referenceDistance = tempVec2f.set(
+                        GhostOverlay.radiusX * cos(angle),
+                        GhostOverlay.radiusY * sin(angle)
+                    ).length()
+                    if (distance > referenceDistance) {
+                        ghostBody.targetEnemies.remove(enemy)
+                    }
+                }
+            }
+        }
     }
+
+    private fun MutableVec2f.set(vec2: Vec2): MutableVec2f =
+        this.apply { set(vec2.x, vec2.y) }
 
     override fun postSolve(contact: Contact, impulse: ContactImpulse) {}
 

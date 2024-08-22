@@ -68,7 +68,6 @@ class EventExecutor(
 
     private fun executeItem() {
         val item = activeEvent?.get(activeEventPosition)?.trim() ?: return
-        println("executing $item")
         if (item.isBlank() || item.startsWith('#')) {
             advance()
             return

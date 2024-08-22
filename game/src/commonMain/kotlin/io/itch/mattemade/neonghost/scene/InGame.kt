@@ -2,11 +2,17 @@ package io.itch.mattemade.neonghost.scene
 
 import com.littlekt.Context
 import com.littlekt.graphics.Camera
+import com.littlekt.graphics.Color
+import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.Batch
+import com.littlekt.graphics.g2d.shape.ShapeRenderer
 import com.littlekt.graphics.g2d.tilemap.tiled.TiledMap
 import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
+import com.littlekt.graphics.g2d.tilemap.tiled.TiledTilesLayer
+import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapController
 import com.littlekt.input.InputMapProcessor
+import com.littlekt.math.MutableVec2f
 import com.littlekt.util.datastructure.BiMap
 import com.littlekt.util.milliseconds
 import com.littlekt.util.seconds
@@ -15,6 +21,8 @@ import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.Game.Companion.IPPU
+import io.itch.mattemade.neonghost.Game.Companion.visibleWorldHeight
+import io.itch.mattemade.neonghost.Game.Companion.visibleWorldWidth
 import io.itch.mattemade.neonghost.character.DepthBasedRenderable
 import io.itch.mattemade.neonghost.character.enemy.Enemy
 import io.itch.mattemade.neonghost.character.rei.Player
@@ -24,6 +32,7 @@ import io.itch.mattemade.neonghost.tempo.UI
 import io.itch.mattemade.neonghost.world.CameraMan
 import io.itch.mattemade.neonghost.world.Floor
 import io.itch.mattemade.neonghost.world.GeneralContactListener
+import io.itch.mattemade.neonghost.world.GhostBody
 import io.itch.mattemade.neonghost.world.Trigger
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
@@ -66,6 +75,12 @@ class InGame(
         ::renderUi
     ).releasing()
     val texture = sharedFrameBuffer.textures[0]
+
+    private val tiledLayers = level.layers.asSequence().filterIsInstance<TiledTilesLayer>()
+    private val floorLayer = tiledLayers.first { it.name == "floor" }
+    private val wallLayer = tiledLayers.first { it.name == "wall" }
+    private val decorationLayer = tiledLayers.first { it.name == "decoration" }
+    private val foregroundLayer = tiledLayers.first { it.name == "foreground" }
 
     private val ui by lazy {
         UI(
@@ -119,7 +134,6 @@ class InGame(
             }
             setContactListener(GeneralContactListener(::enterTrigger, ::exitTrigger))
         }.registerAsContextDisposer(Body::class) {
-            println("destorying body $it")
             destroyBody(it as Body)
         }
     }
@@ -191,21 +205,21 @@ class InGame(
     }
 
     private fun onTriggerEventCallback(event: String) {
-        println("event triggered ${event}")
         when (event) {
             "changeMusic" -> changeMusic()
-            "launchGhost" -> ghostOverlay.activate()
+            "launchGhost" -> {
+                ghostOverlay.activate()
+                createGhostBody()
+            }
             "transform" -> player.transform()
         }
     }
 
     private fun enterTrigger(trigger: Trigger) {
-        println("triggered ${trigger.name}")
         enterTriggers.add(trigger)
     }
 
     private fun exitTrigger(trigger: Trigger) {
-        println("exit from trigger ${trigger.name}")
         if (enterTriggers.contains(trigger)) {
             enterTriggers.remove(trigger)
         } else {
@@ -250,6 +264,13 @@ class InGame(
         return shouldBeRemoved
     }
 
+    private var ghostBody: GhostBody? = null
+    private fun createGhostBody() {
+        if (ghostBody == null) {
+            ghostBody = GhostBody(world, ghostOverlay)
+        }
+    }
+
     private fun createEnemy(
         enemySpec: EventExecutor.EnemySpec
     ): Enemy {
@@ -287,6 +308,11 @@ class InGame(
     }
 
     private var time = 0f
+    private var ghostCasting = 0f
+    private var ghostStaying = 0f
+    private var ghostCooldown = 0f
+    private val ghostEdgeColor = MutableColor(1f, 1f, 1f, 0.9f).toFloatBits()
+    private val ghostFillColor = MutableColor(1f, 1f, 1f, 0.75f).toFloatBits()
 
     private var music = false
 
@@ -302,6 +328,9 @@ class InGame(
             }
         })
         triggers // to initialize
+        if (ghostOverlay.isActive) {
+            createGhostBody()
+        }
     }
 
     private fun changeMusic() {
@@ -309,9 +338,46 @@ class InGame(
         music = !music
     }
 
+    private val tempVec2 = Vec2()
     private fun updateWorld(dt: Duration, camera: Camera) {
         val millis = dt.milliseconds
         time += dt.seconds
+
+        ghostBody?.let { ghostBody ->
+            if (ghostOverlay.isMoving) {
+                ghostBody.updatePosition(
+                    tempVec2.set(ghostOverlay.ghostPosition.x, ghostOverlay.ghostPosition.y).addLocal(
+                        cameraMan.position.x - visibleWorldWidth / 2f,
+                        cameraMan.position.y - visibleWorldHeight / 2f
+                    )
+                )
+                if (ghostCooldown > 0f) {
+                    ghostCooldown -= dt.seconds
+                    if (ghostCooldown <= 0f) {
+                        ghostCooldown = 0f
+                    }
+                }
+            } else if (ghostCasting > 0f) {
+                ghostCasting -= dt.seconds
+                if (ghostCasting <= 0f) {
+                    if (ghostBody.targetEnemies.isNotEmpty()) {
+                        ghostBody.targetEnemies.forEach {
+                            it.hit(ghostBody.position, 3)
+                        }
+                        ghostBody.targetEnemies.clear()
+                    }
+                    ghostStaying = GhostOverlay.postCastTime + ghostCasting
+                    ghostCasting = 0f
+                }
+            } else if (ghostStaying > 0f) {
+                ghostStaying -= dt.seconds
+                if (ghostStaying <= 0f) {
+                    ghostOverlay.isMoving = true
+                    ghostCooldown = GhostOverlay.castCooldown + ghostStaying
+                    ghostStaying = 0f
+                }
+            }
+        }
 
         depthBasedDrawables.forEach {
             it.update(
@@ -341,12 +407,56 @@ class InGame(
         depthBasedDrawables.sortBy { it.depth }
         cameraMan.update(dt)
 
+        if (ghostOverlay.isMoving && ghostCooldown <= 0f) {
+            ghostBody?.let { ghostBody ->
+                if (ghostBody.targetEnemies.isNotEmpty()) {
+                    ghostOverlay.isMoving = false
+                    ghostCasting = GhostOverlay.castTime
+                }
+            }
+        }
+
         camera.position.set(cameraMan.position.x, cameraMan.position.y, 0f)
     }
 
+    private var shapeRenderer: ShapeRenderer? = null
+    private val tempVec2f = MutableVec2f()
     private fun renderWorld(dt: Duration, camera: Camera, batch: Batch) {
-        level.render(batch, camera, scale = IPPU)
+        if (shapeRenderer == null) {
+            shapeRenderer = ShapeRenderer(batch)
+        }
+        floorLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
+        if (ghostOverlay.isActive) {
+            tempVec2f.set(ghostOverlay.ghostPosition).add(
+                cameraMan.position.x - visibleWorldWidth / 2f,
+                cameraMan.position.y - visibleWorldHeight / 2f
+            )
+            if (ghostCasting > 0f /*|| ghostStaying > 0f*/) {
+                val casted =
+                    /*if (ghostStaying > 0f) 1f else */(GhostOverlay.castTime - ghostCasting) / GhostOverlay.castTime
+                shapeRenderer!!.filledEllipse(
+                    x = tempVec2f.x,
+                    y = tempVec2f.y,
+                    rx = GhostOverlay.radiusX * casted,
+                    ry = GhostOverlay.radiusY * casted,
+                    innerColor = ghostFillColor,
+                    outerColor = ghostFillColor,
+                )
+            }
+            if (ghostCooldown <= 0f && ghostStaying == 0f) {
+                shapeRenderer!!.ellipse(
+                    tempVec2f,
+                    rx = GhostOverlay.radiusX,
+                    ry = GhostOverlay.radiusY,
+                    color = ghostEdgeColor,
+                    thickness = IPPU
+                )
+            }
+        }
+        wallLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
+        decorationLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
         depthBasedDrawables.forEach { it.render(batch) }
+        foregroundLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
     }
 
     private fun updateUi(dt: Duration, camera: Camera) {

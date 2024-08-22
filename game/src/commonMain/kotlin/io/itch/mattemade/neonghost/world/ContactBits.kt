@@ -9,5 +9,6 @@ class ContactBits {
         const val ENEMY_PUNCH = 0x000F
         const val CAMERA = 0x0010
         const val TRIGGER = 0x0020
+        const val GHOST_AOE = 0x0040
     }
 }

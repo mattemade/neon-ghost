@@ -3,14 +3,14 @@
  "infinite":false,
  "layers":[
         {
-         "data":[3, 3, 3, 3, 43, 43, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-            3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-            3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-            3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 3, 3, 3, 3, 3, 3, 3,
-            3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 3, 3, 3, 3, 3, 3],
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0],
          "height":5,
          "id":1,
-         "name":"Tile Layer 1",
+         "name":"floor",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -19,14 +19,14 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         "data":[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 3, 3, 2, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0,
+            3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 3, 3, 2, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":5,
          "id":3,
-         "name":"Tile Layer 2",
+         "name":"wall",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -42,7 +42,23 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":5,
          "id":4,
-         "name":"Tile Layer 3",
+         "name":"decoration",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":32,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":5,
+         "id":10,
+         "name":"foreground",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -62,8 +78,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1008,
-                 "x":48,
+                 "width":1056,
+                 "x":0,
                  "y":96
                 }],
          "opacity":1,
@@ -102,7 +118,7 @@
                 {
                  "height":48,
                  "id":10,
-                 "name":"change music",
+                 "name":"change music terminal",
                  "properties":[
                         {
                          "name":"0",
@@ -113,6 +129,11 @@
                          "name":"1",
                          "type":"string",
                          "value":"trigger changeMusic\nterminal<:switching to 3b\nstate 0"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"change music"
                         }, 
                         {
                          "name":"type",
@@ -129,7 +150,7 @@
                 {
                  "height":48,
                  "id":11,
-                 "name":"use terminal",
+                 "name":"life_support_terminal",
                  "properties":[
                         {
                          "name":"0",
@@ -140,6 +161,11 @@
                          "name":"1",
                          "type":"string",
                          "value":"terminal<:Life system support: OFFLINE\\Reserve generator: ON\n"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"use terminal"
                         }, 
                         {
                          "name":"type",
@@ -176,8 +202,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":144,
-                 "x":48,
+                 "width":48,
+                 "x":0,
                  "y":96
                 }, 
                 {
@@ -249,7 +275,7 @@
                 {
                  "height":48,
                  "id":16,
-                 "name":"transform",
+                 "name":"transform_terminal",
                  "properties":[
                         {
                          "name":"0",
@@ -262,6 +288,11 @@
                          "value":"terminal<:transformation sequence... complete\nstate 2"
                         }, 
                         {
+                         "name":"title",
+                         "type":"string",
+                         "value":"transform"
+                        }, 
+                        {
                          "name":"type",
                          "type":"string",
                          "value":"interaction"
@@ -271,6 +302,33 @@
                  "visible":true,
                  "width":48,
                  "x":192,
+                 "y":96
+                }, 
+                {
+                 "height":48,
+                 "id":17,
+                 "name":"teleport",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"trigger teleport level2"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"teleport"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":96,
                  "y":96
                 }],
          "opacity":1,
@@ -301,8 +359,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":10,
- "nextobjectid":17,
+ "nextlayerid":11,
+ "nextobjectid":18,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

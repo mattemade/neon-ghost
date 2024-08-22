@@ -82,7 +82,7 @@ class UI(
     var availableInteraction: Trigger? = null
         set(value) {
             field = value
-            availableInteractionName = value?.name?.uppercase()?.let { listOf(it) }
+            availableInteractionName = value?.properties?.get("title")?.string?.uppercase()?.let { listOf(it) }
         }
     var activeOptions: List<Pair<List<String>, String>>? = null
     var readyToSelectOption = false
@@ -100,10 +100,10 @@ class UI(
         for (i in 0 until 4) {
             tempVec2f.set(15f, 0f).rotate((PI_F * i / 2f).radians).add(center)
             tempVec2fb.set(10f, 0f).rotate((PI_F * i / 2f).radians).add(center)
-            shapeRenderer.line(tempVec2fb, tempVec2f, color = Color.WHITE, thickness = 1)
+            shapeRenderer.line(tempVec2fb, tempVec2f, color = Color.WHITE, thickness = 1f)
         }
         tempVec2f.set(14f, 0f).rotate((toMeasure * PI_F * 2 - PI_F / 2f).radians).add(center)
-        shapeRenderer.line(center, tempVec2f, color = Color.WHITE, thickness = 1)
+        shapeRenderer.line(center, tempVec2f, color = Color.WHITE, thickness = 1f)
 
         renderProgressbar(
             34f,
@@ -309,7 +309,6 @@ class UI(
         }
         availableInteraction?.let {
             if (controller.pressed(GameInput.ANY_ACTION)) {
-                println("interactiong with ${it.name}")
                 activateInteraction(it)
                 return
             }

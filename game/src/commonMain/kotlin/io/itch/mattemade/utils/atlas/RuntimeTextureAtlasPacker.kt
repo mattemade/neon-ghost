@@ -59,7 +59,6 @@ class RuntimeTextureAtlasPacker(private val context: Context) : Releasing by Sel
         slices.block {
             val existingSlice = slices.get(normalizedPath)
             if (existingSlice != null) {
-                println("Found existing slice for $normalizedPath: ${existingSlice.hashCode()} $existingSlice")
                 return@block context.vfs.async { existingSlice }
             }
             val existingDeferred = deferredSlices[normalizedPath]

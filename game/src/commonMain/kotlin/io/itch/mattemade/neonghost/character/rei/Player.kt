@@ -293,11 +293,11 @@ class Player(
             movingOffBeat = !matchBeat
             if (isFacingLeft) {
                 leftPunchTargets.forEach {
-                    it.hit(body.position, movingToBeat)
+                    it.hit(body.position, if (movingToBeat) 2 else 1)
                 }
             } else {
                 rightPunchTargets.forEach {
-                    it.hit(body.position, movingToBeat)
+                    it.hit(body.position, if (movingToBeat) 2 else 1)
                 }
             }
         }

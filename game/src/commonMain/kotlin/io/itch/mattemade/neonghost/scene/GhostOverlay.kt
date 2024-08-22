@@ -41,28 +41,35 @@ class GhostOverlay(
     private val ghostAnimations = assets.animation.ghostGrayAnimations
     private var currentAnimation = ghostAnimations.fly
 
-    private val ghostPosition = MutableVec2f(0f)
+    val ghostPosition = MutableVec2f(0f)
     private fun interpolate(value: Float): Float = 3 * value * value - 2 * value * value * value
 
     private var time = 0f
     private var isFacingLeft = false
-    private var isActive = false
+    var isActive = false
+    var isMoving = false
 
     private val halfScreenWidth = Game.visibleWorldWidth / 2f
     private val halfScreenHeight = Game.visibleWorldHeight / 2f
 
     private fun updateWorld(dt: Duration, camera: Camera) {
-        time += dt.seconds
-
-        val prevX = ghostPosition.x
-        ghostPosition.set(
-            halfScreenWidth + halfScreenWidth * cos(time * 0.6f),
-            halfScreenHeight + halfScreenHeight * sin(time * 1.5f)
-        )
-        if (isFacingLeft != ghostPosition.x < prevX) {
-            isFacingLeft = !isFacingLeft
-        }
         currentAnimation.update(dt)
+        if (isMoving) {
+            currentAnimation.currentKeyFrame?.let { frame ->
+                time += dt.seconds
+
+                val prevX = ghostPosition.x
+                val halfWidthBounds = (Game.visibleWorldWidth - frame.width * Game.IPPU) / 2f
+                val halfHeightBounds = (Game.visibleWorldHeight - frame.height * Game.IPPU) / 2f
+                ghostPosition.set(
+                    halfWidthBounds + halfWidthBounds * cos(time * 0.6f) + frame.width * Game.IPPU / 2f,
+                    halfHeightBounds + halfHeightBounds * sin(time * 1.5f) + frame.height * Game.IPPU
+                )
+                if (isFacingLeft != ghostPosition.x < prevX) {
+                    isFacingLeft = !isFacingLeft
+                }
+            }
+        }
         camera.position.set(halfScreenWidth, halfScreenHeight, 0f)
     }
 
@@ -73,7 +80,7 @@ class GhostOverlay(
             batch.draw(
                 frame,
                 ghostPosition.x - width / 2f,
-                ghostPosition.y - height / 2f,
+                ghostPosition.y - height,
                 width = width,
                 height = height,
                 flipX = isFacingLeft,
@@ -90,5 +97,14 @@ class GhostOverlay(
 
     fun activate() {
         isActive = true
+        isMoving = true
+    }
+
+    companion object {
+        const val radiusX = 48f * Game.IPPU
+        const val radiusY = 24f * Game.IPPU
+        const val castTime = 2f
+        const val castCooldown = 2f
+        const val postCastTime = 2f
     }
 }
