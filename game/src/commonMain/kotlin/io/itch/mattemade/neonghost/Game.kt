@@ -6,6 +6,7 @@ import com.littlekt.graph.node.resource.HAlign
 import com.littlekt.graphics.Camera
 import com.littlekt.graphics.Color
 import com.littlekt.graphics.Fonts
+import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.gl.BlendFactor
 import com.littlekt.graphics.gl.ClearBufferMask
@@ -123,8 +124,8 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                     restartGame()
                 }
                 choreographer.update(dt)
-                inGame?.updateAndRender(dt)
-                ghostOverlay.updateAndRender(dt)
+                inGame?.updateAndRender(choreographer.adjustedDt)
+                ghostOverlay.updateAndRender(choreographer.adjustedDt)
             }
 
             directRender.render(dt)
@@ -220,6 +221,8 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
         const val virtualHeight = 240//224//240
         const val visibleWorldWidth = (virtualWidth / PPU).toInt()
         const val visibleWorldHeight = (virtualHeight / PPU).toInt()
+
+        val shadowColor = MutableColor(0f, 0f, 0f, 0.25f).toFloatBits()
     }
 }
 

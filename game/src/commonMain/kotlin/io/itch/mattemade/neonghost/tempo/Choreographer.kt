@@ -13,6 +13,7 @@ class Choreographer(private val context: Context) {
     private var secondsPerBeat = 0f
     private var doubleSecondsPerBeat = 0f
     private var secondsPerMeasure = 0f
+    var adjustedDt: Duration = Duration.ZERO
     var bpm = 0f
         private set
     var time = 0f
@@ -22,6 +23,7 @@ class Choreographer(private val context: Context) {
     var toMeasure = 0f
         private set
 
+    var playbackRate = 1.0
     private var currentlyPlaying: AudioClipEx? = null
     private var currentlyPlayingId: Int = 0
     val isActive: Boolean
@@ -30,6 +32,8 @@ class Choreographer(private val context: Context) {
     fun play(music: StreamBpm) {
         currentlyPlaying?.stop(currentlyPlayingId)
         currentlyPlayingId = music.stream.play(volume = 0.1f, referenceDistance = 10000f, loop = true)
+        music.stream.setPlaybackRate(currentlyPlayingId, playbackRate.toFloat())
+        bpm = music.bpm
         currentlyPlaying = music.stream
         time = music.offset
         secondsPerBeat = 60f / music.bpm
@@ -37,8 +41,14 @@ class Choreographer(private val context: Context) {
         secondsPerMeasure = secondsPerBeat * 4
     }
 
+    fun setPlaybackRate(rate: Float) {
+        playbackRate = rate.toDouble()
+        currentlyPlaying?.setPlaybackRate(currentlyPlayingId, rate)
+    }
+
     fun update(dt: Duration) {
-        time += dt.seconds
+        adjustedDt = dt.times(playbackRate)
+        time += adjustedDt.seconds
         toBeat = (time % secondsPerBeat) / secondsPerBeat
         toMeasure = (time % secondsPerMeasure) / secondsPerMeasure
     }

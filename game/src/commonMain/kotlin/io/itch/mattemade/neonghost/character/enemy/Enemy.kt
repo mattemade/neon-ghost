@@ -18,6 +18,7 @@ import com.littlekt.math.MutableVec2f
 import com.soywiz.korma.geom.Angle
 import com.soywiz.korma.geom.radians
 import io.itch.mattemade.blackcat.input.GameInput
+import io.itch.mattemade.neonghost.pixelPerfectPosition
 import io.itch.mattemade.utils.animation.SignallingAnimationPlayer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
@@ -274,8 +275,10 @@ class Enemy(
         currentMagicalAnimation.currentKeyFrame?.let { frame ->
             val width = frame.width / Game.PPU
             val height = frame.height / Game.PPU
-            val positionX = texturePositionX(width)
-            val positionY = texturePositionY(height)
+            val xOffset = (frame.width * 0.1f / Game.PPU).pixelPerfectPosition
+            val yOffset = (3f / Game.PPU).pixelPerfectPosition
+            val positionX = texturePositionX(width).pixelPerfectPosition + if (isFacingLeft) -xOffset else xOffset
+            val positionY = texturePositionY(height) + yOffset
             batch.draw(
                 frame,
                 positionX,
@@ -310,6 +313,19 @@ class Enemy(
             height = physicalHeight,
             color = Color.BLUE.toFloatBits(),
         )*/
+    }
+    override fun renderShadow(shapeRenderer: ShapeRenderer) {
+        currentMagicalAnimation.currentKeyFrame?.let { frame ->
+            val width = frame.width / Game.PPU
+            shapeRenderer.filledEllipse(
+                x = body.position.x,
+                y = body.position.y,
+                rx = width / 4f,
+                ry = width / 8f,
+                innerColor = Game.shadowColor,
+                outerColor = Game.shadowColor,
+            )
+        }
     }
 
     private fun texturePositionX(width: Float) = body.position.x - width / 2f

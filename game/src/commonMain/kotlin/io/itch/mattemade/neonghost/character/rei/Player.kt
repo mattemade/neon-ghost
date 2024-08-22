@@ -367,8 +367,10 @@ class Player(
         currentAnimation.currentKeyFrame?.let { frame ->
             val width = frame.width / Game.PPU
             val height = frame.height / Game.PPU
-            val positionX = texturePositionX(width).pixelPerfectPosition
-            val positionY = texturePositionY(height).pixelPerfectPosition
+            val xOffset = (frame.width * 0.1f / Game.PPU).pixelPerfectPosition
+            val yOffset = (3f / Game.PPU).pixelPerfectPosition
+            val positionX = texturePositionX(width).pixelPerfectPosition + if (isFacingLeft) -xOffset else xOffset
+            val positionY = texturePositionY(height).pixelPerfectPosition + yOffset
             batch.draw(
                 frame,
                 positionX,
@@ -403,6 +405,20 @@ class Player(
                 height = physicalHh,
                 color = Color.BLUE.toFloatBits(),
             )*/
+        }
+    }
+
+    override fun renderShadow(shapeRenderer: ShapeRenderer) {
+        currentAnimation.currentKeyFrame?.let { frame ->
+            val width = frame.width / Game.PPU
+            shapeRenderer.filledEllipse(
+                x = body.position.x.pixelPerfectPosition,
+                y = body.position.y.pixelPerfectPosition,
+                rx = width / 4f,
+                ry = width / 8f,
+                innerColor = Game.shadowColor,
+                outerColor = Game.shadowColor,
+            )
         }
     }
 

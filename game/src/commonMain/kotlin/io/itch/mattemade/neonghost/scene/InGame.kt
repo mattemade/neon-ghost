@@ -206,7 +206,10 @@ class InGame(
 
     private fun onTriggerEventCallback(event: String) {
         when (event) {
-            "changeMusic" -> changeMusic()
+            "setMusic3b" -> choreographer.play(assets.music.background)
+            "setMusic1c" -> choreographer.play(assets.music.background1c)
+            "faster" -> choreographer.setPlaybackRate(choreographer.playbackRate.toFloat() + 0.25f)
+            "slower" -> choreographer.setPlaybackRate(choreographer.playbackRate.toFloat() - 0.25f)
             "launchGhost" -> {
                 ghostOverlay.activate()
                 createGhostBody()
@@ -318,24 +321,10 @@ class InGame(
 
     init {
         choreographer.play(assets.music.background)
-        inputController.addInputMapProcessor(object : InputMapProcessor<GameInput> {
-            override fun onActionDown(inputType: GameInput): Boolean {
-                if (inputType == GameInput.START) {
-                    changeMusic()
-                }
-
-                return false
-            }
-        })
         triggers // to initialize
         if (ghostOverlay.isActive) {
             createGhostBody()
         }
-    }
-
-    private fun changeMusic() {
-        choreographer.play(if (music) assets.music.background else assets.music.background1c)
-        music = !music
     }
 
     private val tempVec2 = Vec2()
@@ -453,6 +442,7 @@ class InGame(
                 )
             }
         }
+        depthBasedDrawables.forEach { it.renderShadow(shapeRenderer!!) }
         wallLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
         decorationLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
         depthBasedDrawables.forEach { it.render(batch) }

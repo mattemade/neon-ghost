@@ -123,17 +123,12 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"trigger changeMusic\nterminal<:switching to 1c\nstate 1"
-                        }, 
-                        {
-                         "name":"1",
-                         "type":"string",
-                         "value":"trigger changeMusic\nterminal<:switching to 3b\nstate 0"
+                         "value":"trigger changeMusic\nterminal<:what do you want\nchoose 3b:3b; 1c:1c; slow\\down:slower; speed\\up:faster\nchoice 3b\ntrigger setMusic3b\nchoice 1c\ntrigger setMusic1c\nchoice slower\ntrigger slower\nchoice faster\ntrigger faster\nchoice\nterminal<:here you go"
                         }, 
                         {
                          "name":"title",
                          "type":"string",
-                         "value":"change music"
+                         "value":"jukebox"
                         }, 
                         {
                          "name":"type",

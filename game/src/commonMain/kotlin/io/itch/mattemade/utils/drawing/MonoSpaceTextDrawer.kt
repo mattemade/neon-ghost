@@ -64,7 +64,7 @@ class MonoSpaceTextDrawer(
         x: Float,
         y: Float,
         hAlign: HAlign = HAlign.CENTER,
-        vAlign: VAlign = VAlign.CENTER,
+        vAlign: VAlign = VAlign.TOP,
         characterLimit: Int = Int.MAX_VALUE,
     ): Int {
         if (text.size == 0) {
@@ -94,10 +94,10 @@ class MonoSpaceTextDrawer(
                     letters[char]?.let { letter ->
                         batch.draw(
                             letter,
-                            (lineStartX + column * (drawingLetterWidth + drawingHorizontalSpacing)),
-                            (startPositionY + textBoxHeight - (rows - row - 1) * (drawingLetterHeight + drawingVerticalSpacing)),
-                            drawingLetterWidth,
-                            drawingLetterHeight
+                            x = (lineStartX + column * (drawingLetterWidth + drawingHorizontalSpacing)),
+                            y = (startPositionY + textBoxHeight - (rows - row) * (drawingLetterHeight + drawingVerticalSpacing)),
+                            width = drawingLetterWidth,
+                            height = drawingLetterHeight
                         )
                     }
                 }

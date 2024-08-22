@@ -18,7 +18,6 @@ import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.character.enemy.Enemy
 import io.itch.mattemade.neonghost.character.rei.Player
-import io.itch.mattemade.neonghost.pixelPerfectPosition
 import io.itch.mattemade.neonghost.screenSpacePixelPerfect
 import io.itch.mattemade.neonghost.world.Trigger
 import io.itch.mattemade.utils.drawing.DelayedTextDrawer
@@ -82,7 +81,8 @@ class UI(
     var availableInteraction: Trigger? = null
         set(value) {
             field = value
-            availableInteractionName = value?.properties?.get("title")?.string?.uppercase()?.let { listOf(it) }
+            availableInteractionName =
+                value?.properties?.get("title")?.string?.uppercase()?.let { listOf(it) }
         }
     var activeOptions: List<Pair<List<String>, String>>? = null
     var readyToSelectOption = false
@@ -147,6 +147,7 @@ class UI(
                 it,
                 (Game.virtualWidth / 2f).screenSpacePixelPerfect,
                 (dialogPadding + interactionTitleHeight / 2f).screenSpacePixelPerfect + 0.5f,
+                vAlign = VAlign.CENTER
             )
         }
 
@@ -155,7 +156,7 @@ class UI(
                 0f,//dialogPadding,
                 0f,//dialogPadding,
                 Game.virtualWidth.toFloat(),// - dialogPadding * 2f,
-                dialogHeight + dialogPadding*2f + if (activeOptions != null) optionsHeight else 0f,//dialogHeight,
+                dialogHeight + dialogPadding * 2f + if (activeOptions != null) optionsHeight else 0f,//dialogHeight,
                 color = Color.BLACK.toFloatBits()
             )
 
@@ -184,7 +185,6 @@ class UI(
                 lines,
                 (Game.virtualWidth / 2f).screenSpacePixelPerfect,
                 (dialogPadding + portraitPadding).screenSpacePixelPerfect,
-                vAlign = VAlign.TOP
             )
 
             activeOptions?.let { options ->
@@ -193,13 +193,13 @@ class UI(
                 val y = (dialogHeight + dialogPadding * 2f).screenSpacePixelPerfect
                 options.forEachIndexed { index, pair ->
                     val text = pair.first
-                    val x = (portraitPadding + widthPerOption/2f + index * widthPerOption).screenSpacePixelPerfect
+                    val x =
+                        (portraitPadding + widthPerOption / 2f + index * widthPerOption).screenSpacePixelPerfect
                     textDrawer.drawText(
                         batch,
                         text,
                         x,
                         y,
-                        vAlign = VAlign.TOP
                     )
 
                     if (index == activeOption) {
@@ -321,7 +321,7 @@ class UI(
     }
 
     fun showOptions(options: List<Pair<String, String>>) {
-        activeOptions = options.map { listOf(it.first.uppercase()) to it.second }
+        activeOptions = options.map { it.first.uppercase().split("\\") to it.second }
         activeOption = 0
         readyToSelectOption = true
     }
