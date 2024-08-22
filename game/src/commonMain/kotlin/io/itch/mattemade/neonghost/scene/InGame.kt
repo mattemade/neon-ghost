@@ -42,7 +42,7 @@ class InGame(
     private val inputController: InputMapController<GameInput>,
     private val choreographer: Choreographer,
     private val ghostOverlay: GhostOverlay,
-    eventState: MutableMap<String, Int>,
+    private val eventState: MutableMap<String, Int>,
     private val onGameOver: () -> Unit,
 ) : Releasing by Self() {
 
@@ -164,15 +164,18 @@ class InGame(
         val result = BiMap<String, Trigger>()
         level.layers.asSequence().filterIsInstance<TiledObjectLayer>()
             .first { it.name == "trigger" }.objects.forEach {
-                result.put(
-                    it.name, Trigger(
-                        world,
-                        it.bounds,
-                        levelHeight,
-                        it.name,
-                        it.properties
+                val triggerState = eventState[it.name]
+                if (triggerState == null || it.properties.containsKey(triggerState.toString())) {
+                    result.put(
+                        it.name, Trigger(
+                            world,
+                            it.bounds,
+                            levelHeight,
+                            it.name,
+                            it.properties
+                        )
                     )
-                )
+                }
             }
         result
     }
@@ -183,8 +186,8 @@ class InGame(
     private var enterTriggers = mutableSetOf<Trigger>()
     private var exitTriggers = mutableSetOf<Trigger>()
 
-    private fun onEventFinished() {
-
+    private fun onEventFinished(trigger: Trigger) {
+        trigger.deactivated() // to remove if it went out of states
     }
 
     private fun onTriggerEventCallback(event: String) {
@@ -220,20 +223,31 @@ class InGame(
         if (eventExecutor.isInDialogue || eventExecutor.isFighting) {
             return
         }
-        enterTriggers.forEach {
-            when (it.properties["type"]?.string) {
-                "trigger" -> eventExecutor.execute(it)
-                "interaction" -> ui.availableInteraction = it
-
+        enterTriggers.forEach { triggger ->
+            if (!triggger.deactivated()) {
+                when (triggger.properties["type"]?.string) {
+                    "trigger" -> eventExecutor.execute(triggger)
+                    "interaction" -> ui.availableInteraction = triggger
+                }
             }
         }
         enterTriggers.clear()
-        exitTriggers.forEach {
-            when (it.properties["type"]?.string) {
+        exitTriggers.forEach { triggger ->
+            when (triggger.properties["type"]?.string) {
                 "interaction" -> ui.availableInteraction = null
             }
         }
         exitTriggers.clear()
+    }
+
+    private fun Trigger.deactivated(): Boolean {
+        val eventState = eventState[name] ?: return false
+        val shouldBeRemoved = !properties.containsKey(eventState.toString())
+        if (shouldBeRemoved) {
+            triggers.removeValue(this)
+            release()
+        }
+        return shouldBeRemoved
     }
 
     private fun createEnemy(

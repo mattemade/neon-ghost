@@ -16,9 +16,10 @@ class EventExecutor(
     private val eventState: MutableMap<String, Int>,
     private val spawnEnemy: (EnemySpec) -> Unit,
     private val onTrigger: (String) -> Unit,
-    private val onEventFinished: () -> Unit
+    private val onEventFinished: (Trigger) -> Unit
 ) {
 
+    private var activeTrigger: Trigger? = null
     private var activeEventName: String = ""
     private var activeEvent: List<String>? = null
     private var activeEventPosition = 0
@@ -30,6 +31,7 @@ class EventExecutor(
         get() = activeEvent != null && !isFighting
 
     fun execute(trigger: Trigger) {
+        activeTrigger = trigger
         activeEventName = trigger.name
         val state = eventState[activeEventName] ?: 0
         activeEvent = trigger.properties[state.toString()]?.string?.lines()
@@ -49,7 +51,10 @@ class EventExecutor(
             currentChoice.clear()
             currentRequirements.clear()
             ui.stopDialog()
-            onEventFinished()
+            activeTrigger?.let {
+                onEventFinished(it)
+                activeTrigger = null
+            }
         } else {
             executeItem()
         }
