@@ -124,7 +124,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
                     restartGame()
                 }
                 choreographer.update(dt)
-                inGame?.updateAndRender(choreographer.adjustedDt)
+                inGame?.updateAndRender(choreographer.adjustedDt, dt)
                 ghostOverlay.updateAndRender(choreographer.adjustedDt)
             }
 

@@ -15,7 +15,7 @@ enum class GameInput {
     DOWN,
     VERTICAL, // mapped from UP and DOWN based on axis, for climbing
 
-    JUMP,
+    MAGIC,
     ATTACK,
 
     START,
@@ -37,19 +37,51 @@ fun Context.bindInputs(): InputMapController<GameInput> =
         fun List<GameButton>.action(): List<GameButton> = this.also { anyActionButton.addAll(this) }
 
 
-        addBinding(GameInput.RIGHT, listOf(Key.D, Key.ARROW_RIGHT).any(), axes = listOf(GameAxis.LX), buttons = listOf(GameButton.RIGHT).any())
-        addBinding(GameInput.LEFT, listOf(Key.A, Key.ARROW_LEFT).any(), axes = listOf(GameAxis.LX), buttons = listOf(GameButton.LEFT).any())
+        addBinding(
+            GameInput.RIGHT,
+            listOf(Key.D, Key.ARROW_RIGHT).any(),
+            axes = listOf(GameAxis.LX),
+            buttons = listOf(GameButton.RIGHT).any()
+        )
+        addBinding(
+            GameInput.LEFT,
+            listOf(Key.A, Key.ARROW_LEFT).any(),
+            axes = listOf(GameAxis.LX),
+            buttons = listOf(GameButton.LEFT).any()
+        )
         addAxis(GameInput.HORIZONTAL, GameInput.RIGHT, GameInput.LEFT)
 
         // creates an axis based off the DOWN and UP input types
-        addBinding(GameInput.UP, listOf(Key.W, Key.ARROW_UP).any(), axes = listOf(GameAxis.LY), buttons = listOf(GameButton.UP).any())
-        addBinding(GameInput.DOWN, listOf(Key.S, Key.ARROW_DOWN).any(), axes = listOf(GameAxis.LY), buttons = listOf(GameButton.DOWN).any())
+        addBinding(
+            GameInput.UP,
+            listOf(Key.W, Key.ARROW_UP).any(),
+            axes = listOf(GameAxis.LY),
+            buttons = listOf(GameButton.UP).any()
+        )
+        addBinding(
+            GameInput.DOWN,
+            listOf(Key.S, Key.ARROW_DOWN).any(),
+            axes = listOf(GameAxis.LY),
+            buttons = listOf(GameButton.DOWN).any()
+        )
         addAxis(GameInput.VERTICAL, GameInput.DOWN, GameInput.UP)
 
-        addBinding(GameInput.JUMP, listOf(Key.SPACE, Key.K, Key.Z).any().action(), buttons = listOf(GameButton.XBOX_A).any().action())
-        addBinding(GameInput.ATTACK, listOf(Key.SHIFT_LEFT, Key.J, Key.X).any().action(), buttons = listOf(GameButton.XBOX_X).any().action())
+        addBinding(
+            GameInput.MAGIC,
+            listOf(Key.J, Key.X).any().action(),
+            buttons = listOf(GameButton.XBOX_X, GameButton.XBOX_B).any().action()
+        )
+        addBinding(
+            GameInput.ATTACK,
+            listOf(Key.K, Key.Z).any().action(),
+            buttons = listOf(GameButton.XBOX_A, GameButton.XBOX_Y).any().action()
+        )
 
-        addBinding(GameInput.START, listOf(Key.ENTER).any(), buttons = listOf(GameButton.START).any())
+        addBinding(
+            GameInput.START,
+            listOf(Key.ENTER).any(),
+            buttons = listOf(GameButton.START).any()
+        )
         addBinding(GameInput.SELECT, listOf(Key.R), buttons = listOf(GameButton.SELECT))
 
         addBinding(GameInput.ANY, anyKey, buttons = anyButton)

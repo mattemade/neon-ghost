@@ -189,7 +189,7 @@ class Enemy(
         body.setTransform(tempVec2, Angle.ZERO)
     }
 
-    override fun update(dt: Duration, millis: Float, toBeat: Float, toMeasure: Float) {
+    override fun update(dt: Duration, millis: Float, notAdjustedDt: Duration, toBeat: Float, toMeasure: Float) {
         if (!canAct()) {
             stopBody()
             currentMagicalAnimation.update(dt)

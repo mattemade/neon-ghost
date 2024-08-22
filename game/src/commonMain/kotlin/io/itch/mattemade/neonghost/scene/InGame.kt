@@ -2,7 +2,6 @@ package io.itch.mattemade.neonghost.scene
 
 import com.littlekt.Context
 import com.littlekt.graphics.Camera
-import com.littlekt.graphics.Color
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.shape.ShapeRenderer
@@ -11,7 +10,6 @@ import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
 import com.littlekt.graphics.g2d.tilemap.tiled.TiledTilesLayer
 import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapController
-import com.littlekt.input.InputMapProcessor
 import com.littlekt.math.MutableVec2f
 import com.littlekt.util.datastructure.BiMap
 import com.littlekt.util.milliseconds
@@ -81,6 +79,8 @@ class InGame(
     private val wallLayer = tiledLayers.first { it.name == "wall" }
     private val decorationLayer = tiledLayers.first { it.name == "decoration" }
     private val foregroundLayer = tiledLayers.first { it.name == "foreground" }
+    private var notAdjustedTime = 0f
+    private var notAdjustedDt: Duration = Duration.ZERO
 
     private val ui by lazy {
         UI(
@@ -151,10 +151,15 @@ class InGame(
             inputController,
             assets.objects.particleSimulator,
             context.vfs,
+            isMagicGirl = false,
             initialHealth = 10,
             canAct = { !isInDialogue },
-            ::gameOver
+            gameOver = ::gameOver,
+            changePlaybackRate = ::changePlaybackRate
         )
+    }
+    private fun changePlaybackRate(rate: Float) {
+        choreographer.setPlaybackRate(rate)
     }
 
     private val depthBasedDrawables by lazy {
@@ -372,6 +377,7 @@ class InGame(
             it.update(
                 dt,
                 millis,
+                notAdjustedDt,
                 choreographer.toBeat,
                 choreographer.toMeasure
             )
@@ -459,7 +465,8 @@ class InGame(
         ui.render(choreographer.toMeasure, player.movingToBeat, player.movingOffBeat)
     }
 
-    fun updateAndRender(dt: Duration) {
+    fun updateAndRender(dt: Duration, notAdjustedDt: Duration) {
+        this.notAdjustedDt = notAdjustedDt
         worldRender.render(dt)
         uiRenderer.render(dt)
     }

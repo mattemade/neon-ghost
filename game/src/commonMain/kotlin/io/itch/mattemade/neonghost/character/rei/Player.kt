@@ -1,14 +1,7 @@
 package io.itch.mattemade.neonghost.character.rei
 
-import io.itch.mattemade.neonghost.Assets
-import io.itch.mattemade.neonghost.Game
-import io.itch.mattemade.neonghost.character.DepthBasedRenderable
-import io.itch.mattemade.neonghost.character.enemy.Enemy
-import io.itch.mattemade.neonghost.world.ContactBits
 import com.littlekt.file.Vfs
-import com.littlekt.graphics.Color
 import com.littlekt.graphics.MutableColor
-import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.ParticleSimulator
 import com.littlekt.graphics.g2d.shape.ShapeRenderer
@@ -16,13 +9,17 @@ import com.littlekt.graphics.gl.PixmapTextureData
 import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapController
 import com.littlekt.math.MutableVec2f
-import com.littlekt.math.Vec2f
 import com.littlekt.math.random
 import com.littlekt.util.seconds
 import com.soywiz.korma.geom.Angle
 import com.soywiz.korma.geom.radians
 import io.itch.mattemade.blackcat.input.GameInput
+import io.itch.mattemade.neonghost.Assets
+import io.itch.mattemade.neonghost.Game
+import io.itch.mattemade.neonghost.character.DepthBasedRenderable
+import io.itch.mattemade.neonghost.character.enemy.Enemy
 import io.itch.mattemade.neonghost.pixelPerfectPosition
+import io.itch.mattemade.neonghost.world.ContactBits
 import io.itch.mattemade.utils.animation.SignallingAnimationPlayer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
@@ -45,8 +42,10 @@ class Player(
     private val particleSimulator: ParticleSimulator,
     private val vfs: Vfs,
     val initialHealth: Int,
+    var isMagicGirl: Boolean = false,
     private val canAct: () -> Boolean,
-    val gameOver: () -> Unit
+    val gameOver: () -> Unit,
+    private val changePlaybackRate: (Float) -> Unit,
 ) : Releasing by Self(),
     DepthBasedRenderable {
 
@@ -94,7 +93,8 @@ class Player(
             },
             filter = Filter().apply {
                 categoryBits = ContactBits.REI
-                maskBits = ContactBits.WALL or ContactBits.CAMERA or ContactBits.TRIGGER or ContactBits.ENEMY_PUNCH
+                maskBits =
+                    ContactBits.WALL or ContactBits.CAMERA or ContactBits.TRIGGER or ContactBits.ENEMY_PUNCH
             },
             userData = this
         )
@@ -109,7 +109,12 @@ class Player(
     private val leftPunchFixture = body.createFixture(
         FixtureDef(
             shape = PolygonShape().apply {
-                setAsBox(punchWidth / 2f, punchDepth / 2f, center = tempVec2.set(-punchDistance, 0f), angle = 0f.radians)
+                setAsBox(
+                    punchWidth / 2f,
+                    punchDepth / 2f,
+                    center = tempVec2.set(-punchDistance, 0f),
+                    angle = 0f.radians
+                )
             },
             filter = Filter().apply {
                 categoryBits = ContactBits.REI_PUNCH
@@ -122,7 +127,12 @@ class Player(
     private val rightPunchFixture = body.createFixture(
         FixtureDef(
             shape = PolygonShape().apply {
-                setAsBox(punchWidth / 2f, punchDepth / 2f, center = tempVec2.set(punchDistance, 0f), angle = 0f.radians)
+                setAsBox(
+                    punchWidth / 2f,
+                    punchDepth / 2f,
+                    center = tempVec2.set(punchDistance, 0f),
+                    angle = 0f.radians
+                )
             },
             filter = Filter().apply {
                 categoryBits = ContactBits.REI_PUNCH
@@ -154,11 +164,21 @@ class Player(
 
     private var keepMoving = false
 
+    //private var castingTimes = 0
+    private var castingTime = 0f
+    private var reducingTime = 0f
+
     fun hit(from: Vec2, difficulty: Float) {
         if (health == 0) {
             return
         }
-        health = max(0 , health - difficulty.toInt())
+        health = max(0, health - difficulty.toInt())
+        if (castingTime > 0f) {
+            if (castingTime / castTime > castBeforeSlowingTime) {
+                changePlaybackRate(1f)
+            }
+            castingTime = 0f
+        }
         hitCooldown = 300f
         currentAnimation = animations.hit
         val direction = tempVec2f.set(body.position.x, body.position.y).subtract(from.x, from.y)
@@ -184,7 +204,13 @@ class Player(
         body.setTransform(tempVec2, Angle.ZERO)
     }
 
-    override fun update(dt: Duration, millis: Float, toBeat: Float, toMeasure: Float) {
+    override fun update(
+        dt: Duration,
+        millis: Float,
+        notAdjustedDt: Duration,
+        toBeat: Float,
+        toMeasure: Float
+    ) {
         if (!canAct()) {
             stopBody()
             currentAnimation.update(dt)
@@ -272,7 +298,63 @@ class Player(
             stopBody()
         }
 
-        if (controller.pressed(GameInput.ATTACK) || controller.pressed(GameInput.JUMP) || controller.justTouched) {
+        if (isMagicGirl) {
+            val notAdjustedSeconds = notAdjustedDt.seconds
+            if (controller.down(GameInput.MAGIC)) {
+                dashCooldown = 0f
+                punchCooldown = 0f
+                movingOffBeat = false
+                movingToBeat = false
+                if (controller.pressed(GameInput.ATTACK)) {
+                    if (castingTime / castTime >= 2) {
+                        // TODO attack by shadow
+                        println("cast projectile from shadow")
+                    } else {
+                        val castPower = castingTime / castTime
+                        // TODO: cast projectile
+                        println("cast projectile $castPower")
+                        // and then if will automatically fallback into punching!
+                    }
+                    changePlaybackRate(1f)
+                    castingTime = 0f
+                } else { // just holding the Magic button
+                    if (xMovement != 0f || yMovement != 0f) {
+                        // moving while holding magic - it will drain focus
+                        castingTime = max(0f, castingTime - notAdjustedSeconds)
+                        recalculatePlaybackRate()
+                    } else {
+                        stopBody()
+                        currentAnimation = animations.prepare
+                        if (castingTime < castTime * castsToStopTime) {
+                            castingTime += notAdjustedSeconds
+                            if (castingTime / castTime >= castsToStopTime) {
+                                // TODO: activate shadow ghost
+                                changePlaybackRate(0.000000000001f)
+                                println("shadow ghost is activated")
+                            } else {
+                                recalculatePlaybackRate()
+                            }
+                        } else { // castingTime == 2
+                            // TODO: move shadow ghost
+                            //println("shadow ghost is moving")
+                        }
+                    }
+                }
+            } else if (castingTime > 0f) { // releasing after casting
+                if (castingTime / castTime >= castsToStopTime) {
+                    // TODO aoe by shadow
+                    println("aoe by shadow")
+                } else {
+                    val castPower = castingTime / castTime
+                    // TODO: cast aoe
+                    println("aoe by Rei $castPower")
+                }
+                changePlaybackRate(1f)
+                castingTime = 0f
+            }
+        }
+
+        if (controller.pressed(GameInput.ATTACK) || (!isMagicGirl && controller.pressed(GameInput.MAGIC))) {
             punchCooldown = 300f//if (wasPunching) 600f else 900f
             stopBody()
             currentAnimation = if (nextLeftPunch) {
@@ -300,6 +382,19 @@ class Player(
                     it.hit(body.position, if (movingToBeat) 2 else 1)
                 }
             }
+        }
+    }
+
+    private fun recalculatePlaybackRate() {
+        if (castingTime / castTime >= castBeforeSlowingTime) {
+            val castingRemainsDuringSlowingPeriod =
+                castTime * castsToStopTime - castingTime
+            val slowingPeriod =
+                castTime * (castsToStopTime - castBeforeSlowingTime)
+            val playbackRate = castingRemainsDuringSlowingPeriod / slowingPeriod
+            changePlaybackRate(max(0.000000000001f, playbackRate))
+        } else {
+            changePlaybackRate(1f)
         }
     }
 
@@ -357,6 +452,7 @@ class Player(
 
 
     fun transform() {
+        isMagicGirl = true
         animations = assets.animation.magicalReiAnimations
     }
 
@@ -369,7 +465,8 @@ class Player(
             val height = frame.height / Game.PPU
             val xOffset = (frame.width * 0.1f / Game.PPU).pixelPerfectPosition
             val yOffset = (3f / Game.PPU).pixelPerfectPosition
-            val positionX = texturePositionX(width).pixelPerfectPosition + if (isFacingLeft) -xOffset else xOffset
+            val positionX =
+                texturePositionX(width).pixelPerfectPosition + if (isFacingLeft) -xOffset else xOffset
             val positionY = texturePositionY(height).pixelPerfectPosition + yOffset
             batch.draw(
                 frame,
@@ -408,22 +505,65 @@ class Player(
         }
     }
 
+
     override fun renderShadow(shapeRenderer: ShapeRenderer) {
         currentAnimation.currentKeyFrame?.let { frame ->
             val width = frame.width / Game.PPU
+            val minRx = width / 4f
+            val minRy = width / 8f
+            val deltaRx = spellRx - minRx
+            val deltaRy = spellRy - minRy
+            val castingTimes = (castingTime / castTime).toInt()
+            val ratio = if (castingTimes > 0) 1f else castingTime / castTime
+
             shapeRenderer.filledEllipse(
                 x = body.position.x.pixelPerfectPosition,
                 y = body.position.y.pixelPerfectPosition,
-                rx = width / 4f,
-                ry = width / 8f,
-                innerColor = Game.shadowColor,
-                outerColor = Game.shadowColor,
+                rx = minRx + deltaRx * ratio,
+                ry = minRy + deltaRy * ratio,
+                innerColor = if (!isMagicGirl) Game.shadowColor else magicGirlShadowColor,
+                outerColor = if (!isMagicGirl) Game.shadowColor else magicGirlShadowColor,
             )
+            for (i in 0 until castingTimes) {
+                val doubleRatio = if (castingTimes > i + 1) 1f else (castingTime % castTime) / castTime
+                shapeRenderer.filledEllipse(
+                    x = body.position.x.pixelPerfectPosition,
+                    y = body.position.y.pixelPerfectPosition,
+                    rx = spellRx * doubleRatio,
+                    ry = spellRy * doubleRatio,
+                    innerColor = magicGirlShadowColor,
+                    outerColor = magicGirlShadowColor,
+                )
+            }
+
+            if (castingTime > 0f || castingTimes > 0) {
+                shapeRenderer.ellipse(
+                    x = body.position.x.pixelPerfectPosition,
+                    y = body.position.y.pixelPerfectPosition,
+                    rx = spellRx,
+                    ry = spellRy,
+                    thickness = Game.IPPU,
+                    color = magicGirlShadowEdgeColor
+                )
+            }
+
         }
     }
 
     private fun texturePositionX(width: Float) = body.position.x - width / 2f
     private fun texturePositionY(height: Float) = body.position.y - height
+
+    companion object {
+        private val magicGirlShadowEdgeColor = MutableColor(0.325f, 0.212f, 0.384f, 1f).toFloatBits()
+        private val magicGirlShadowColor = MutableColor(0.325f, 0.212f, 0.384f, 0.5f).toFloatBits()
+        private val castTime = 2f
+        private val reduceTime = 0.1f
+        private val spellRx = 64f * Game.IPPU
+        private val spellRy = 32f * Game.IPPU
+        private const val castBeforeSlowingTime = 1
+        private const val castsToStopTime = 2
+    }
+
 }
 
 private fun MutableColor.setArgb888(argb8888: Int): MutableColor {
