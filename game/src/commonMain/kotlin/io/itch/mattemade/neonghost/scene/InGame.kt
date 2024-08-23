@@ -11,6 +11,8 @@ import com.littlekt.graphics.g2d.tilemap.tiled.TiledTilesLayer
 import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapController
 import com.littlekt.math.MutableVec2f
+import com.littlekt.math.PI2
+import com.littlekt.math.geom.radians
 import com.littlekt.util.datastructure.BiMap
 import com.littlekt.util.milliseconds
 import com.littlekt.util.seconds
@@ -515,13 +517,19 @@ class InGame(
                     outerColor = ghostFillColor,
                 )
             }
-            if (ghostCooldown <= 0f && ghostStaying == 0f) {
+            val casted = GhostOverlay.castCooldown - ghostCooldown
+            if (casted > 0f && ghostStaying == 0f) {
+                val startAngle = (0.0).radians
+                val angle = casted / GhostOverlay.castCooldown * PI2
                 shapeRenderer!!.ellipse(
-                    tempVec2f,
+                    tempVec2f.x,
+                    tempVec2f.y,
                     rx = GhostOverlay.radiusX,
                     ry = GhostOverlay.radiusY,
                     color = ghostEdgeColor,
-                    thickness = IPPU
+                    thickness = IPPU,
+                    startAngle = startAngle,
+                    radians = angle.toFloat(),
                 )
             }
         }

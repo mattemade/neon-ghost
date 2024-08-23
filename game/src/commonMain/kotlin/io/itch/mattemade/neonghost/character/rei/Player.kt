@@ -582,7 +582,7 @@ class Player(
                     )
                 }
 
-                if (controller.down(GameInput.MAGIC) && spellCooldown == 0f) {
+                if (focusCooldown > 0f) {
                     val startAngle = (0.0).radians
                     val angle = focusCooldown / maxFocusCooldown * PI2
                     shapeRenderer.ellipse(
@@ -608,7 +608,7 @@ class Player(
         val magicGirlShadowEdgeColor = MutableColor(0.325f, 0.212f, 0.384f, 1f).toFloatBits()
         val magicGirlShadowColor = MutableColor(0.325f, 0.212f, 0.384f, 0.5f).toFloatBits()
         private val castTime = 1.5f
-        private val reduceTime = 1f
+        private val reduceTime = 2f
         private val maxFocusCooldown = 0.5f
         val spellRx = 64f * Game.IPPU
         val spellRy = 32f * Game.IPPU
