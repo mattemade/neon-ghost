@@ -16,7 +16,9 @@ class EventExecutor(
     private val eventState: MutableMap<String, Int>,
     private val spawnEnemy: (EnemySpec) -> Unit,
     private val onTrigger: (String) -> Unit,
-    private val onEventFinished: (Trigger) -> Unit
+    private val onEventFinished: (Trigger) -> Unit,
+    private val onRemember: (String) -> Unit,
+    private val onTeleport: (door: String, toRoom: String) -> Unit,
 ) {
 
     private var activeTrigger: Trigger? = null
@@ -30,22 +32,23 @@ class EventExecutor(
     val isInDialogue: Boolean
         get() = activeEvent != null && !isFighting
 
-    fun execute(trigger: Trigger) {
+    fun execute(trigger: Trigger, knowledge: Set<String>) {
         activeTrigger = trigger
         activeEventName = trigger.name
         val state = eventState[activeEventName] ?: 0
         activeEvent = trigger.properties[state.toString()]?.string?.lines()
         activeEventPosition = 0
+        currentChoice.addAll(knowledge)
         executeItem()
     }
 
-    fun advance() {
+    fun advance(forceEnd: Boolean = false) {
         if (isFighting) {
             isFighting = false
             makeCameraFollowPlayer()
         }
         activeEventPosition++
-        if (activeEventPosition == (activeEvent?.size ?: 0)) {
+        if (forceEnd || activeEventPosition == (activeEvent?.size ?: 0)) {
             activeEventPosition = 0
             activeEvent = null
             currentChoice.clear()
@@ -83,12 +86,18 @@ class EventExecutor(
             "camera" -> action.checkingChoice().executeCamera()
             "choose" -> action.checkingChoice().executeChoose()
             "choice" -> action.updateRequirements()
+            "remember" -> action.checkingChoice().executeRemember()
+            "teleport" -> action.checkingChoice().executeTeleport()
+            "end" -> advance(forceEnd = requirementsFulfilled() )
             else -> item.checkingChoice().executeDialogueLine()
         }
     }
 
     private fun String?.checkingChoice(): String? =
-        takeIf { currentRequirements.isEmpty() || currentChoice.containsAll(currentRequirements) }
+        takeIf { requirementsFulfilled() }
+
+    private fun requirementsFulfilled(): Boolean =
+        currentRequirements.isEmpty() || currentChoice.containsAll(currentRequirements)
 
     private fun String?.executeForPlayer() {
         when (this) {
@@ -119,7 +128,10 @@ class EventExecutor(
             advance()
             return
         }
-        eventState[activeEventName] = this.toInt()
+        val stateArgs = this.split(" ", limit = 2)
+        val state = stateArgs[0].trim().toInt()
+        val optionalEventName = stateArgs.getOrNull(1)?.trim()
+        eventState[optionalEventName ?: activeEventName] = state
         advance()
     }
 
@@ -159,6 +171,25 @@ class EventExecutor(
         when (this) {
             "lock" -> lockCamera()
             "follow" -> makeCameraFollowPlayer()
+        }
+    }
+
+    private fun String?.executeRemember() {
+        if (this != null) {
+            onRemember(this)
+        }
+        advance()
+    }
+
+    private fun String?.executeTeleport() {
+        if (this == null) {
+            advance()
+            return
+        }
+        val doorName = activeTrigger?.name
+        advance(forceEnd = true)
+        if (doorName != null) {
+            onTeleport(doorName, this)
         }
     }
 

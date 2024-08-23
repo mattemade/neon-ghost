@@ -12,6 +12,7 @@ import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.ParticleSimulator
 import com.littlekt.graphics.g2d.TextureAtlas
 import com.littlekt.graphics.g2d.TextureSlice
+import com.littlekt.graphics.g2d.tilemap.tiled.TiledMap
 import com.littlekt.graphics.shader.FragmentShader
 import com.littlekt.graphics.shader.ShaderProgram
 import com.littlekt.graphics.shader.VertexShader
@@ -64,13 +65,16 @@ data class StreamBpm(val stream: AudioClipEx, val bpm: Float, val offset: Float)
 
 private fun AudioClipEx.asTrack(bpm: Float, offset: Float) = StreamBpm(this, bpm, offset)
 
-class Levels(context: Context, atlas: TextureAtlas? = null) : AssetPack(context) {
-    val testRoom by prepare {
-        context.resourcesVfs["level/level.tmj"].readTiledMap(
-            atlas,
-            tilesetBorder = 0
-        )
-    }
+class Levels(context: Context, private val atlas: TextureAtlas? = null) : AssetPack(context) {
+    private fun String.pack(): PreparableGameAsset<TiledMap> =
+        prepare {
+            context.resourcesVfs[this].readTiledMap(
+                atlas,
+                tilesetBorder = 0
+            )
+        }
+    val testRoom by "level/level.tmj".pack()
+    val secondRoom by "level/second_room.tmj".pack()
     //val testRoom by prepare { context.resourcesVfs["brick-and-concrete/test-room.tmj"].readTiledMap() }
 }
 

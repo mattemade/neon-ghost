@@ -54,7 +54,10 @@ class InGame(
     private val choreographer: Choreographer,
     private val ghostOverlay: GhostOverlay,
     private val eventState: MutableMap<String, Int>,
+    private val playerKnowledge: MutableSet<String>,
     private val onGameOver: () -> Unit,
+    private val goThroughDoor: (door: String, toRoom: String) -> Unit,
+    private val wentThroughDoor: String? = null
 ) : Releasing by Self() {
 
     private val sharedFrameBuffer =
@@ -107,7 +110,9 @@ class InGame(
             eventState,
             ::createEnemy,
             ::onTriggerEventCallback,
-            ::onEventFinished
+            ::onEventFinished,
+            playerKnowledge::add,
+            goThroughDoor,
         )
     }
     private val isInDialogue: Boolean get() = eventExecutor.isInDialogue
@@ -116,7 +121,7 @@ class InGame(
     }
 
     private fun activateInteraction(trigger: Trigger) {
-        eventExecutor.execute(trigger)
+        eventExecutor.execute(trigger, playerKnowledge)
     }
 
     private fun selectOption(key: String) {
@@ -143,7 +148,10 @@ class InGame(
     }
     private val neonWorld by lazy { World(gravityX = 0f, gravityY = 0f) }
     private val playerSpawnPosition by lazy {
-        val placement = level.layer("spawn").fastCastTo<TiledObjectLayer>().objects.first()
+        val placement =
+            wentThroughDoor?.let {  door ->
+                level.layer("trigger").fastCastTo<TiledObjectLayer>().objects.first { it.name == door }
+            } ?: level.layer("spawn").fastCastTo<TiledObjectLayer>().objects.first()
         val x = placement.bounds.x + placement.bounds.width / 2f
         val y = levelHeight - (placement.bounds.y - placement.bounds.height / 2f)
         Vec2(x * Game.IPPU, y * Game.IPPU)
@@ -245,8 +253,9 @@ class InGame(
         val result = BiMap<String, Trigger>()
         level.layers.asSequence().filterIsInstance<TiledObjectLayer>()
             .first { it.name == "trigger" }.objects.forEach {
-                val triggerState = eventState[it.name]
-                if (triggerState == null || it.properties.containsKey(triggerState.toString())) {
+                // do not check for the state, as it can change in runtime
+                /*val triggerState = eventState[it.name]
+                if (triggerState == null || it.properties.containsKey(triggerState.toString())) {*/
                     result.put(
                         it.name, Trigger(
                             world,
@@ -256,7 +265,7 @@ class InGame(
                             it.properties
                         )
                     )
-                }
+                //}
             }
         result
     }
@@ -269,7 +278,9 @@ class InGame(
     private var exitTriggers = mutableSetOf<Trigger>()
 
     private fun onEventFinished(trigger: Trigger) {
-        trigger.deactivated() // to remove if it went out of states
+        if (trigger.deactivated()) {
+            ui.availableInteraction = null
+        }
     }
 
     private fun onTriggerEventCallback(event: String) {
@@ -311,7 +322,7 @@ class InGame(
         enterTriggers.forEach { triggger ->
             if (!triggger.deactivated()) {
                 when (triggger.properties["type"]?.string) {
-                    "trigger" -> eventExecutor.execute(triggger)
+                    "trigger" -> eventExecutor.execute(triggger, playerKnowledge)
                     "interaction" -> ui.availableInteraction = triggger
                 }
             }
@@ -328,10 +339,11 @@ class InGame(
     private fun Trigger.deactivated(): Boolean {
         val eventState = eventState[name] ?: return false
         val shouldBeRemoved = !properties.containsKey(eventState.toString())
-        if (shouldBeRemoved) {
+        // do not remove triggers as they can be activated again
+        /*if (shouldBeRemoved) {
             triggers.removeValue(this)
             release()
-        }
+        }*/
         return shouldBeRemoved
     }
 

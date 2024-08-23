@@ -36,10 +36,10 @@
         }, 
         {
          "data":[0, 0, 0, 0, 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 67, 0, 67, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 67, 0, 67, 0, 67, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 57, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            0, 0, 0, 0, 57, 0, 67, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":5,
          "id":4,
          "name":"decoration",
@@ -113,65 +113,6 @@
                  "visible":true,
                  "width":48,
                  "x":480,
-                 "y":96
-                }, 
-                {
-                 "height":48,
-                 "id":10,
-                 "name":"change music terminal",
-                 "properties":[
-                        {
-                         "name":"0",
-                         "type":"string",
-                         "value":"trigger changeMusic\nterminal<:what do you want\nchoose 3d:3d; 1c:1c; slow\\down:slower; speed\\up:faster\nchoice 3d\ntrigger setMusic3d\nchoice 1c\ntrigger setMusic1c\nchoice slower\ntrigger slower\nchoice faster\ntrigger faster\nchoice\nterminal<:here you go"
-                        }, 
-                        {
-                         "name":"title",
-                         "type":"string",
-                         "value":"jukebox"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"interaction"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":384,
-                 "y":96
-                }, 
-                {
-                 "height":48,
-                 "id":11,
-                 "name":"life_support_terminal",
-                 "properties":[
-                        {
-                         "name":"0",
-                         "type":"string",
-                         "value":"terminal<:Life system support: ON\\Main generator: ON\\Reserve generator: OFF\n\nchoose Turn off:off; Exit:exit\nchoice off\nterminal<:Turning life system support off...\nterminal<:Life system support: OFFLINE\\Main generator: OFF\\Reserve generator: OFF\ntrigger launchGhost\nstate 1\nchoice\n"
-                        }, 
-                        {
-                         "name":"1",
-                         "type":"string",
-                         "value":"terminal<:Life system support: OFFLINE\\Reserve generator: ON\n"
-                        }, 
-                        {
-                         "name":"title",
-                         "type":"string",
-                         "value":"use terminal"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"interaction"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":288,
                  "y":96
                 }, 
                 {
@@ -269,99 +210,13 @@
                 }, 
                 {
                  "height":48,
-                 "id":16,
-                 "name":"transform_terminal",
-                 "properties":[
-                        {
-                         "name":"0",
-                         "type":"string",
-                         "value":"terminal<:transformation sequence...\ntrigger transform\nplayer stop\nterminal<:transformation sequence... compolete\nstate 1\n"
-                        }, 
-                        {
-                         "name":"1",
-                         "type":"string",
-                         "value":"terminal<:transformation sequence... complete\nstate 2"
-                        }, 
-                        {
-                         "name":"title",
-                         "type":"string",
-                         "value":"transform"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"interaction"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":192,
-                 "y":96
-                }, 
-                {
-                 "height":48,
-                 "id":17,
-                 "name":"teleport",
-                 "properties":[
-                        {
-                         "name":"0",
-                         "type":"string",
-                         "value":"trigger teleport level2"
-                        }, 
-                        {
-                         "name":"title",
-                         "type":"string",
-                         "value":"teleport"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"interaction"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":96,
-                 "y":96
-                }, 
-                {
-                 "height":48,
-                 "id":18,
-                 "name":"transform_terminal",
-                 "properties":[
-                        {
-                         "name":"0",
-                         "type":"string",
-                         "value":"terminal<:looking for something...\nremember key\nterminal<:found a key!\nstate 1\n"
-                        }, 
-                        {
-                         "name":"title",
-                         "type":"string",
-                         "value":"search"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"interaction"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":288,
-                 "y":192
-                }, 
-                {
-                 "height":48,
                  "id":19,
                  "name":"locked_door",
                  "properties":[
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"door<:the door is locked\nchoice key\nchoose Use key:use_key; go away:go_away\n\nchoice key,use_key\ndoor<:using the key, the door is unlocked\nstate 1\nteleport secondRoom\n\nchoice key,go_away\ndoor<:oh well,\\see you later,\\I guess\nend\n\n# no key\nchoice\ndoor<:and you have no key\\try to search around\n"
+                         "value":"door<:the door is locked\nchoice key\nchoose Use key:use_key; go away:go_away\n\nchoice key,use_key\ndoor<:using the key, the door is unlocked\nstate 1\nteleport testRoom\n\nchoice key,go_away\ndoor<:oh well,\\see you later,\\I guess\nend\n\n# no key\nchoice\ndoor<:and you have no key\\try to search around\n"
                         }, 
                         {
                          "name":"title",
@@ -377,7 +232,34 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":192,
+                 "x":576,
+                 "y":96
+                }, 
+                {
+                 "height":48,
+                 "id":20,
+                 "name":"locked_door_switch",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"door<:the door is revealed\nstate 0 locked_door"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"reveal the door"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":576,
                  "y":192
                 }],
          "opacity":1,
@@ -409,7 +291,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":20,
+ "nextobjectid":21,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

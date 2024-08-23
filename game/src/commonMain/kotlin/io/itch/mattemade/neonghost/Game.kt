@@ -8,6 +8,7 @@ import com.littlekt.graphics.Color
 import com.littlekt.graphics.Fonts
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.Batch
+import com.littlekt.graphics.g2d.tilemap.tiled.TiledMap
 import com.littlekt.graphics.gl.BlendFactor
 import com.littlekt.graphics.gl.ClearBufferMask
 import com.littlekt.graphics.gl.State
@@ -54,17 +55,31 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     private var framesRenderedInPeriod = 0
 
     private val eventState = mutableMapOf<String, Int>()
+    private val playerKnowledge = mutableSetOf<String>()
+    private val startMap by lazy { assets.level.testRoom }
 
-    private fun restartGame() {
+    private fun openDoor(door: String, toRoom: String) {
+        val level = when(toRoom) {
+            "testRoom" -> assets.level.testRoom
+            "secondRoom" -> assets.level.secondRoom
+            else -> assets.level.testRoom
+        }
+        restartGame(level, door)
+    }
+
+    private fun restartGame(level: TiledMap, wentThrough: String?) {
         inGame = InGame(
             context,
             assets,
-            assets.level.testRoom,
+            level,
             inputController,
             choreographer,
             ghostOverlay,
             eventState,
-            ::restartGame
+            playerKnowledge,
+            { restartGame(startMap, null) },
+            goThroughDoor = ::openDoor,
+            wentThroughDoor = wentThrough
         )
     }
 
@@ -121,7 +136,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             }
             if (focused && assetsReady) {
                 if (inGame == null) {
-                    restartGame()
+                    restartGame(startMap, null)
                 }
                 choreographer.update(dt)
                 inGame?.updateAndRender(choreographer.adjustedDt, dt)
