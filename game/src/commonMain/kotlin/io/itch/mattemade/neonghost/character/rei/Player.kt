@@ -46,6 +46,7 @@ class Player(
     private val canAct: () -> Boolean,
     val gameOver: () -> Unit,
     private val changePlaybackRate: (Float) -> Unit,
+    private val spawnNeonGhost: (facingLeft: Boolean) -> Unit,
 ) : Releasing by Self(),
     DepthBasedRenderable {
 
@@ -175,7 +176,7 @@ class Player(
         health = max(0, health - difficulty.toInt())
         if (castingTime > 0f) {
             if (castingTime / castTime > castBeforeSlowingTime) {
-                changePlaybackRate(1f)
+                updateReducingTime()
             }
             castingTime = 0f
         }
@@ -195,6 +196,19 @@ class Player(
         body.isAwake = true
     }
 
+    private fun updateReducingTime() {
+        if (castingTime / castTime <= castBeforeSlowingTime) {
+            reducingTime = 0f
+            return
+        }
+        val castWithinSlowingPeriod = castingTime - castTime * castBeforeSlowingTime
+        val slowingPeriod =
+            castTime * (castsToStopTime - castBeforeSlowingTime)
+        val rate = castWithinSlowingPeriod / slowingPeriod
+        reducingTime = reduceTime * rate
+        println("calculated to reduce time by $reducingTime")
+    }
+
     fun stopBody(resetAnimationToIdle: Boolean = false) {
         if (resetAnimationToIdle) {
             currentAnimation = animations.idle
@@ -211,6 +225,14 @@ class Player(
         toBeat: Float,
         toMeasure: Float
     ) {
+        if (reducingTime > 0f) {
+            reducingTime -= notAdjustedDt.seconds
+            if (reducingTime <= 0f) {
+                changePlaybackRate(1f)
+            } else {
+                changePlaybackRate(1f - reducingTime / reduceTime)
+            }
+        }
         if (!canAct()) {
             stopBody()
             currentAnimation.update(dt)
@@ -218,7 +240,7 @@ class Player(
         }
         val xMovement = controller.axis(GameInput.HORIZONTAL)
         val yMovement = controller.axis(GameInput.VERTICAL)
-        val moving = xMovement != 0f || yMovement != 0f
+        val moving = (xMovement != 0f || yMovement != 0f) && castingTime < castTime * castsToStopTime
         val anyAction = controller.down(GameInput.ANY_ACTION)
         val matchBeat = toBeat < 0.2f || toBeat > 0.9f || toMeasure < 0.075f || toMeasure > 0.9625f
 
@@ -260,6 +282,7 @@ class Player(
             movingToBeat = false
         }
 
+        var speed = 1f
         if (moving) {
             wasPunching = false
             nextLeftPunch = true
@@ -287,6 +310,7 @@ class Player(
                     movingToBeat = false
                 }
                 body.linearVelocity.set(xMovement, yMovement)
+                speed = body.linearVelocity.length()
             }
             body.isAwake = true
             keepMoving = true
@@ -315,12 +339,12 @@ class Player(
                         println("cast projectile $castPower")
                         // and then if will automatically fallback into punching!
                     }
-                    changePlaybackRate(1f)
+                    updateReducingTime()
                     castingTime = 0f
                 } else { // just holding the Magic button
-                    if (xMovement != 0f || yMovement != 0f) {
+                    if (moving) {
                         // moving while holding magic - it will drain focus
-                        castingTime = max(0f, castingTime - notAdjustedSeconds)
+                        castingTime = max(0f, castingTime - notAdjustedSeconds / 2f)
                         recalculatePlaybackRate()
                     } else {
                         stopBody()
@@ -328,15 +352,12 @@ class Player(
                         if (castingTime < castTime * castsToStopTime) {
                             castingTime += notAdjustedSeconds
                             if (castingTime / castTime >= castsToStopTime) {
-                                // TODO: activate shadow ghost
+                                spawnNeonGhost(isFacingLeft)
                                 changePlaybackRate(0.000000000001f)
                                 println("shadow ghost is activated")
                             } else {
                                 recalculatePlaybackRate()
                             }
-                        } else { // castingTime == 2
-                            // TODO: move shadow ghost
-                            //println("shadow ghost is moving")
                         }
                     }
                 }
@@ -349,7 +370,7 @@ class Player(
                     // TODO: cast aoe
                     println("aoe by Rei $castPower")
                 }
-                changePlaybackRate(1f)
+                updateReducingTime()
                 castingTime = 0f
             }
         }
@@ -367,7 +388,7 @@ class Player(
             //activateParticles()
         }
 
-        currentAnimation.update(dt) // will trigger animation callbacks
+        currentAnimation.update(dt * speed.toDouble()) // will trigger animation callbacks
 
         if (activatePunch) {
             activatePunch = false
@@ -459,6 +480,8 @@ class Player(
     private var shaperRenderer: ShapeRenderer? = null
 
 
+    private var ghostXOffset = 0f
+    private var ghostYOffset = 0f
     override fun render(batch: Batch) {
         currentAnimation.currentKeyFrame?.let { frame ->
             val width = frame.width / Game.PPU
@@ -514,37 +537,49 @@ class Player(
             val deltaRx = spellRx - minRx
             val deltaRy = spellRy - minRy
             val castingTimes = (castingTime / castTime).toInt()
-            val ratio = if (castingTimes > 0) 1f else castingTime / castTime
-
-            shapeRenderer.filledEllipse(
-                x = body.position.x.pixelPerfectPosition,
-                y = body.position.y.pixelPerfectPosition,
-                rx = minRx + deltaRx * ratio,
-                ry = minRy + deltaRy * ratio,
-                innerColor = if (!isMagicGirl) Game.shadowColor else magicGirlShadowColor,
-                outerColor = if (!isMagicGirl) Game.shadowColor else magicGirlShadowColor,
-            )
-            for (i in 0 until castingTimes) {
-                val doubleRatio = if (castingTimes > i + 1) 1f else (castingTime % castTime) / castTime
+            if (castingTimes == castsToStopTime) {
                 shapeRenderer.filledEllipse(
                     x = body.position.x.pixelPerfectPosition,
                     y = body.position.y.pixelPerfectPosition,
-                    rx = spellRx * doubleRatio,
-                    ry = spellRy * doubleRatio,
+                    rx = minRx,
+                    ry = minRy,
                     innerColor = magicGirlShadowColor,
                     outerColor = magicGirlShadowColor,
                 )
-            }
+            } else {
+                val ratio = if (castingTimes > 0) 1f else castingTime / castTime
 
-            if (castingTime > 0f || castingTimes > 0) {
-                shapeRenderer.ellipse(
+                shapeRenderer.filledEllipse(
                     x = body.position.x.pixelPerfectPosition,
                     y = body.position.y.pixelPerfectPosition,
-                    rx = spellRx,
-                    ry = spellRy,
-                    thickness = Game.IPPU,
-                    color = magicGirlShadowEdgeColor
+                    rx = minRx + deltaRx * ratio,
+                    ry = minRy + deltaRy * ratio,
+                    innerColor = if (!isMagicGirl) Game.shadowColor else magicGirlShadowColor,
+                    outerColor = if (!isMagicGirl) Game.shadowColor else magicGirlShadowColor,
                 )
+                for (i in 0 until castingTimes) {
+                    val doubleRatio =
+                        if (castingTimes > i + 1) 1f else (castingTime % castTime) / castTime
+                    shapeRenderer.filledEllipse(
+                        x = body.position.x.pixelPerfectPosition,
+                        y = body.position.y.pixelPerfectPosition,
+                        rx = spellRx * doubleRatio,
+                        ry = spellRy * doubleRatio,
+                        innerColor = magicGirlShadowColor,
+                        outerColor = magicGirlShadowColor,
+                    )
+                }
+
+                if (castingTime > 0f || castingTimes > 0) {
+                    shapeRenderer.ellipse(
+                        x = body.position.x.pixelPerfectPosition,
+                        y = body.position.y.pixelPerfectPosition,
+                        rx = spellRx,
+                        ry = spellRy,
+                        thickness = Game.IPPU,
+                        color = magicGirlShadowEdgeColor
+                    )
+                }
             }
 
         }
@@ -554,14 +589,14 @@ class Player(
     private fun texturePositionY(height: Float) = body.position.y - height
 
     companion object {
-        private val magicGirlShadowEdgeColor = MutableColor(0.325f, 0.212f, 0.384f, 1f).toFloatBits()
-        private val magicGirlShadowColor = MutableColor(0.325f, 0.212f, 0.384f, 0.5f).toFloatBits()
+        val magicGirlShadowEdgeColor = MutableColor(0.325f, 0.212f, 0.384f, 1f).toFloatBits()
+        val magicGirlShadowColor = MutableColor(0.325f, 0.212f, 0.384f, 0.5f).toFloatBits()
         private val castTime = 2f
-        private val reduceTime = 0.1f
-        private val spellRx = 64f * Game.IPPU
-        private val spellRy = 32f * Game.IPPU
+        private val reduceTime = 2f
+        val spellRx = 64f * Game.IPPU
+        val spellRy = 32f * Game.IPPU
         private const val castBeforeSlowingTime = 1
-        private const val castsToStopTime = 2
+        const val castsToStopTime = 2
     }
 
 }

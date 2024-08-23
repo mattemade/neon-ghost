@@ -3,13 +3,12 @@ package io.itch.mattemade.neonghost.scene
 import com.littlekt.Context
 import com.littlekt.graphics.Camera
 import com.littlekt.graphics.g2d.Batch
-import com.littlekt.graphics.gl.BlendFactor
-import com.littlekt.graphics.gl.State
-import com.littlekt.graphics.slice
+import com.littlekt.graphics.g2d.TextureSlice
 import com.littlekt.math.MutableVec2f
 import com.littlekt.util.seconds
 import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.Game
+import io.itch.mattemade.neonghost.pixelPerfectPosition
 import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
@@ -65,8 +64,11 @@ class GhostOverlay(
                     halfWidthBounds + halfWidthBounds * cos(time * 0.6f) + frame.width * Game.IPPU / 2f,
                     halfHeightBounds + halfHeightBounds * sin(time * 1.5f) + frame.height * Game.IPPU
                 )
-                if (isFacingLeft != ghostPosition.x < prevX) {
-                    isFacingLeft = !isFacingLeft
+                val xMovement = ghostPosition.x - prevX
+                if (isFacingLeft && xMovement > 0f) {
+                    isFacingLeft = false
+                } else if (!isFacingLeft && xMovement < 0f) {
+                    isFacingLeft = true
                 }
             }
         }
@@ -74,23 +76,45 @@ class GhostOverlay(
     }
 
     private fun renderWorld(dt: Duration, camera: Camera, batch: Batch) {
-        currentAnimation.currentKeyFrame?.let { frame ->
+        if (isActive) {
+            currentAnimation.currentKeyFrame?.let { frame ->
+                val width = frame.width * Game.IPPU
+                val height = frame.height * Game.IPPU
+                batch.draw(
+                    frame,
+                    ghostPosition.x - width / 2f,
+                    ghostPosition.y - height,
+                    width = width,
+                    height = height,
+                    flipX = isFacingLeft,
+                )
+            }
+        }
+        neonGhostSlice?.let { frame ->
             val width = frame.width * Game.IPPU
             val height = frame.height * Game.IPPU
+            val xOffset = (frame.width * 0.1f / Game.PPU).pixelPerfectPosition
+            val yOffset = (3f / Game.PPU).pixelPerfectPosition
             batch.draw(
                 frame,
-                ghostPosition.x - width / 2f,
-                ghostPosition.y - height,
+                neonGhostX - width / 2f + if (neonGhostFacingLeft) -xOffset else xOffset,
+                neonGhostY - height + yOffset,
                 width = width,
                 height = height,
-                flipX = isFacingLeft,
+                flipX = neonGhostFacingLeft,
             )
+        } ?: run {
+            println("not rendering ghost")
         }
     }
 
     fun updateAndRender(dt: Duration) {
-        if (!isActive) {
+        if (!isActive && neonGhostSlice == null && !renderJustOneMoreTime) {
             return
+        }
+        if (renderJustOneMoreTime) {
+            println("rendering one more time")
+            renderJustOneMoreTime = false
         }
         worldRender.render(dt)
     }
@@ -98,6 +122,24 @@ class GhostOverlay(
     fun activate() {
         isActive = true
         isMoving = true
+    }
+
+    private var renderJustOneMoreTime = false
+    private var neonGhostSlice: TextureSlice? = null
+    private var neonGhostFacingLeft: Boolean = false
+    private var neonGhostX = 0f
+    private var neonGhostY = 0f
+    fun renderNeonGhost(frame: TextureSlice?, isFacingLeft: Boolean, x: Float, y: Float) {
+        neonGhostSlice = frame
+        neonGhostFacingLeft = isFacingLeft
+        neonGhostX = x
+        neonGhostY = y
+        if (frame == null) {
+            println("asked to clear render one more time")
+            renderJustOneMoreTime = true
+        } else if (renderJustOneMoreTime) {
+            println("asked to render a frame after asking to clear one more time")
+        }
     }
 
     companion object {

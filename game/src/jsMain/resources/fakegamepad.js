@@ -143,7 +143,7 @@ const gamepadSimulator = {
   updateGamepads: function () {
     gamepadSimulator.gamepads = gamepadSimulator.getRealGamepads();
     if (gamepadSimulator.fakeController.index == gamepadSimulator.gamepads.length) {
-      gamepadSimulator.gamepads = gamepadSimulator.concat(gamepadSimulator.fakeController);
+      gamepadSimulator.gamepads = gamepadSimulator.gamepads.concat(gamepadSimulator.fakeController);
     } else {
       gamepadSimulator.gamepads[gamepadSimulator.fakeController.index] = gamepadSimulator.fakeController;
     }
@@ -174,7 +174,7 @@ const gamepadSimulator = {
     return index;
   }
 }
-
+/*
 window.addEventListener("gamepadconnected", (e) => {
   let connectedGamepad = navigator.getGamepads()[e.gamepad.index];
   console.log(`gamepad connected ${connectedGamepad}`);
@@ -196,6 +196,7 @@ window.addEventListener("gamepaddisconnected", (e) => {
   }
 });
 
+
 var userInputEventNames = [
         'click', 'contextmenu', 'auxclick', 'dblclick', 'mousedown',
         'mouseup', 'pointerup', 'touchend', 'keydown', 'keyup', 'touchstart'
@@ -213,3 +214,4 @@ var createAndConnectFakeGamepad = function(e) {
 userInputEventNames.forEach(function (eventName) {
   window.addEventListener(eventName, createAndConnectFakeGamepad);
 });
+*/

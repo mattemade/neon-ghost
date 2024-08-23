@@ -23,6 +23,7 @@ import io.itch.mattemade.neonghost.Game.Companion.visibleWorldHeight
 import io.itch.mattemade.neonghost.Game.Companion.visibleWorldWidth
 import io.itch.mattemade.neonghost.character.DepthBasedRenderable
 import io.itch.mattemade.neonghost.character.enemy.Enemy
+import io.itch.mattemade.neonghost.character.rei.NeonGhost
 import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.event.EventExecutor
 import io.itch.mattemade.neonghost.tempo.Choreographer
@@ -137,6 +138,7 @@ class InGame(
             destroyBody(it as Body)
         }
     }
+    private val neonWorld by lazy { World(gravityX = 0f, gravityY = 0f) }
     private val playerSpawnPosition by lazy {
         val placement = level.layer("spawn").fastCastTo<TiledObjectLayer>().objects.first()
         val x = placement.bounds.x + placement.bounds.width / 2f
@@ -155,9 +157,31 @@ class InGame(
             initialHealth = 10,
             canAct = { !isInDialogue },
             gameOver = ::gameOver,
-            changePlaybackRate = ::changePlaybackRate
-        )
+            changePlaybackRate = ::changePlaybackRate,
+            spawnNeonGhost = ::spawnNeonGhost
+        ).also { it.transform() }
     }
+    private var neonGhost: NeonGhost? = null
+    private fun spawnNeonGhost(facingLeft: Boolean) {
+        neonGhost = NeonGhost(
+            Vec2(player.x, player.y),
+            facingLeft,
+            neonWorld,
+            assets,
+            inputController,
+            assets.objects.particleSimulator,
+            context.vfs,
+            ghostOverlay,
+            cameraMan,
+            removeGhost = ::removeNeonGhost
+        ).also { depthBasedDrawables.add(it) }
+    }
+    private fun removeNeonGhost(ghost: NeonGhost) {
+        depthBasedDrawables.remove(ghost)
+        ghost.release()
+        neonGhost = null
+    }
+
     private fun changePlaybackRate(rate: Float) {
         choreographer.setPlaybackRate(rate)
     }
@@ -201,6 +225,7 @@ class InGame(
 
     private val worldStep = 1f / 60f
     private var worldAccumulator = 0f
+    private var neonWorldAccumulator = 0f
 
     private var enterTriggers = mutableSetOf<Trigger>()
     private var exitTriggers = mutableSetOf<Trigger>()
@@ -398,6 +423,13 @@ class InGame(
             world.step(worldStep, 6, 2)
             worldAccumulator -= worldStep
         }
+        neonGhost?.let { ghost ->
+            neonWorldAccumulator += notAdjustedDt.seconds
+            while (neonWorldAccumulator >= worldStep) {
+                neonWorld.step(worldStep, 6, 2)
+                neonWorldAccumulator -= worldStep
+            }
+        }
         processTriggers()
         depthBasedDrawables.sortBy { it.depth }
         cameraMan.update(dt)
@@ -473,7 +505,10 @@ class InGame(
 
     fun onAnimationEvent(event: String) {
         when (event) {
-            "punch" -> player.activatePunch()
+            "punch" -> {
+                player.activatePunch()
+                neonGhost?.activatePunch()
+            }
         }
     }
 }
