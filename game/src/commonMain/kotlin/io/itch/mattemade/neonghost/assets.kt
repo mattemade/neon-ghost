@@ -4,11 +4,9 @@ import com.littlekt.Context
 import com.littlekt.PreparableGameAsset
 import com.littlekt.Releasable
 import com.littlekt.audio.AudioClipEx
-import com.littlekt.audio.AudioStreamEx
 import com.littlekt.file.vfs.baseName
 import com.littlekt.file.vfs.pathInfo
 import com.littlekt.file.vfs.readAudioClipEx
-import com.littlekt.file.vfs.readAudioStreamEx
 import com.littlekt.file.vfs.readTiledMap
 import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.ParticleSimulator
@@ -58,13 +56,8 @@ class Sound(context: Context) : AssetPack(context) {
 }
 
 class Music(context: Context) : AssetPack(context) {
-    val background by prepare {
-        context.resourcesVfs["sound/magical girl 3b.mp3"].readAudioClipEx().asTrack(150f, -0.1f)
-        //context.resourcesVfs["sound/untitled.mp3"].readAudioStreamEx().bpm(138.6882f, -0.2f)
-    }
-    val background1c by prepare {
-        context.resourcesVfs["sound/magical girl 1c.mp3"].readAudioClipEx().asTrack(129.97198f, -0.1f)
-    }
+    val music3d by prepare { context.resourcesVfs["sound/magical girl 3d.mp3"].readAudioClipEx().asTrack(150f, -0.1f) }
+    val music1c by prepare { context.resourcesVfs["sound/magical girl 1c.mp3"].readAudioClipEx().asTrack(129.97198f, -0.1f) }
 }
 
 data class StreamBpm(val stream: AudioClipEx, val bpm: Float, val offset: Float) : Releasable by stream

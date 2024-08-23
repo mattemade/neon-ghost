@@ -164,7 +164,7 @@ class InGame(
             spawnNeonGhost = ::spawnNeonGhost,
             castAoe = ::castAoe,
             castProjectile = ::castProjectile,
-        ).also { it.transform() }
+        )
     }
     private var neonGhost: NeonGhost? = null
     private var addNeonGhostToList = false
@@ -274,8 +274,8 @@ class InGame(
 
     private fun onTriggerEventCallback(event: String) {
         when (event) {
-            "setMusic3b" -> choreographer.play(assets.music.background)
-            "setMusic1c" -> choreographer.play(assets.music.background1c)
+            "setMusic3d" -> choreographer.play(assets.music.music3d)
+            "setMusic1c" -> choreographer.play(assets.music.music1c)
             "faster" -> choreographer.setPlaybackRate(choreographer.playbackRate.toFloat() + 0.25f)
             "slower" -> choreographer.setPlaybackRate(choreographer.playbackRate.toFloat() - 0.25f)
             "launchGhost" -> {
@@ -388,7 +388,7 @@ class InGame(
     private var music = false
 
     init {
-        choreographer.play(assets.music.background)
+        choreographer.play(assets.music.music3d)
         triggers // to initialize
         if (ghostOverlay.isActive) {
             createGhostBody()

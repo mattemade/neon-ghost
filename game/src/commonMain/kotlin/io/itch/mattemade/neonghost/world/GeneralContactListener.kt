@@ -62,8 +62,8 @@ class GeneralContactListener(
             contact.getUserData<Enemy>()?.let { enemy ->
                 contact.getUserData<GhostBody>()?.let { ghostBody ->
                     val belongsToEllipse = belongsToEllipse(
-                        tempVec2f.x,
-                        tempVec2f.y,
+                        enemy.x,
+                        enemy.y,
                         ghostBody.body.position.x,
                         ghostBody.body.position.y,
                         GhostOverlay.radiusX,

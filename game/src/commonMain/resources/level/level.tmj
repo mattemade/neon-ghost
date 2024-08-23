@@ -123,7 +123,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"trigger changeMusic\nterminal<:what do you want\nchoose 3b:3b; 1c:1c; slow\\down:slower; speed\\up:faster\nchoice 3b\ntrigger setMusic3b\nchoice 1c\ntrigger setMusic1c\nchoice slower\ntrigger slower\nchoice faster\ntrigger faster\nchoice\nterminal<:here you go"
+                         "value":"trigger changeMusic\nterminal<:what do you want\nchoose 3d:3d; 1c:1c; slow\\down:slower; speed\\up:faster\nchoice 3d\ntrigger setMusic3d\nchoice 1c\ntrigger setMusic1c\nchoice slower\ntrigger slower\nchoice faster\ntrigger faster\nchoice\nterminal<:here you go"
                         }, 
                         {
                          "name":"title",
