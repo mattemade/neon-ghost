@@ -7,12 +7,10 @@ import io.itch.mattemade.neonghost.character.DepthBasedRenderable
 import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.world.ContactBits
 import com.littlekt.file.Vfs
-import com.littlekt.graphics.Color
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.ParticleSimulator
 import com.littlekt.graphics.g2d.shape.ShapeRenderer
-import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapController
 import com.littlekt.math.MutableVec2f
 import com.soywiz.korma.geom.Angle
@@ -72,6 +70,7 @@ class Enemy(
 
     val x get() = body.position.x
     val y get() = body.position.y
+    var extraForEllipseCheck = physicalWidth / 2f
     override val depth: Float get() = y
 
     private val walk = animations.walk.copy()
@@ -147,14 +146,14 @@ class Enemy(
     private var hitCooldown = 0f
     var isAggressive = false
 
-    fun hit(from: Vec2, strength: Int) {
+    fun hit(from: Vec2, strength: Int, fromSpell: Boolean = false) {
         if (health == 0) {
             return
         }
         health = max(0, health - strength)
         hitCooldown = if (health == 0) 500f else 300f
         currentMagicalAnimation = hit
-        if (strength > 1 || health == 0) {
+        if (strength > 1 || health == 0 || fromSpell) {
             val direction = tempVec2f.set(body.position.x, body.position.y).subtract(from.x, from.y)
             val force = if (health == 0) 3f else 5f / difficulty
             tempVec2f2.set(force, 0f)

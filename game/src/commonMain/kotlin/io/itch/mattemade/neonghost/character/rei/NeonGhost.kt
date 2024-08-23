@@ -43,6 +43,8 @@ class NeonGhost(
     private val ghostOverlay: GhostOverlay,
     private val cameraMan: CameraMan,
     private val removeGhost: (NeonGhost) -> Unit,
+    private val castAoe: (Vec2) -> Unit,
+    private val castProjectile: (Vec2, Boolean) -> Unit,
 ) : Releasing by Self(),
     DepthBasedRenderable {
 
@@ -141,6 +143,7 @@ class NeonGhost(
             ghostOverlay.renderNeonGhost(null, isFacingLeft, 0f, 0f)
             removeGhost(this)
             dead = true
+            return
         }
 
         var speed = 1f
@@ -170,6 +173,7 @@ class NeonGhost(
         } else {
             punchCooldown = 300f
             stopBody()
+            castAoe(body.position)
             // TODO: cast ghost AOE
             // 1. create a AOE fixture in normal world of RX circle
             // 2. destroy the ghost
@@ -181,6 +185,7 @@ class NeonGhost(
 
         if (activatePunch) {
             activatePunch = false
+            castProjectile(body.position, isFacingLeft)
             // TODO: cast ghost projectile
             // 1. add it in the normal world
             /*if (isFacingLeft) {

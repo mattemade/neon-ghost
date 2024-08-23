@@ -69,12 +69,12 @@ fun Context.bindInputs(): InputMapController<GameInput> =
         addBinding(
             GameInput.MAGIC,
             listOf(Key.J, Key.X).any().action(),
-            buttons = listOf(GameButton.XBOX_X, GameButton.XBOX_B).any().action()
+            buttons = listOf(GameButton.XBOX_A, GameButton.XBOX_Y).any().action()
         )
         addBinding(
             GameInput.ATTACK,
             listOf(Key.K, Key.Z).any().action(),
-            buttons = listOf(GameButton.XBOX_A, GameButton.XBOX_Y).any().action()
+            buttons = listOf(GameButton.XBOX_X, GameButton.XBOX_B).any().action()
         )
 
         addBinding(

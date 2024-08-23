@@ -4,15 +4,19 @@ import com.littlekt.file.Vfs
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.ParticleSimulator
+import com.littlekt.graphics.g2d.shape.JoinType
 import com.littlekt.graphics.g2d.shape.ShapeRenderer
 import com.littlekt.graphics.gl.PixmapTextureData
 import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapController
 import com.littlekt.math.MutableVec2f
+import com.littlekt.math.PI2
+import com.littlekt.math.PI_F
+import com.littlekt.math.geom.radians
 import com.littlekt.math.random
 import com.littlekt.util.seconds
 import com.soywiz.korma.geom.Angle
-import com.soywiz.korma.geom.radians
+import com.soywiz.korma.geom.radians as boxRadians
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.Game
@@ -30,6 +34,7 @@ import org.jbox2d.dynamics.BodyType
 import org.jbox2d.dynamics.Filter
 import org.jbox2d.dynamics.FixtureDef
 import org.jbox2d.dynamics.World
+import kotlin.math.PI
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.time.Duration
@@ -47,6 +52,8 @@ class Player(
     val gameOver: () -> Unit,
     private val changePlaybackRate: (Float) -> Unit,
     private val spawnNeonGhost: (facingLeft: Boolean) -> Unit,
+    private val castAoe: (Vec2, Int) -> Unit,
+    private val castProjectile: (Vec2, Int, Boolean) -> Unit,
 ) : Releasing by Self(),
     DepthBasedRenderable {
 
@@ -114,7 +121,7 @@ class Player(
                     punchWidth / 2f,
                     punchDepth / 2f,
                     center = tempVec2.set(-punchDistance, 0f),
-                    angle = 0f.radians
+                    angle = 0f.boxRadians
                 )
             },
             filter = Filter().apply {
@@ -132,7 +139,7 @@ class Player(
                     punchWidth / 2f,
                     punchDepth / 2f,
                     center = tempVec2.set(punchDistance, 0f),
-                    angle = 0f.radians
+                    angle = 0f.boxRadians
                 )
             },
             filter = Filter().apply {
@@ -151,6 +158,8 @@ class Player(
     private var wasPunching = false
     private var nextLeftPunch = true
     private var punchCooldown = 0f
+    private var spellCooldown = 0f
+    private var focusCooldown = 0f
 
     var movingToBeat = false
     var movingOffBeat = false
@@ -180,6 +189,7 @@ class Player(
             }
             castingTime = 0f
         }
+        focusCooldown = 0f
         hitCooldown = 300f
         currentAnimation = animations.hit
         val direction = tempVec2f.set(body.position.x, body.position.y).subtract(from.x, from.y)
@@ -206,7 +216,6 @@ class Player(
             castTime * (castsToStopTime - castBeforeSlowingTime)
         val rate = castWithinSlowingPeriod / slowingPeriod
         reducingTime = reduceTime * rate
-        println("calculated to reduce time by $reducingTime")
     }
 
     fun stopBody(resetAnimationToIdle: Boolean = false) {
@@ -233,6 +242,9 @@ class Player(
                 changePlaybackRate(1f - reducingTime / reduceTime)
             }
         }
+        if (spellCooldown > 0f) {
+            spellCooldown = max (0f, spellCooldown - dt.seconds)
+        }
         if (!canAct()) {
             stopBody()
             currentAnimation.update(dt)
@@ -241,7 +253,6 @@ class Player(
         val xMovement = controller.axis(GameInput.HORIZONTAL)
         val yMovement = controller.axis(GameInput.VERTICAL)
         val moving = (xMovement != 0f || yMovement != 0f) && castingTime < castTime * castsToStopTime
-        val anyAction = controller.down(GameInput.ANY_ACTION)
         val matchBeat = toBeat < 0.2f || toBeat > 0.9f || toMeasure < 0.075f || toMeasure > 0.9625f
 
         if (toBeat < lastBeatPosition && movingOffBeat) {
@@ -325,53 +336,53 @@ class Player(
         if (isMagicGirl) {
             val notAdjustedSeconds = notAdjustedDt.seconds
             if (controller.down(GameInput.MAGIC)) {
-                dashCooldown = 0f
-                punchCooldown = 0f
-                movingOffBeat = false
-                movingToBeat = false
-                if (controller.pressed(GameInput.ATTACK)) {
-                    if (castingTime / castTime >= 2) {
-                        // TODO attack by shadow
-                        println("cast projectile from shadow")
-                    } else {
-                        val castPower = castingTime / castTime
-                        // TODO: cast projectile
-                        println("cast projectile $castPower")
-                        // and then if will automatically fallback into punching!
-                    }
-                    updateReducingTime()
-                    castingTime = 0f
-                } else { // just holding the Magic button
-                    if (moving) {
-                        // moving while holding magic - it will drain focus
-                        castingTime = max(0f, castingTime - notAdjustedSeconds / 2f)
-                        recalculatePlaybackRate()
-                    } else {
-                        stopBody()
-                        currentAnimation = animations.prepare
-                        if (castingTime < castTime * castsToStopTime) {
-                            castingTime += notAdjustedSeconds
-                            if (castingTime / castTime >= castsToStopTime) {
-                                spawnNeonGhost(isFacingLeft)
-                                changePlaybackRate(0.000000000001f)
-                                println("shadow ghost is activated")
-                            } else {
-                                recalculatePlaybackRate()
+                focusCooldown = min(maxFocusCooldown, focusCooldown + dt.seconds)
+                if (spellCooldown == 0f && focusCooldown == maxFocusCooldown) {
+                    dashCooldown = 0f
+                    punchCooldown = 0f
+                    movingOffBeat = false
+                    movingToBeat = false
+                    if (controller.pressed(GameInput.ATTACK)) {
+                        if (castingTime / castTime < castsToStopTime) {
+                            val castPower = castingTime / castTime
+                            castProjectile(body.position, castPower.toInt(), isFacingLeft)
+                            // and then if will automatically fallback into punching!
+                        }
+                        updateReducingTime()
+                        castingTime = 0f
+                        focusCooldown = 0f
+                    } else { // just holding the Magic button
+                        if (moving) {
+                            // moving while holding magic - it will drain focus
+                            castingTime = max(0f, castingTime - notAdjustedSeconds / 2f)
+                            recalculatePlaybackRate()
+                        } else {
+                            stopBody()
+                            currentAnimation = animations.prepare
+                            if (castingTime < castTime * castsToStopTime) {
+                                castingTime += notAdjustedSeconds
+                                if (castingTime / castTime >= castsToStopTime) {
+                                    spawnNeonGhost(isFacingLeft)
+                                    changePlaybackRate(0.000000000001f)
+                                } else {
+                                    recalculatePlaybackRate()
+                                }
                             }
                         }
                     }
                 }
             } else if (castingTime > 0f) { // releasing after casting
-                if (castingTime / castTime >= castsToStopTime) {
-                    // TODO aoe by shadow
-                    println("aoe by shadow")
-                } else {
-                    val castPower = castingTime / castTime
-                    // TODO: cast aoe
-                    println("aoe by Rei $castPower")
+                if (castingTime / castTime < castsToStopTime) {
+                    val castPower = (castingTime / castTime).toInt()
+                    castAoe(body.position, castPower)
+                    // TODO: maybe return this?
+                    //spellCooldown = castingTime
                 }
                 updateReducingTime()
                 castingTime = 0f
+                focusCooldown = 0f
+            } else {
+                focusCooldown = max(0f, focusCooldown - dt.seconds)
             }
         }
 
@@ -536,7 +547,8 @@ class Player(
             val minRy = width / 8f
             val deltaRx = spellRx - minRx
             val deltaRy = spellRy - minRy
-            val castingTimes = (castingTime / castTime).toInt()
+            val focusedMagic = if (castingTime > 0f) castingTime else spellCooldown
+            val castingTimes = (focusedMagic / castTime).toInt()
             if (castingTimes == castsToStopTime) {
                 shapeRenderer.filledEllipse(
                     x = body.position.x.pixelPerfectPosition,
@@ -547,7 +559,7 @@ class Player(
                     outerColor = magicGirlShadowColor,
                 )
             } else {
-                val ratio = if (castingTimes > 0) 1f else castingTime / castTime
+                val ratio = if (castingTimes > 0) 1f else focusedMagic / castTime
 
                 shapeRenderer.filledEllipse(
                     x = body.position.x.pixelPerfectPosition,
@@ -559,7 +571,7 @@ class Player(
                 )
                 for (i in 0 until castingTimes) {
                     val doubleRatio =
-                        if (castingTimes > i + 1) 1f else (castingTime % castTime) / castTime
+                        if (castingTimes > i + 1) 1f else (focusedMagic % castTime) / castTime
                     shapeRenderer.filledEllipse(
                         x = body.position.x.pixelPerfectPosition,
                         y = body.position.y.pixelPerfectPosition,
@@ -570,18 +582,22 @@ class Player(
                     )
                 }
 
-                if (castingTime > 0f || castingTimes > 0) {
+                if (controller.down(GameInput.MAGIC) && spellCooldown == 0f) {
+                    val startAngle = (0.0).radians
+                    val angle = focusCooldown / maxFocusCooldown * PI2
                     shapeRenderer.ellipse(
                         x = body.position.x.pixelPerfectPosition,
                         y = body.position.y.pixelPerfectPosition,
                         rx = spellRx,
                         ry = spellRy,
                         thickness = Game.IPPU,
-                        color = magicGirlShadowEdgeColor
+                        color = magicGirlShadowEdgeColor,
+                        startAngle = startAngle,
+                        joinType = JoinType.NONE,
+                        radians = angle.toFloat(),
                     )
                 }
             }
-
         }
     }
 
@@ -591,8 +607,9 @@ class Player(
     companion object {
         val magicGirlShadowEdgeColor = MutableColor(0.325f, 0.212f, 0.384f, 1f).toFloatBits()
         val magicGirlShadowColor = MutableColor(0.325f, 0.212f, 0.384f, 0.5f).toFloatBits()
-        private val castTime = 2f
-        private val reduceTime = 2f
+        private val castTime = 1.5f
+        private val reduceTime = 1f
+        private val maxFocusCooldown = 0.5f
         val spellRx = 64f * Game.IPPU
         val spellRy = 32f * Game.IPPU
         private const val castBeforeSlowingTime = 1

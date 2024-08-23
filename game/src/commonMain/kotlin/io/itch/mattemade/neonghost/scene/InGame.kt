@@ -33,6 +33,7 @@ import io.itch.mattemade.neonghost.world.Floor
 import io.itch.mattemade.neonghost.world.GeneralContactListener
 import io.itch.mattemade.neonghost.world.GhostBody
 import io.itch.mattemade.neonghost.world.Trigger
+import io.itch.mattemade.utils.math.belongsToEllipse
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
 import io.itch.mattemade.utils.render.PixelRender
@@ -158,10 +159,14 @@ class InGame(
             canAct = { !isInDialogue },
             gameOver = ::gameOver,
             changePlaybackRate = ::changePlaybackRate,
-            spawnNeonGhost = ::spawnNeonGhost
+            spawnNeonGhost = ::spawnNeonGhost,
+            castAoe = ::castAoe,
+            castProjectile = ::castProjectile,
         ).also { it.transform() }
     }
     private var neonGhost: NeonGhost? = null
+    private var addNeonGhostToList = false
+    private var removeNeonGhostFromList = false
     private fun spawnNeonGhost(facingLeft: Boolean) {
         neonGhost = NeonGhost(
             Vec2(player.x, player.y),
@@ -173,17 +178,48 @@ class InGame(
             context.vfs,
             ghostOverlay,
             cameraMan,
-            removeGhost = ::removeNeonGhost
-        ).also { depthBasedDrawables.add(it) }
+            removeGhost = ::removeNeonGhost,
+            castAoe = ::castAoe,
+            castProjectile = ::castProjectile,
+        )
+        addNeonGhostToList = true
     }
     private fun removeNeonGhost(ghost: NeonGhost) {
-        depthBasedDrawables.remove(ghost)
+        removeNeonGhostFromList = true
         ghost.release()
-        neonGhost = null
     }
 
     private fun changePlaybackRate(rate: Float) {
         choreographer.setPlaybackRate(rate)
+    }
+
+    private fun castAoe(position: Vec2) {
+        castAoe(position, Player.castsToStopTime)
+    }
+
+    private fun castAoe(position: Vec2, power: Int) {
+        enemies.forEach {
+            if (belongsToEllipse(
+                    it.x,
+                    it.y,
+                    position.x,
+                    position.y,
+                    Player.spellRx,
+                    Player.spellRy,
+                    it.extraForEllipseCheck,
+            )) {
+                it.hit(position, power * 2 + 1, fromSpell = true)
+            }
+        }
+        println("casting aoe at $position with $power")
+    }
+
+    private fun castProjectile(position: Vec2, facingLeft: Boolean) {
+        castProjectile(position, Player.castsToStopTime, facingLeft)
+    }
+
+    private fun castProjectile(position: Vec2, power: Int, facingLeft: Boolean) {
+        println("casting projectile at $position with $power, isLeft = $facingLeft")
     }
 
     private val depthBasedDrawables by lazy {
@@ -406,6 +442,15 @@ class InGame(
                 choreographer.toBeat,
                 choreographer.toMeasure
             )
+        }
+        if (addNeonGhostToList) {
+            depthBasedDrawables.add(neonGhost!!)
+            addNeonGhostToList = false
+        }
+        if (removeNeonGhostFromList) {
+            depthBasedDrawables.remove(neonGhost!!)
+            neonGhost = null
+            removeNeonGhostFromList = false
         }
         if (deadEnemies.isNotEmpty()) {
             enemies.removeAll(deadEnemies)

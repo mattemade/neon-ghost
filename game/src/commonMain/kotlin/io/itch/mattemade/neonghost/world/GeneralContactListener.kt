@@ -7,6 +7,7 @@ import com.littlekt.math.geom.sin
 import io.itch.mattemade.neonghost.character.enemy.Enemy
 import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.scene.GhostOverlay
+import io.itch.mattemade.utils.math.belongsToEllipse
 import org.jbox2d.callbacks.ContactImpulse
 import org.jbox2d.callbacks.ContactListener
 import org.jbox2d.collision.Manifold
@@ -60,24 +61,22 @@ class GeneralContactListener(
         if (contact.ofCategory(ContactBits.GHOST_AOE)) {
             contact.getUserData<Enemy>()?.let { enemy ->
                 contact.getUserData<GhostBody>()?.let { ghostBody ->
-                    tempVec2f.set(enemy.body.position)
-                        .subtract(ghostBody.body.position.x, ghostBody.body.position.y)
-                    val distance = tempVec2f.length()
-                    val angle = tempVec2f.angleTo(Vec2f.X_AXIS)
-                    val referenceDistance = tempVec2f.set(
-                        GhostOverlay.radiusX * cos(angle),
-                        GhostOverlay.radiusY * sin(angle)
-                    ).length()
-                    if (distance > referenceDistance) {
+                    val belongsToEllipse = belongsToEllipse(
+                        tempVec2f.x,
+                        tempVec2f.y,
+                        ghostBody.body.position.x,
+                        ghostBody.body.position.y,
+                        GhostOverlay.radiusX,
+                        GhostOverlay.radiusY,
+                        enemy.extraForEllipseCheck,
+                    )
+                    if (!belongsToEllipse) {
                         ghostBody.targetEnemies.remove(enemy)
                     }
                 }
             }
         }
     }
-
-    private fun MutableVec2f.set(vec2: Vec2): MutableVec2f =
-        this.apply { set(vec2.x, vec2.y) }
 
     override fun postSolve(contact: Contact, impulse: ContactImpulse) {}
 
