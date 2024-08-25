@@ -1,0 +1,14 @@
+{ "columns":10,
+ "image":"abstract.png",
+ "imageheight":48,
+ "imagewidth":480,
+ "margin":0,
+ "name":"abstract",
+ "spacing":0,
+ "tilecount":10,
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilewidth":48,
+ "type":"tileset",
+ "version":"1.10"
+}

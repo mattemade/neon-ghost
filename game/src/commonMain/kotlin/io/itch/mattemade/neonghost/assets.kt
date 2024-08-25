@@ -1,5 +1,6 @@
 package io.itch.mattemade.neonghost
 
+import co.touchlab.stately.collections.ConcurrentMutableMap
 import com.littlekt.Context
 import com.littlekt.PreparableGameAsset
 import com.littlekt.Releasable
@@ -57,26 +58,65 @@ class Sound(context: Context) : AssetPack(context) {
 }
 
 class Music(context: Context) : AssetPack(context) {
-    val music3d by prepare { context.resourcesVfs["sound/magical girl 3d.mp3"].readAudioClipEx().asTrack(150f, -0.1f) }
-    val music1c by prepare { context.resourcesVfs["sound/magical girl 1c.mp3"].readAudioClipEx().asTrack(129.97198f, -0.1f) }
+
+    private fun String.mp3name(): String = this.substringAfterLast("/").substringBefore(".mp3")
+    val concurrentTracks = ConcurrentMutableMap<String, StreamBpm>()
+
+    private val preparations = listOf(
+        "sound/magical girl 3d.mp3" to 150f,
+        "sound/magical girl 1c.mp3" to 129.97198f,
+    ).forEach {
+        val name = it.first.mp3name()
+        prepare {
+            val track = context.resourcesVfs[it.first].readAudioClipEx().asTrack(name, it.second, 0.0f)
+            concurrentTracks[name] = track
+            track
+        }
+    }
 }
 
-data class StreamBpm(val stream: AudioClipEx, val bpm: Float, val offset: Float) : Releasable by stream
+data class StreamBpm(val name: String, val stream: AudioClipEx, val bpm: Float, val offset: Float) :
+    Releasable by stream
 
-private fun AudioClipEx.asTrack(bpm: Float, offset: Float) = StreamBpm(this, bpm, offset)
+private fun AudioClipEx.asTrack(name: String, bpm: Float, offset: Float) = StreamBpm(name, this, bpm, offset)
 
 class Levels(context: Context, private val atlas: TextureAtlas? = null) : AssetPack(context) {
     private fun String.pack(): PreparableGameAsset<TiledMap> =
         prepare {
-            context.resourcesVfs[this].readTiledMap(
-                atlas,
-                tilesetBorder = 0
-            )
+            context.resourcesVfs[this].readTiledMap(atlas, tilesetBorder = 0)
         }
-    val testRoom by "level/level.tmj".pack()
-    val secondRoom by "level/second_room.tmj".pack()
-    //val testRoom by prepare { context.resourcesVfs["brick-and-concrete/test-room.tmj"].readTiledMap() }
+
+    private fun String.levelName(): String = this.substringAfterLast("/").substringBefore(".tmj")
+
+    //val startLevel by "level/boxing_club.tmj".pack()
+    val levels by preparePlain {
+        listOf(
+            "level/boxing_club.tmj" to false,
+            "level/going_home.tmj" to false,
+            "level/rei_home.tmj" to false,
+            "level/strange_room.tmj" to false,
+            "level/street_level.tmj" to false,
+            "level/street_back_alley.tmj" to false,
+            "level/interrogation_room.tmj" to true,
+            "level/washing_room.tmj" to true,
+            "level/security_lift.tmj" to true,
+            "level/main_lift.tmj" to true,
+            "level/power_plant.tmj" to true,
+            "level/roof.tmj" to true,
+            "level/research_inner_room.tmj" to true,
+            "level/research_outer_room.tmj" to true,
+            "level/control_room.tmj" to true,
+            "level/lobby_room.tmj" to true,
+            "level/corridor.tmj" to true,
+        ).associate {
+            val level = context.resourcesVfs[it.first].readTiledMap(atlas, tilesetBorder = 0)
+                .releasing()
+            it.first.levelName() to LevelSpec(level, it.second)
+        }
+    }
 }
+
+class LevelSpec(val level: TiledMap, val freeCameraY: Boolean)
 
 class TileSets(context: Context, private val packer: RuntimeTextureAtlasPacker) :
     AssetPack(context) {
@@ -87,6 +127,17 @@ class TileSets(context: Context, private val packer: RuntimeTextureAtlasPacker) 
     val light by "level/Outside-Light 150_150.png".pack()
     val window by "level/Outside-Window 48_48.png".pack()
     val terminalTile by "level/terminal_tile.png".pack()
+    val interior by "level/PV_Tides_Asset_Pack/tilesets/interior modern/Interior A4.png".pack()
+    val abstract by "level/abstract.png".pack()
+    val metalWall by "level/tilesets/0_Asset_Wall_144144.png".pack()
+    val metalFloor by "level/tilesets/0_Asset_Floor_4848.png".pack()
+    val controls by "level/tilesets/0_Asset_Control_9696.png".pack()
+    val container by "level/tilesets/0_Asset_Container_240240.png".pack()
+    val chair1 by "level/tilesets/0_Asset_Chair_240240.png".pack()
+    val chair2 by "level/tilesets/0_Asset_Chair02_240240.png".pack()
+    val doorTransparent by "level/tilesets/door_transparent.png".pack()
+    val redDoor by "level/tilesets/red_door.png".pack()
+    val redDoorTransparent by "level/tilesets/red_door_transparent.png".pack()
 }
 
 class Animations(

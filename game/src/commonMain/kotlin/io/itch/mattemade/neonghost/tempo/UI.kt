@@ -3,12 +3,14 @@ package io.itch.mattemade.neonghost.tempo
 import com.littlekt.Context
 import com.littlekt.graph.node.resource.VAlign
 import com.littlekt.graphics.Color
+import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.SpriteBatch
 import com.littlekt.graphics.g2d.shape.ShapeRenderer
 import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapController
 import com.littlekt.math.MutableVec2f
 import com.littlekt.math.PI_F
+import com.littlekt.math.Rect
 import com.littlekt.math.Vec2f
 import com.littlekt.math.geom.radians
 import com.littlekt.util.Scaler
@@ -31,6 +33,7 @@ class UI(
     private val assets: Assets,
     private val player: Player,
     private val controller: InputMapController<GameInput>,
+    private val interactionOverrideMap: Map<String, String>,
     private val advanceDialogue: () -> Unit,
     private val activateInteraction: (Trigger) -> Unit,
     private val selectOption: (String) -> Unit,
@@ -82,7 +85,7 @@ class UI(
         set(value) {
             field = value
             availableInteractionName =
-                value?.properties?.get("title")?.string?.uppercase()?.let { listOf(it) }
+                (interactionOverrideMap[value?.name] ?: value?.properties?.get("title")?.string?.uppercase())?.split("\\")
         }
     var activeOptions: List<Pair<List<String>, String>>? = null
     var readyToSelectOption = false
@@ -91,6 +94,11 @@ class UI(
     fun render(toMeasure: Float, movingToBeat: Boolean, movingOffbeat: Boolean) {
         viewport.apply(context)
         batch.begin(camera.viewProjection)
+
+        if (fadeWorldColor.a > 0f) {
+            shapeRenderer.filledRectangle(fullscreenRect, color = fadeWorldColor.toFloatBits())
+        }
+
         shapeRenderer.filledCircle(center, 15f, color = Color.WHITE.toFloatBits())
         shapeRenderer.filledCircle(
             center,
@@ -110,7 +118,7 @@ class UI(
             healthBarPadding,
             healthBarWidth,
             healthBarHeight,
-            player.health.toFloat() / player.initialHealth,
+            player.health.toFloat() / Player.maxPlayerHealth,
             Color.GRAY,
             Color.GREEN
         )
@@ -146,7 +154,7 @@ class UI(
                 batch,
                 it,
                 (Game.virtualWidth / 2f).screenSpacePixelPerfect,
-                (dialogPadding + interactionTitleHeight / 2f).screenSpacePixelPerfect + 0.5f,
+                (dialogPadding + interactionTitleHeight / 2f).screenSpacePixelPerfect + if (it.size % 2 == 1) 0.5f else 0f,
                 vAlign = VAlign.CENTER
             )
         }
@@ -222,6 +230,9 @@ class UI(
                     height = dialogArrow.height.toFloat()
                 )
             }
+        }
+        if (fadeEverythingColor.a > 0f) {
+            shapeRenderer.filledRectangle(fullscreenRect, color = fadeEverythingColor.toFloatBits())
         }
 
         batch.end()
@@ -309,6 +320,7 @@ class UI(
         }
         availableInteraction?.let {
             if (controller.pressed(GameInput.ANY_ACTION)) {
+                player.stopBody(resetAnimationToIdle = true)
                 activateInteraction(it)
                 return
             }
@@ -324,5 +336,24 @@ class UI(
         activeOptions = options.map { it.first.uppercase().split("\\") to it.second }
         activeOption = 0
         readyToSelectOption = true
+    }
+
+    private var fullscreenRect = Rect(0f, 0f, Game.virtualWidth.toFloat(), Game.virtualHeight.toFloat())
+    private var fadeWorldColor = MutableColor(0f, 0f, 0f, 0f)
+    fun setFadeWorldColor(color: Color) {
+        fadeWorldColor.set(color)
+    }
+
+    fun setFadeWorld(alpha: Float) {
+        fadeWorldColor.a = alpha
+    }
+
+    private var fadeEverythingColor = MutableColor(0f, 0f, 0f, 0f)
+    fun setFadeEverythingColor(color: Color) {
+        fadeEverythingColor.set(color)
+    }
+
+    fun setFadeEverything(alpha: Float) {
+        fadeEverythingColor.a = alpha
     }
 }

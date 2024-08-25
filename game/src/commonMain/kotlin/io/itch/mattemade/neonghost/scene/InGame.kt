@@ -2,6 +2,7 @@ package io.itch.mattemade.neonghost.scene
 
 import com.littlekt.Context
 import com.littlekt.graphics.Camera
+import com.littlekt.graphics.Color
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.shape.ShapeRenderer
@@ -23,6 +24,7 @@ import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.Game.Companion.IPPU
 import io.itch.mattemade.neonghost.Game.Companion.visibleWorldHeight
 import io.itch.mattemade.neonghost.Game.Companion.visibleWorldWidth
+import io.itch.mattemade.neonghost.LevelSpec
 import io.itch.mattemade.neonghost.character.DepthBasedRenderable
 import io.itch.mattemade.neonghost.character.enemy.Enemy
 import io.itch.mattemade.neonghost.character.rei.NeonGhost
@@ -31,7 +33,7 @@ import io.itch.mattemade.neonghost.event.EventExecutor
 import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.neonghost.tempo.UI
 import io.itch.mattemade.neonghost.world.CameraMan
-import io.itch.mattemade.neonghost.world.Floor
+import io.itch.mattemade.neonghost.world.Wall
 import io.itch.mattemade.neonghost.world.GeneralContactListener
 import io.itch.mattemade.neonghost.world.GhostBody
 import io.itch.mattemade.neonghost.world.Trigger
@@ -49,17 +51,23 @@ import kotlin.time.Duration
 class InGame(
     private val context: Context,
     private val assets: Assets,
-    private val level: TiledMap,
+    private val levelSpec: LevelSpec,
     private val inputController: InputMapController<GameInput>,
     private val choreographer: Choreographer,
     private val ghostOverlay: GhostOverlay,
     private val eventState: MutableMap<String, Int>,
     private val playerKnowledge: MutableSet<String>,
+    private val interactionOverride: MutableMap<String, String>,
     private val onGameOver: () -> Unit,
-    private val goThroughDoor: (door: String, toRoom: String) -> Unit,
-    private val wentThroughDoor: String? = null
+    private val goThroughDoor: (door: String, toRoom: String, playerHealth: Int, isMagic: Boolean) -> Unit,
+    private val wentThroughDoor: String? = null,
+    private val saveState: () -> Unit,
+    private val loadState: () -> Unit,
+    private val playerHealth: Int,
+    private val isMagic: Boolean
 ) : Releasing by Self() {
 
+    private val level = levelSpec.level
     private val sharedFrameBuffer =
         context.createPixelFrameBuffer(Game.virtualWidth, Game.virtualHeight)
     private val worldRender = PixelRender(
@@ -85,6 +93,7 @@ class InGame(
     private val floorLayer = tiledLayers.first { it.name == "floor" }
     private val wallLayer = tiledLayers.first { it.name == "wall" }
     private val decorationLayer = tiledLayers.first { it.name == "decoration" }
+    private val decorationLayer2 = tiledLayers.firstOrNull() { it.name == "decoration2" }
     private val foregroundLayer = tiledLayers.first { it.name == "foreground" }
     private var notAdjustedTime = 0f
     private var notAdjustedDt: Duration = Duration.ZERO
@@ -95,6 +104,7 @@ class InGame(
             assets,
             player,
             inputController,
+            interactionOverride,
             ::advanceDialog,
             ::activateInteraction,
             ::selectOption
@@ -107,15 +117,36 @@ class InGame(
             player,
             ui,
             cameraMan,
+            levelSpec,
             eventState,
+            interactionOverride,
             ::createEnemy,
             ::onTriggerEventCallback,
             ::onEventFinished,
             playerKnowledge::add,
-            goThroughDoor,
+            playerKnowledge::remove,
+            onTeleport = ::openDoor,
+            onMusic = ::musicCommand,
+            onScreen = ::screenCommand,
+            onSave = saveState,
+            wait = ::wait,
         )
     }
-    private val isInDialogue: Boolean get() = eventExecutor.isInDialogue
+
+    private fun openDoor(door: String, toRoom: String) {
+        ui.availableInteraction = null
+        maxWaitingTime = 0.5f
+        waitingTime = 0.5f
+        ui.setFadeWorldColor(Color.BLACK)
+        ui.setFadeWorld(0f)
+        whileWaitingAction = { ui.setFadeWorld(1f - it) }
+        waitingAction = {
+            ui.setFadeWorld(0f)
+            goThroughDoor(door, toRoom, player.health, player.isMagicGirl)
+        }
+    }
+
+    private val isInDialogue: Boolean get() = eventExecutor.isInDialogue || waitingTime > 0f
     private fun advanceDialog() {
         eventExecutor.advance()
     }
@@ -128,16 +159,39 @@ class InGame(
         eventExecutor.selectOption(key)
     }
 
+    private var waitingTime: Float = 0f
+    private var maxWaitingTime: Float = 0f
+    private var whileWaitingAction: ((Float) -> Unit)? = null
+    private var waitingAction: (() -> Unit)? = null
+    private fun wait(time: Float) {
+        maxWaitingTime = time
+        waitingTime = time
+        whileWaitingAction = null
+        waitingAction = { eventExecutor.advance() }
+    }
+
+    private fun musicCommand(command: String) {
+        when (command) {
+            else -> assets.music.concurrentTracks[command]?.let {
+                choreographer.play(it)
+            }
+        }
+    }
+
+    private fun screenCommand(command: String) {
+
+    }
+
 
     private val levelHeight by lazy { level.height * level.tileHeight }
-    private val floors = mutableListOf<Floor>()
+    private val walls = mutableListOf<Wall>()
     private val world by lazy {
         World(gravityX = 0f, gravityY = 0f).apply {
             val mapHeight = levelHeight
             level.layers.asSequence().filterIsInstance<TiledObjectLayer>().forEach {
-                if (it.name == "floor") {
+                if (it.name == "walls") {
                     it.objects.forEach {
-                        floors += Floor(this, it.bounds, mapHeight)
+                        walls += Wall(this, it.x, it.y, it.shape, mapHeight)
                     }
                 }
             }
@@ -164,8 +218,8 @@ class InGame(
             inputController,
             assets.objects.particleSimulator,
             context.vfs,
-            isMagicGirl = false,
-            initialHealth = 10,
+            isMagicGirl = isMagic,
+            initialHealth = playerHealth,
             canAct = { !isInDialogue },
             gameOver = ::gameOver,
             changePlaybackRate = ::changePlaybackRate,
@@ -243,9 +297,9 @@ class InGame(
     private val deadEnemies = mutableListOf<Enemy>()
 
     private val cameraMan by lazy {
-        val tempVec2 = Vec2(playerSpawnPosition.x, Game.visibleWorldHeight / 2f)
+        val tempVec2 = Vec2(playerSpawnPosition.x, if (levelSpec.freeCameraY) playerSpawnPosition.y - Game.visibleWorldHeight / 8f else visibleWorldHeight / 2f)
         CameraMan(world, tempVec2).apply {
-            lookAt { it.set(player.x, Game.visibleWorldHeight / 2f) }
+            lookAt { it.set(player.x, if (levelSpec.freeCameraY) player.y - Game.visibleWorldHeight / 8f else visibleWorldHeight / 2f) }
         }
     }
 
@@ -285,8 +339,6 @@ class InGame(
 
     private fun onTriggerEventCallback(event: String) {
         when (event) {
-            "setMusic3d" -> choreographer.play(assets.music.music3d)
-            "setMusic1c" -> choreographer.play(assets.music.music1c)
             "faster" -> choreographer.setPlaybackRate(choreographer.playbackRate.toFloat() + 0.25f)
             "slower" -> choreographer.setPlaybackRate(choreographer.playbackRate.toFloat() - 0.25f)
             "launchGhost" -> {
@@ -337,7 +389,7 @@ class InGame(
     }
 
     private fun Trigger.deactivated(): Boolean {
-        val eventState = eventState[name] ?: return false
+        val eventState = eventState[name] ?: 0//return false
         val shouldBeRemoved = !properties.containsKey(eventState.toString())
         // do not remove triggers as they can be activated again
         /*if (shouldBeRemoved) {
@@ -358,9 +410,8 @@ class InGame(
         enemySpec: EventExecutor.EnemySpec
     ): Enemy {
         val offsetX =
-            if (Random.nextBoolean()) -Game.visibleWorldWidth / 2f - 0.5f else Game.visibleWorldWidth / 2f + 0.5f
-        val offsetY =
-            Game.visibleWorldHeight * 4f / 5f - Random.nextFloat() * Game.visibleWorldHeight / 3f
+            if (enemySpec.fromLeft) -Game.visibleWorldWidth / 2f - 0.5f else Game.visibleWorldWidth / 2f + 0.5f
+        val offsetY = enemySpec.verticalPosition
         val enemy = Enemy(
             Vec2(cameraMan.position.x + offsetX, offsetY),
             player,
@@ -400,7 +451,24 @@ class InGame(
     private var music = false
 
     init {
-        choreographer.play(assets.music.music3d)
+        maxWaitingTime = 0.5f
+        waitingTime = 0.5f
+        if (eventState.isEmpty()) {
+            ui.setFadeEverythingColor(Color.BLACK)
+            ui.setFadeEverything(1f)
+            whileWaitingAction = { ui.setFadeEverything(it) }
+            waitingAction = {
+                ui.setFadeEverything(0f)
+            }
+        } else {
+            ui.setFadeWorldColor(Color.BLACK)
+            ui.setFadeWorld(1f)
+            whileWaitingAction = { ui.setFadeWorld(it) }
+            waitingAction = {
+                ui.setFadeWorld(0f)
+            }
+        }
+
         triggers // to initialize
         if (ghostOverlay.isActive) {
             createGhostBody()
@@ -411,6 +479,16 @@ class InGame(
     private fun updateWorld(dt: Duration, camera: Camera) {
         val millis = dt.milliseconds
         time += dt.seconds
+        if (waitingTime > 0f) {
+            waitingTime -= dt.seconds
+            whileWaitingAction?.invoke(waitingTime / maxWaitingTime)
+            if (waitingTime <= 0f) {
+                waitingTime = 0f
+                waitingAction?.invoke()
+                whileWaitingAction = null
+                waitingAction = null
+            }
+        }
 
         ghostBody?.let { ghostBody ->
             if (ghostOverlay.isMoving) {
@@ -548,6 +626,7 @@ class InGame(
         depthBasedDrawables.forEach { it.renderShadow(shapeRenderer!!) }
         wallLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
         decorationLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
+        decorationLayer2?.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
         depthBasedDrawables.forEach { it.render(batch) }
         foregroundLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
     }

@@ -1,0 +1,334 @@
+{ "compressionlevel":-1,
+ "height":5,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            68, 68, 68, 69, 69, 69, 69, 72, 72, 68, 68, 68, 69, 69, 69, 69, 69, 69, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 0, 0, 0, 0,
+            68, 68, 68, 69, 69, 69, 69, 68, 68, 68, 68, 71, 69, 69, 69, 69, 69, 69, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 0, 0, 0, 0,
+            68, 68, 68, 69, 69, 69, 70, 68, 68, 68, 68, 71, 69, 69, 69, 69, 69, 69, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 0, 0, 0, 0],
+         "height":5,
+         "id":1,
+         "name":"floor",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":32,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69,
+            69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 69, 69, 69,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 69, 69, 69,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 69, 69, 69],
+         "height":5,
+         "id":3,
+         "name":"wall",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":32,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 76, 76, 76, 76, 76, 0, 0, 0, 0, 70, 70, 0, 0, 0, 0, 70, 70, 0, 0, 71, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 76, 76, 76, 76, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 71, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":5,
+         "id":4,
+         "name":"decoration",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":32,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 77, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 77, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":5,
+         "id":10,
+         "name":"foreground",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":32,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"walls",
+         "objects":[
+                {
+                 "height":144,
+                 "id":1,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":288,
+                 "x":288,
+                 "y":96
+                }, 
+                {
+                 "height":96,
+                 "id":21,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":55.75,
+                 "x":288,
+                 "y":96
+                }, 
+                {
+                 "height":96,
+                 "id":25,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":52.3333333333334,
+                 "x":523.666666666667,
+                 "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":26,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":96,
+                 "x":336,
+                 "y":96
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"trigger",
+         "objects":[
+                {
+                 "height":144,
+                 "id":14,
+                 "name":"first_fight_with_punk",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"punk>:Hey you\npunk>:Do you want to have some fun?\n\nchoose Yes:yes; No:no\nchoice yes\npunk>:He he he\nchoice no\npunk>:But I want\nchoice\n\nfight punk\n\nrei<: Remember your place!\npunk>: Oh, be sure, I'll remember\nstate 1\n"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":864,
+                 "y":96
+                }, 
+                {
+                 "height":48,
+                 "id":18,
+                 "name":"enter_home",
+                 "properties":[
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"choice tools\nmusic fade\nteleport strange_room\nend\n\nchoice\nrei<:Should I really go without my tools?\nchoose Yes:yes; no:no\nchoice yes\nmusic fade\nteleport strange_room\n"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"start mission"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":432,
+                 "y":192
+                }, 
+                {
+                 "height":48,
+                 "id":20,
+                 "name":"exit_boxing",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"teleport boxing_club"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"boxing club"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":1248,
+                 "y":96
+                }, 
+                {
+                 "height":62.3333333333333,
+                 "id":22,
+                 "name":"rei_home_bed",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"bed<: Go to sleep?\nchoose Yes:yes; No:no\nchoice no\nend\nchoice yes\nstate 1\nscreen fade\ntrigger dream\nbed<: you see a dream\\of starts and clock\nbed<: \"wake up\" says the whisper\nbed<: rei wakes up\nrei<: That dream again...\nrei<: How I wish to see the stars for real\nrei<: But the smoke and clouds are\\so thick in this city,\\you can't tell day from night\nphone>:ring ring ring\nphone>:Good morning, Rei\nphone>:I've sent you the details of the mission\nphone>:Be very careful, we are onto something big this time\nrei<:I'm on my way\nphone>:hangs up\nrei<:gotta take my tools before I go\nstate 1 rei_home_table\nstate 1 enter_home"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Bed"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":112,
+                 "x":336,
+                 "y":96
+                }, 
+                {
+                 "height":48,
+                 "id":23,
+                 "name":"rei_home_shower",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"Shower<: Take a shower?\nchoose Yes:yes; No:no\nchoice no\nend\nchoice yes\nstate 1\ntrigger heal\nrei<:that was refreshing"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Shower"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":288,
+                 "y":192
+                }, 
+                {
+                 "height":106.666666666667,
+                 "id":24,
+                 "name":"rei_home_table",
+                 "properties":[
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"table<: Take the hacking tools?\nchoose Yes:yes; No:no\nchoice no\nend\nchoice yes\nremember tools\nstate 2\n"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Table"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":66.3333333333333,
+                 "x":509.666666666667,
+                 "y":133.333333333333
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"spawn",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":11,
+ "nextobjectid":27,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"Outside-Wall 48_48.tsj"
+        }, 
+        {
+         "firstgid":36,
+         "source":"Outside-Light 150_150.tsj"
+        }, 
+        {
+         "firstgid":39,
+         "source":"Outside-Window 48_48.tsj"
+        }, 
+        {
+         "firstgid":67,
+         "source":"terminal_tile.tsj"
+        }, 
+        {
+         "firstgid":68,
+         "source":"abstract.tsj"
+        }],
+ "tilewidth":48,
+ "type":"map",
+ "version":"1.10",
+ "width":32
+}

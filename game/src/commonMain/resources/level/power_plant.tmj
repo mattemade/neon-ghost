@@ -1,0 +1,293 @@
+{ "compressionlevel":-1,
+ "height":8,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78,
+            78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78,
+            78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78,
+            78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78,
+            78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78],
+         "height":8,
+         "id":1,
+         "name":"floor",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":13,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[85, 89, 90, 91, 83, 84, 84, 84, 85, 80, 81, 82, 83,
+            97, 101, 102, 103, 95, 96, 96, 96, 97, 92, 93, 94, 95,
+            109, 113, 114, 115, 107, 108, 108, 108, 109, 104, 105, 106, 107,
+            0, 0, 0, 0, 132, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 137, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":3,
+         "name":"wall",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":13,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 164, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 169, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 174, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 176, 177, 178, 179, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 181, 182, 183, 184, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":4,
+         "name":"decoration",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":13,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 141, 142, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 151, 152, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":11,
+         "name":"decoration2",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":13,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 161, 162, 163, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 166, 167, 168, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 126, 171, 172, 173, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 131, 132, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 136, 137, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":10,
+         "name":"foreground",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":13,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"walls",
+         "objects":[
+                {
+                 "height":240,
+                 "id":28,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":624,
+                 "x":0,
+                 "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":39,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":353.666666666667,
+                 "y":141.333333333333
+                }, 
+                {
+                 "height":70.6666666666667,
+                 "id":40,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":140.666666666667,
+                 "x":209.666666666667,
+                 "y":143.333333333333
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"trigger",
+         "objects":[
+                {
+                 "height":48,
+                 "id":30,
+                 "name":"security_lift_enter",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"lift>:How did you get there\nstate 1\n"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"rename security_lift_exit:Level B3\nstate 0 security_lift_exit\nteleport security_lift"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"security lift"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":137.5,
+                 "x":438.5,
+                 "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":35,
+                 "name":"security_lift_exit",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":133.454545454545,
+                 "x":442.545454545455,
+                 "y":144
+                }, 
+                {
+                 "height":53,
+                 "id":38,
+                 "name":"power_plant_terminal",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"terminal<:Hello, I am power plant terminal\nchoose activate ghost:ghost;exit:exit\nchoice exit\nend\nchoice ghost\nremember ghost\ntrigger launchGhost"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Terminal"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":89.5757575757576,
+                 "x":336,
+                 "y":144
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"spawn",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":12,
+ "nextobjectid":41,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"Outside-Wall 48_48.tsj"
+        }, 
+        {
+         "firstgid":36,
+         "source":"Outside-Light 150_150.tsj"
+        }, 
+        {
+         "firstgid":39,
+         "source":"Outside-Window 48_48.tsj"
+        }, 
+        {
+         "firstgid":67,
+         "source":"terminal_tile.tsj"
+        }, 
+        {
+         "firstgid":68,
+         "source":"abstract.tsj"
+        }, 
+        {
+         "firstgid":78,
+         "source":"tilesets\/0_Asset_Floor_4848.tsj"
+        }, 
+        {
+         "firstgid":80,
+         "source":"tilesets\/0_Asset_Wall_144144.tsj"
+        }, 
+        {
+         "firstgid":116,
+         "source":"tilesets\/0_Asset_Chair_240240.tsj"
+        }, 
+        {
+         "firstgid":141,
+         "source":"tilesets\/0_Asset_Control_9696.tsj"
+        }, 
+        {
+         "firstgid":161,
+         "source":"tilesets\/0_Asset_Container_240240.tsj"
+        }],
+ "tilewidth":48,
+ "type":"map",
+ "version":"1.10",
+ "width":13
+}

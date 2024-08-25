@@ -1,0 +1,424 @@
+{ "compressionlevel":-1,
+ "height":8,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78,
+            78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78,
+            78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78,
+            78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":1,
+         "name":"floor",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":17,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[186, 187, 188, 89, 186, 187, 188, 91, 83, 84, 84, 84, 85, 80, 81, 82, 83,
+            189, 190, 191, 101, 189, 190, 191, 103, 95, 96, 96, 96, 97, 92, 93, 94, 95,
+            192, 193, 194, 113, 192, 193, 194, 115, 107, 108, 108, 108, 109, 104, 105, 106, 107,
+            0, 0, 0, 0, 0, 0, 0, 0, 132, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 137, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":3,
+         "name":"wall",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":17,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":4,
+         "name":"decoration",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":17,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":11,
+         "name":"decoration2",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":17,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            195, 196, 197, 0, 195, 196, 197, 136, 137, 0, 0, 0, 0, 0, 0, 0, 0,
+            198, 199, 200, 0, 198, 199, 200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            201, 202, 203, 0, 201, 202, 203, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":10,
+         "name":"foreground",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":17,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"walls",
+         "objects":[
+                {
+                 "height":192,
+                 "id":28,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":816,
+                 "x":0,
+                 "y":144
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"trigger",
+         "objects":[
+                {
+                 "height":48,
+                 "id":30,
+                 "name":"security_lift_enter",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"lift>:How did you get there\nstate 1\n"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"rename security_lift_exit:Level B1\nstate 2 security_lift_exit\nteleport security_lift"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"security lift"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":135.333333333333,
+                 "x":632.666666666667,
+                 "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":35,
+                 "name":"security_lift_exit",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":134.666666666667,
+                 "x":633.333333333333,
+                 "y":144
+                }, 
+                {
+                 "height":192,
+                 "id":41,
+                 "name":"corridor_gruads_fight",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"fight guard<,guard<,guard<\nstate 1"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":576,
+                 "y":144
+                }, 
+                {
+                 "height":192,
+                 "id":42,
+                 "name":"corridor_punks_fight",
+                 "properties":[
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"punk<:Someone left all the\\doors open, let's go out of here!\nfight punk<,punk<,punk<\nfight punk<,punk<,punk<\nstate 2"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":192,
+                 "x":336,
+                 "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":43,
+                 "name":"red_door_3",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"door<:LOCKED\n\nchoice tools\nrei<:Hmm, I don't think I can hack it\nend\n\nchoice\nrei<:Let's look around,\\there should be a way to unlock it"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"teleport interrogation_room"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Enter"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":144,
+                 "x":0,
+                 "y":288
+                }, 
+                {
+                 "height":48,
+                 "id":44,
+                 "name":"red_door_1",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"door<:LOCKED\n\nchoice tools\nrei<:Hmm, I don't think I can hack it\nend\n\nchoice\nrei<:Let's look around,\\there should be a way to unlock it"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"teleport interrogation_room"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Enter"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":144,
+                 "x":-40,
+                 "y":28
+                }, 
+                {
+                 "height":48,
+                 "id":45,
+                 "name":"red_door_2",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"door<:LOCKED\n\nchoice tools\nrei<:Hmm, I don't think I can hack it\nend\n\nchoice\nrei<:Let's look around,\\there should be a way to unlock it"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"teleport interrogation_room"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Enter"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":144,
+                 "x":202,
+                 "y":32.6666666666667
+                }, 
+                {
+                 "height":48,
+                 "id":46,
+                 "name":"red_door_4",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"door<:LOCKED\n\nchoice tools\nrei<:Hmm, I don't think I can hack it\nend\n\nchoice\nrei<:Let's look around,\\there should be a way to unlock it"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"teleport interrogation_room"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Enter"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":144,
+                 "x":200.666666666667,
+                 "y":376.666666666667
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"spawn",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":12,
+ "nextobjectid":47,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"Outside-Wall 48_48.tsj"
+        }, 
+        {
+         "firstgid":36,
+         "source":"Outside-Light 150_150.tsj"
+        }, 
+        {
+         "firstgid":39,
+         "source":"Outside-Window 48_48.tsj"
+        }, 
+        {
+         "firstgid":67,
+         "source":"terminal_tile.tsj"
+        }, 
+        {
+         "firstgid":68,
+         "source":"abstract.tsj"
+        }, 
+        {
+         "firstgid":78,
+         "source":"tilesets\/0_Asset_Floor_4848.tsj"
+        }, 
+        {
+         "firstgid":80,
+         "source":"tilesets\/0_Asset_Wall_144144.tsj"
+        }, 
+        {
+         "firstgid":116,
+         "source":"tilesets\/0_Asset_Chair_240240.tsj"
+        }, 
+        {
+         "firstgid":141,
+         "source":"tilesets\/0_Asset_Control_9696.tsj"
+        }, 
+        {
+         "firstgid":161,
+         "source":"tilesets\/0_Asset_Container_240240.tsj"
+        }, 
+        {
+         "firstgid":186,
+         "source":"tilesets\/red_door.tsj"
+        }, 
+        {
+         "firstgid":195,
+         "source":"tilesets\/red_door_transparent.tsj"
+        }],
+ "tilewidth":48,
+ "type":"map",
+ "version":"1.10",
+ "width":17
+}

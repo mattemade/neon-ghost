@@ -3,22 +3,31 @@ package io.itch.mattemade.neonghost.event
 import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.CharacterAnimations
 import io.itch.mattemade.neonghost.Game
+import io.itch.mattemade.neonghost.LevelSpec
 import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.tempo.UI
 import io.itch.mattemade.neonghost.world.CameraMan
 import io.itch.mattemade.neonghost.world.Trigger
+import kotlin.random.Random
 
 class EventExecutor(
     private val assets: Assets,
     private val player: Player,
     private val ui: UI,
     private val cameraMan: CameraMan,
+    private val levelSpec: LevelSpec,
     private val eventState: MutableMap<String, Int>,
+    private val interactionOverride: MutableMap<String, String>,
     private val spawnEnemy: (EnemySpec) -> Unit,
     private val onTrigger: (String) -> Unit,
     private val onEventFinished: (Trigger) -> Unit,
     private val onRemember: (String) -> Unit,
+    private val onForget: (String) -> Unit,
     private val onTeleport: (door: String, toRoom: String) -> Unit,
+    private val onMusic: (String) -> Unit,
+    private val onScreen: (String) -> Unit,
+    private val onSave: () -> Unit,
+    private val wait: (Float) -> Unit,
 ) {
 
     private var activeTrigger: Trigger? = null
@@ -27,6 +36,7 @@ class EventExecutor(
     private var activeEventPosition = 0
     private var currentChoice = mutableSetOf<String>()
     private var currentRequirements = mutableSetOf<String>()
+    private var negativeRequirements = mutableSetOf<String>()
     var isFighting = false
         private set
     val isInDialogue: Boolean
@@ -86,9 +96,17 @@ class EventExecutor(
             "camera" -> action.checkingChoice().executeCamera()
             "choose" -> action.checkingChoice().executeChoose()
             "choice" -> action.updateRequirements()
+            "not" -> action.updateNegativeRequirements()
             "remember" -> action.checkingChoice().executeRemember()
+            "forget" -> action.checkingChoice().executeForget()
+            "rename" -> action.checkingChoice().executeRename()
             "teleport" -> action.checkingChoice().executeTeleport()
-            "end" -> advance(forceEnd = requirementsFulfilled() )
+            "music" -> action.checkingChoice().executeMusic()
+            "screen" -> action.checkingChoice().executeScreen()
+            "wait" -> action.checkingChoice().executeWait()
+            "save" -> action.checkingChoice().executeSave()
+            "stop" -> executeStopDialog()
+            "end" -> advance(forceEnd = requirementsFulfilled())
             else -> item.checkingChoice().executeDialogueLine()
         }
     }
@@ -97,7 +115,10 @@ class EventExecutor(
         takeIf { requirementsFulfilled() }
 
     private fun requirementsFulfilled(): Boolean =
-        currentRequirements.isEmpty() || currentChoice.containsAll(currentRequirements)
+        (currentRequirements.isEmpty() || currentChoice.containsAll(currentRequirements))
+                && (negativeRequirements.isEmpty() || !currentChoice.containsAll(
+            negativeRequirements
+        ))
 
     private fun String?.executeForPlayer() {
         when (this) {
@@ -111,16 +132,69 @@ class EventExecutor(
             advance()
             return
         }
-        this.split(",").forEach {
-            when (it.trim().lowercase()) {
-                "punk" -> spawnEnemy(EnemySpec(assets.animation.punkAnimations, 1f, 5))
-                "guard" -> spawnEnemy(EnemySpec(assets.animation.guardAnimations, 3f, 8))
-                "officer" -> spawnEnemy(EnemySpec(assets.animation.officerAnimations, 5f, 20))
+
+        activeTrigger?.let { trigger ->
+            this.split(",").forEach {
+                var spec = it.trim().lowercase()
+                var fromLeft = Random.nextBoolean()
+                var verticalPositionRate = Random.nextFloat()
+                if (spec.contains('<')) {
+                    fromLeft = true
+                    val optionalPosition = spec.substringAfter('<')
+                    if (optionalPosition.isNotBlank()) {
+                        verticalPositionRate = optionalPosition.toFloat()
+                    }
+                    spec = spec.substringBefore('<')
+                } else if (spec.contains('>')) {
+                    fromLeft = false
+                    val optionalPosition = spec.substringAfter('>')
+                    if (optionalPosition.isNotBlank()) {
+                        verticalPositionRate = optionalPosition.toFloat()
+                    }
+                    spec = spec.substringBefore('>')
+                }
+
+                val verticalPosition = trigger.bottom + verticalPositionRate * trigger.height
+
+                when (spec) {
+                    "punk" -> spawnEnemy(
+                        EnemySpec(
+                            assets.animation.punkAnimations,
+                            1f,
+                            5,
+                            fromLeft,
+                            verticalPosition
+                        )
+                    )
+
+                    "guard" -> spawnEnemy(
+                        EnemySpec(
+                            assets.animation.guardAnimations,
+                            3f,
+                            8,
+                            fromLeft,
+                            verticalPosition
+                        )
+                    )
+
+                    "officer" -> spawnEnemy(
+                        EnemySpec(
+                            assets.animation.officerAnimations,
+                            5f,
+                            20,
+                            fromLeft,
+                            verticalPosition
+                        )
+                    )
+                }
             }
+            isFighting = true
+            ui.stopDialog()
+            lockCamera()
+        } ?: run {
+            advance()
         }
-        isFighting = true
-        ui.stopDialog()
-        lockCamera()
+
     }
 
     private fun String?.executeState() {
@@ -163,20 +237,41 @@ class EventExecutor(
         advance()
     }
 
-    private fun String?.executeCamera() {
-        if (this == null) {
-            advance()
-            return
+    private fun String?.updateNegativeRequirements() {
+        negativeRequirements.clear()
+        if (this != null) {
+            negativeRequirements.addAll(this.split(",").map { it.trim() })
         }
+        advance()
+    }
+
+    private fun String?.executeCamera() {
         when (this) {
             "lock" -> lockCamera()
+            "trigger" -> makeCameraFollowTrigger()
             "follow" -> makeCameraFollowPlayer()
         }
+        advance()
     }
 
     private fun String?.executeRemember() {
         if (this != null) {
             onRemember(this)
+        }
+        advance()
+    }
+
+    private fun String?.executeForget() {
+        if (this != null) {
+            onForget(this)
+        }
+        advance()
+    }
+
+    private fun String?.executeRename() {
+        if (this != null) {
+            val (key, name) = this.split(":", limit = 2)
+            interactionOverride[key] = name.uppercase()
         }
         advance()
     }
@@ -193,8 +288,65 @@ class EventExecutor(
         }
     }
 
+    private fun String?.executeMusic() {
+        if (this == null) {
+            advance()
+            return
+        }
+        onMusic(this)
+        advance()
+    }
+
+    private fun String?.executeScreen() {
+        if (this == null) {
+            advance()
+            return
+        }
+        onScreen(this)
+        advance()
+    }
+
+    private fun String?.executeSave() {
+        if (this == null) {
+            advance()
+            return
+        }
+        onSave()
+        advance()
+    }
+
+    private fun executeStopDialog() {
+        if (!requirementsFulfilled()) {
+            advance()
+            return
+        }
+        ui.stopDialog()
+        advance()
+    }
+
+    private fun String?.executeWait() {
+        if (this == null) {
+            advance()
+            return
+        }
+        toFloatOrNull()?.let(wait) ?: run {
+            advance()
+        }
+    }
+
+    private fun makeCameraFollowTrigger() {
+        activeTrigger?.let { trigger ->
+            cameraMan.lookAt(withinSeconds = 2f) { it.set(trigger.centerX, trigger.centerY) }
+        }
+    }
+
     private fun makeCameraFollowPlayer() {
-        cameraMan.lookAt(withinSeconds = 2f) { it.set(player.x, Game.visibleWorldHeight / 2f) }
+        cameraMan.lookAt(withinSeconds = 2f) {
+            it.set(
+                player.x,
+                if (levelSpec.freeCameraY) player.y - Game.visibleWorldHeight / 8f else Game.visibleWorldHeight / 2f
+            )
+        }
     }
 
     private fun String?.executeDialogueLine() {
@@ -218,6 +370,8 @@ class EventExecutor(
     data class EnemySpec(
         val characterAnimations: CharacterAnimations,
         val difficulty: Float,
-        val health: Int
+        val health: Int,
+        val fromLeft: Boolean,
+        val verticalPosition: Float,
     )
 }

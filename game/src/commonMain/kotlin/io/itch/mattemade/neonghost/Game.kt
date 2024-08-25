@@ -8,7 +8,6 @@ import com.littlekt.graphics.Color
 import com.littlekt.graphics.Fonts
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.Batch
-import com.littlekt.graphics.g2d.tilemap.tiled.TiledMap
 import com.littlekt.graphics.gl.BlendFactor
 import com.littlekt.graphics.gl.ClearBufferMask
 import com.littlekt.graphics.gl.State
@@ -19,6 +18,7 @@ import com.littlekt.input.Pointer
 import com.littlekt.util.milliseconds
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.blackcat.input.bindInputs
+import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.scene.GhostOverlay
 import io.itch.mattemade.neonghost.scene.InGame
 import io.itch.mattemade.neonghost.tempo.Choreographer
@@ -56,18 +56,25 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
 
     private val eventState = mutableMapOf<String, Int>()
     private val playerKnowledge = mutableSetOf<String>()
-    private val startMap by lazy { assets.level.testRoom }
+    private val interactionOverride = mutableMapOf<String, String>()
 
-    private fun openDoor(door: String, toRoom: String) {
-        val level = when(toRoom) {
-            "testRoom" -> assets.level.testRoom
-            "secondRoom" -> assets.level.secondRoom
-            else -> assets.level.testRoom
+    private var savedState: SavedState? = null
+    private var previousDoorName: String? = null
+    private var previousRoomName: String? = null
+    private fun openDoor(door: String, toRoom: String, playerHealth: Int, isMagic: Boolean) {
+        previousRoomName?.let { previousRoomName ->
+            previousDoorName?.let { previousDoorName ->
+                saveGame(previousDoorName, previousRoomName, playerHealth, isMagic)
+            }
         }
-        restartGame(level, door)
+        previousRoomName = toRoom
+        previousDoorName = door
+        assets.level.levels[toRoom]?.let { level ->
+            startGameFromLevel(level, door, playerHealth, isMagic)
+        } ?: error("no such level found $toRoom")
     }
 
-    private fun restartGame(level: TiledMap, wentThrough: String?) {
+    private fun startGameFromLevel(level: LevelSpec, wentThrough: String?, playerHealth: Int, isMagic: Boolean) {
         inGame = InGame(
             context,
             assets,
@@ -77,10 +84,66 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             ghostOverlay,
             eventState,
             playerKnowledge,
-            { restartGame(startMap, null) },
+            interactionOverride,
+            onGameOver = ::loadGame,
             goThroughDoor = ::openDoor,
-            wentThroughDoor = wentThrough
+            wentThroughDoor = wentThrough,
+            saveState = {
+                saveGame(previousDoorName!!, previousRoomName!!, savedState!!.playerHealth, savedState!!.isMagic)
+            },
+            loadState = {
+                //TODO
+            },
+            playerHealth = playerHealth,
+            isMagic = isMagic
         )
+    }
+
+    private fun saveGame(door: String, room: String, playerHealth: Int, isMagic: Boolean) {
+        savedState = SavedState(
+            door = door,
+            room = room,
+            eventState = mutableMapOf<String, Int>().apply { putAll(eventState) },
+            playerKnowledge = mutableSetOf<String>().apply { addAll(playerKnowledge) },
+            interactionOverride = mutableMapOf<String, String>().apply { putAll(interactionOverride) },
+            ghostActive = ghostOverlay.isActive,
+            playerHealth = playerHealth,
+            isMagic = isMagic,
+            activeMusic = choreographer.currentlyPlayingTrack?.name
+        )
+    }
+
+    private fun loadGame() {
+        savedState?.let {
+            eventState.clear()
+            eventState.putAll(it.eventState)
+            playerKnowledge.clear()
+            playerKnowledge.addAll(it.playerKnowledge)
+            interactionOverride.clear()
+            interactionOverride.putAll(it.interactionOverride)
+            ghostOverlay.isActive = it.ghostActive
+            it.activeMusic?.let { activeMusic ->
+                choreographer.play(assets.music.concurrentTracks[activeMusic]!!)
+            }
+            previousRoomName = it.room
+            previousDoorName = it.door
+            openDoor(it.door, it.room, it.playerHealth, it.isMagic)
+        } ?: resetGame()
+    }
+
+    private fun resetGame() {
+        eventState.clear()
+        playerKnowledge.clear()
+        interactionOverride.clear()
+        ghostOverlay.isActive = false
+        ghostOverlay.isMoving = false
+        //previousRoomName = "boxing_club"
+        //openDoor("player", "boxing_club", Player.maxPlayerHealth, false)
+
+        choreographer.play(assets.music.concurrentTracks["magical girl 3d"]!!)
+        eventState["officer_catch"] = 1
+        previousRoomName = "interrogation_room"
+        openDoor("officer_catch", "interrogation_room", 10, false)
     }
 
     private fun onAnimationEvent(event: String) {
@@ -136,7 +199,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             }
             if (focused && assetsReady) {
                 if (inGame == null) {
-                    restartGame(startMap, null)
+                    resetGame()
                 }
                 choreographer.update(dt)
                 inGame?.updateAndRender(choreographer.adjustedDt, dt)
@@ -227,6 +290,18 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     }
 
     private val slightlyTransparentWhite = Color.WHITE.withAlpha(0.5f)
+
+    private class SavedState(
+        val door: String,
+        val room: String,
+        val eventState: MutableMap<String, Int>,
+        val playerKnowledge: MutableSet<String>,
+        val interactionOverride: MutableMap<String, String>,
+        val ghostActive: Boolean,
+        val playerHealth: Int,
+        val isMagic: Boolean,
+        val activeMusic: String?,
+    )
 
     companion object {
         const val PPU = 80f

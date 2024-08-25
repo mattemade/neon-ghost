@@ -1,0 +1,14 @@
+{ "columns":2,
+ "image":"0_Asset_Floor_4848.png",
+ "imageheight":48,
+ "imagewidth":96,
+ "margin":0,
+ "name":"0_Asset_Floor_4848",
+ "spacing":0,
+ "tilecount":2,
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilewidth":48,
+ "type":"tileset",
+ "version":"1.10"
+}

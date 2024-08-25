@@ -21,6 +21,11 @@ class Trigger(
     val properties: Map<String, TiledMap.Property>,
 ): Releasing by Self() {
 
+    val bottom: Float = (mapHeight - rect.y) * Game.IPPU
+    val height: Float = rect.height * Game.IPPU
+    val top: Float = (mapHeight - rect.y + rect.height) * Game.IPPU
+    val centerX: Float = (rect.x + rect.width / 2f) * Game.IPPU
+    val centerY: Float = (mapHeight - rect.y + rect.height / 2f) * Game.IPPU
     val renderPath = mutableListOf<Vec2f>()
     private val body = world.createBody(
         BodyDef(

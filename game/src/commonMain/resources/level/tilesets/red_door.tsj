@@ -1,0 +1,14 @@
+{ "columns":3,
+ "image":"red_door.png",
+ "imageheight":144,
+ "imagewidth":144,
+ "margin":0,
+ "name":"red_door",
+ "spacing":0,
+ "tilecount":9,
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilewidth":48,
+ "type":"tileset",
+ "version":"1.10"
+}

@@ -84,7 +84,7 @@ class Player(
     val y get() = body.position.y
     override val depth: Float get() = y
 
-    private var animations = assets.animation.normalReiAnimations
+    private var animations = if (isMagicGirl) assets.animation.magicalReiAnimations else assets.animation.normalReiAnimations
 
     internal var currentAnimation: SignallingAnimationPlayer = animations.walk
         set(value) {
@@ -614,6 +614,7 @@ class Player(
         val spellRy = 32f * Game.IPPU
         private const val castBeforeSlowingTime = 1
         const val castsToStopTime = 2
+        const val maxPlayerHealth = 10
     }
 
 }

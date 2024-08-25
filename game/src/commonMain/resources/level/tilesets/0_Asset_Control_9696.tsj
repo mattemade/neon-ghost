@@ -1,0 +1,14 @@
+{ "columns":10,
+ "image":"0_Asset_Control_9696.png",
+ "imageheight":96,
+ "imagewidth":480,
+ "margin":0,
+ "name":"0_Asset_Control_9696",
+ "spacing":0,
+ "tilecount":20,
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilewidth":48,
+ "type":"tileset",
+ "version":"1.10"
+}

@@ -1,0 +1,236 @@
+{ "compressionlevel":-1,
+ "height":6,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79,
+            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79,
+            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79],
+         "height":6,
+         "id":1,
+         "name":"floor",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":11,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[89, 89, 90, 91, 83, 84, 85, 116, 117, 118, 83,
+            101, 101, 102, 103, 95, 96, 97, 119, 120, 121, 95,
+            113, 113, 114, 115, 107, 108, 109, 122, 123, 124, 107,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":6,
+         "id":3,
+         "name":"wall",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":11,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":6,
+         "id":4,
+         "name":"decoration",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":11,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":6,
+         "id":10,
+         "name":"foreground",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":11,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"walls",
+         "objects":[
+                {
+                 "height":144,
+                 "id":29,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":528,
+                 "x":0,
+                 "y":144
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"trigger",
+         "objects":[
+                {
+                 "height":48,
+                 "id":18,
+                 "name":"officer_catch",
+                 "properties":[
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"officer>:Oh, you're finally awake\nrei<:Where am I?\nofficer>:I am the one who ask questions here\nofficer>:How did you know about the box?\nrei<:I don't know what you are talking about\nofficer>:I see...\nofficer>:Who should we call to pick you up?\nrei<:I don't have anyone,\\so good luck with your ransom\nofficer>:Good, no one is looking for you then\nrei<:...\nradio>:Sir, the detector reacts on her\nofficer>:What??\nofficer>:Looks like we got our lucky ticket, guys\nofficer>:Bring her to the washing machine!\nguard>:Yes, sir!\nrei<:Hey, I am not that dirty!\nguard>:This machine won't clean you from outside\nrei<:Ewww, that's even worse\nstate 2\nteleport washing_room\n"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"start mission"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":96,
+                 "y":192
+                }, 
+                {
+                 "height":48,
+                 "id":27,
+                 "name":"spawn",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":336,
+                 "y":192
+                }, 
+                {
+                 "height":48,
+                 "id":32,
+                 "name":"red_door_3",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"door<:LOCKED\n\nchoice tools\nrei<:Hmm, I don't think I can hack it\nend\n\nchoice\nrei<:Let's look around,\\there should be a way to unlock it"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"teleport corridor"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Exit"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":144,
+                 "x":336,
+                 "y":144
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"spawn",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":11,
+ "nextobjectid":33,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"Outside-Wall 48_48.tsj"
+        }, 
+        {
+         "firstgid":36,
+         "source":"Outside-Light 150_150.tsj"
+        }, 
+        {
+         "firstgid":39,
+         "source":"Outside-Window 48_48.tsj"
+        }, 
+        {
+         "firstgid":67,
+         "source":"terminal_tile.tsj"
+        }, 
+        {
+         "firstgid":68,
+         "source":"abstract.tsj"
+        }, 
+        {
+         "firstgid":78,
+         "source":"tilesets\/0_Asset_Floor_4848.tsj"
+        }, 
+        {
+         "firstgid":80,
+         "source":"tilesets\/0_Asset_Wall_144144.tsj"
+        }, 
+        {
+         "firstgid":116,
+         "source":"tilesets\/red_door.tsj"
+        }],
+ "tilewidth":48,
+ "type":"map",
+ "version":"1.10",
+ "width":11
+}

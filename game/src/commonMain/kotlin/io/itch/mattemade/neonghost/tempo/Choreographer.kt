@@ -24,6 +24,8 @@ class Choreographer(private val context: Context) {
         private set
 
     var playbackRate = 1.0
+    var currentlyPlayingTrack: StreamBpm? = null
+        private set
     private var currentlyPlaying: AudioClipEx? = null
     private var currentlyPlayingId: Int = 0
     val isActive: Boolean
@@ -39,6 +41,7 @@ class Choreographer(private val context: Context) {
         secondsPerBeat = 60f / music.bpm
         doubleSecondsPerBeat = secondsPerBeat * 2f
         secondsPerMeasure = secondsPerBeat * 4
+        currentlyPlayingTrack = music
     }
 
     fun setPlaybackRate(rate: Float) {
