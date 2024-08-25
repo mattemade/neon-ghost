@@ -104,7 +104,7 @@ class EventExecutor(
             "music" -> action.checkingChoice().executeMusic()
             "screen" -> action.checkingChoice().executeScreen()
             "wait" -> action.checkingChoice().executeWait()
-            "save" -> action.checkingChoice().executeSave()
+            "save" -> executeSave()
             "stop" -> executeStopDialog()
             "end" -> advance(forceEnd = requirementsFulfilled())
             else -> item.checkingChoice().executeDialogueLine()
@@ -306,12 +306,10 @@ class EventExecutor(
         advance()
     }
 
-    private fun String?.executeSave() {
-        if (this == null) {
-            advance()
-            return
+    private fun executeSave() {
+        if (requirementsFulfilled()) {
+            onSave()
         }
-        onSave()
         advance()
     }
 
