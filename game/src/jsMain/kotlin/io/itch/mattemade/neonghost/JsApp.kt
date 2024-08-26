@@ -3,6 +3,7 @@ package io.itch.mattemade.neonghost
 import com.littlekt.Context
 import com.littlekt.RemoveContextCallback
 import com.littlekt.createLittleKtApp
+import io.itch.mattemade.neonghost.character.rei.Player
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.HTMLCanvasElement
@@ -16,8 +17,43 @@ fun main() {
         title = "LittleKt Game Template"
         canvasId = CANVAS_ID
     }.start {
+        var playerHealth = Player.maxPlayerHealth
+        var knowledge = mutableSetOf<String>()
+        var eventState = mutableMapOf<String, Int>()
+        var door: String = "player"
+        var room: String = "boxing_club"
+        var isMagical = false
+        var isGhost = false
+        var argument = false
+        var savedState: Game.SavedState? = null
+        window.location.href.substringAfter('?').split("&").forEach {
+            argument = true
+            val split = it.split("=")
+            val key = split[0]
+            val value = split.getOrNull(1)
+            when (key) {
+                "hp" -> playerHealth = value?.toInt() ?: Player.maxPlayerHealth
+                "remember" -> knowledge.add(value ?: "")
+                "spawn" -> door = value ?: door
+                "room" -> room = value ?: room
+                else -> eventState[key] = value?.toIntOrNull() ?: 0
+            }
+        }
+        if (argument) {
+            savedState = Game.SavedState(
+                door = door,
+                room = room,
+                eventState = eventState,
+                playerKnowledge = knowledge,
+                interactionOverride = mutableMapOf(),
+                ghostActive = knowledge.contains("ghost"),
+                playerHealth = playerHealth,
+                isMagic = knowledge.contains("magic"),
+                activeMusic = "magical girl 3d"
+            )
+        }
         scheduleCanvasResize(it)
-        val game = Game(it, ::onLowPerformance)
+        val game = Game(it, ::onLowPerformance, savedState)
         window.addEventListener("blur", {
             game.focused = false
         })

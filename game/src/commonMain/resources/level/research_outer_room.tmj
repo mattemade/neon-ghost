@@ -332,6 +332,23 @@
                  "width":121.333666666667,
                  "x":306,
                  "y":528
+                }, 
+                {
+                 "height":48,
+                 "id":68,
+                 "name":"main_lift_exit",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":131,
+                 "x":48,
+                 "y":528
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -351,7 +368,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":68,
+ "nextobjectid":69,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

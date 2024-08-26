@@ -28,7 +28,11 @@ import io.itch.mattemade.utils.render.DirectRender
 import org.jbox2d.internal.System_nanoTime
 import kotlin.time.Duration
 
-class Game(context: Context, private val onLowPerformance: () -> Unit) : ContextListener(context),
+class Game(
+    context: Context,
+    private val onLowPerformance: () -> Unit,
+    savedStateOverride: SavedState? = null
+) : ContextListener(context),
     Releasing by Self() {
 
     private val choreographer = Choreographer(context)
@@ -58,17 +62,13 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
     private val playerKnowledge = mutableSetOf<String>()
     private val interactionOverride = mutableMapOf<String, String>()
 
-    private var savedState: SavedState? = null
-    private var previousDoorName: String? = null
+    private var savedState: SavedState? = savedStateOverride
     private var previousRoomName: String? = null
     private fun openDoor(door: String, toRoom: String, playerHealth: Int, isMagic: Boolean) {
         previousRoomName?.let { previousRoomName ->
-            previousDoorName?.let { previousDoorName ->
-                saveGame(previousDoorName, previousRoomName, playerHealth, isMagic)
-            }
+            saveGame(door, previousRoomName, playerHealth, isMagic)
         }
         previousRoomName = toRoom
-        previousDoorName = door
         assets.level.levels[toRoom]?.let { level ->
             startGameFromLevel(level, door, playerHealth, isMagic)
         } ?: error("no such level found $toRoom")
@@ -89,7 +89,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             goThroughDoor = ::openDoor,
             wentThroughDoor = wentThrough,
             saveState = {
-                saveGame(previousDoorName!!, previousRoomName!!, savedState!!.playerHealth, savedState!!.isMagic)
+                saveGame(wentThrough!!, previousRoomName!!, savedState!!.playerHealth, savedState!!.isMagic)
             },
             loadState = {
                 //TODO
@@ -122,11 +122,11 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             interactionOverride.clear()
             interactionOverride.putAll(it.interactionOverride)
             ghostOverlay.isActive = it.ghostActive
+            ghostOverlay.isMoving = it.ghostActive
             it.activeMusic?.let { activeMusic ->
                 choreographer.play(assets.music.concurrentTracks[activeMusic]!!)
             }
             previousRoomName = it.room
-            previousDoorName = it.door
             openDoor(it.door, it.room, it.playerHealth, it.isMagic)
         } ?: resetGame()
     }
@@ -137,13 +137,13 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
         interactionOverride.clear()
         ghostOverlay.isActive = false
         ghostOverlay.isMoving = false
-        //previousRoomName = "boxing_club"
-        //openDoor("player", "boxing_club", Player.maxPlayerHealth, false)
+        previousRoomName = "boxing_club"
+        openDoor("player", "boxing_club", Player.maxPlayerHealth, false)
 
-        choreographer.play(assets.music.concurrentTracks["magical girl 3d"]!!)
+/*        choreographer.play(assets.music.concurrentTracks["magical girl 3d"]!!)
         eventState["officer_catch"] = 1
         previousRoomName = "interrogation_room"
-        openDoor("officer_catch", "interrogation_room", 10, false)
+        openDoor("officer_catch", "interrogation_room", 10, false)*/
     }
 
     private fun onAnimationEvent(event: String) {
@@ -199,7 +199,11 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
             }
             if (focused && assetsReady) {
                 if (inGame == null) {
-                    resetGame()
+                    if (savedState != null) {
+                        loadGame()
+                    } else {
+                        resetGame()
+                    }
                 }
                 choreographer.update(dt)
                 inGame?.updateAndRender(choreographer.adjustedDt, dt)
@@ -291,7 +295,7 @@ class Game(context: Context, private val onLowPerformance: () -> Unit) : Context
 
     private val slightlyTransparentWhite = Color.WHITE.withAlpha(0.5f)
 
-    private class SavedState(
+    class SavedState(
         val door: String,
         val room: String,
         val eventState: MutableMap<String, Int>,
