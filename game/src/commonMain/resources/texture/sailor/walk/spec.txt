@@ -1,3 +1,0 @@
-6 frames like walk%.png
-1..6 for 120
-repeat

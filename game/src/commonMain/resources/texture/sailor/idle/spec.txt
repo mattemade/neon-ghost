@@ -1,3 +1,0 @@
-1 frames like idle%.png
-1 for 500
-repeat

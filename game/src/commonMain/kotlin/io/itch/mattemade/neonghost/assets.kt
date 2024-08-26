@@ -53,7 +53,6 @@ class Textures(context: Context, private val packer: RuntimeTextureAtlasPacker) 
 }
 
 class Sound(context: Context) : AssetPack(context) {
-    //val wind by prepare { context.resourcesVfs["sound/untitled.mp3"].readAudioClipEx() }
     val speech1 by prepare { context.resourcesVfs["sound/speech1.mp3"].readAudioClipEx() }
 }
 
@@ -88,7 +87,6 @@ class Levels(context: Context, private val atlas: TextureAtlas? = null) : AssetP
 
     private fun String.levelName(): String = this.substringAfterLast("/").substringBefore(".tmj")
 
-    //val startLevel by "level/boxing_club.tmj".pack()
     val levels by preparePlain {
         listOf(
             "level/boxing_club.tmj" to false,
@@ -127,7 +125,6 @@ class TileSets(context: Context, private val packer: RuntimeTextureAtlasPacker) 
     val light by "level/Outside-Light 150_150.png".pack()
     val window by "level/Outside-Window 48_48.png".pack()
     val terminalTile by "level/terminal_tile.png".pack()
-    val interior by "level/PV_Tides_Asset_Pack/tilesets/interior modern/Interior A4.png".pack()
     val abstract by "level/abstract.png".pack()
     val metalWall by "level/tilesets/0_Asset_Wall_144144.png".pack()
     val metalFloor by "level/tilesets/0_Asset_Floor_4848.png".pack()
