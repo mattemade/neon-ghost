@@ -7,20 +7,24 @@ import com.littlekt.graphics.Camera
 import com.littlekt.graphics.Color
 import com.littlekt.graphics.Fonts
 import com.littlekt.graphics.MutableColor
+import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.gl.BlendFactor
 import com.littlekt.graphics.gl.ClearBufferMask
 import com.littlekt.graphics.gl.State
+import com.littlekt.graphics.shader.ShaderProgram
 import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapProcessor
 import com.littlekt.input.InputProcessor
 import com.littlekt.input.Pointer
-import com.littlekt.util.milliseconds
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.blackcat.input.bindInputs
 import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.scene.GhostOverlay
 import io.itch.mattemade.neonghost.scene.InGame
+import io.itch.mattemade.neonghost.shader.CabinetFragmentShader
+import io.itch.mattemade.neonghost.shader.CabinetVertexShader
+import io.itch.mattemade.neonghost.shader.createCabinetShader
 import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
@@ -50,8 +54,18 @@ class Game(
     var inGame: InGame? = null
     val ghostOverlay by lazy { GhostOverlay(context, assets, choreographer) }
     val directRender = DirectRender(context, virtualWidth, virtualHeight, ::update, ::render)
+    val cabinetRender =
+        DirectRender(context, virtualWidth, virtualHeight, ::updateCabinet, ::renderCabinet)
+    lateinit var cabinetShader: ShaderProgram<CabinetVertexShader, CabinetFragmentShader>
+    var useCabinet = true
     var offsetX = 0f
     var offsetY = 0f
+    var cabinetOffsetX = 0f
+    var cabinetOffsetY = 0f
+    var currentScreenWidth: Float = 0f
+    var currentScreenHeight: Float = 0f
+    var cabinetWidth: Float = 0f
+    var cabinetHeight: Float = 0f
     var scale = 1
     private var audioReady: Boolean = false
     private var assetsReady: Boolean = false
@@ -74,7 +88,12 @@ class Game(
         } ?: error("no such level found $toRoom")
     }
 
-    private fun startGameFromLevel(level: LevelSpec, wentThrough: String?, playerHealth: Int, isMagic: Boolean) {
+    private fun startGameFromLevel(
+        level: LevelSpec,
+        wentThrough: String?,
+        playerHealth: Int,
+        isMagic: Boolean
+    ) {
         inGame = InGame(
             context,
             assets,
@@ -89,7 +108,12 @@ class Game(
             goThroughDoor = ::openDoor,
             wentThroughDoor = wentThrough,
             saveState = {
-                saveGame(wentThrough!!, previousRoomName!!, savedState!!.playerHealth, savedState!!.isMagic)
+                saveGame(
+                    wentThrough!!,
+                    previousRoomName!!,
+                    savedState!!.playerHealth,
+                    savedState!!.isMagic
+                )
             },
             loadState = {
                 //TODO
@@ -140,10 +164,10 @@ class Game(
         previousRoomName = "boxing_club"
         openDoor("player", "boxing_club", Player.maxPlayerHealth, false)
 
-/*        choreographer.play(assets.music.concurrentTracks["magical girl 3d"]!!)
-        eventState["officer_catch"] = 1
-        previousRoomName = "interrogation_room"
-        openDoor("officer_catch", "interrogation_room", 10, false)*/
+        /*        choreographer.play(assets.music.concurrentTracks["magical girl 3d"]!!)
+                eventState["officer_catch"] = 1
+                previousRoomName = "interrogation_room"
+                openDoor("officer_catch", "interrogation_room", 10, false)*/
     }
 
     private fun onAnimationEvent(event: String) {
@@ -154,6 +178,11 @@ class Game(
     }
 
     override suspend fun Context.start() {
+        cabinetShader = createCabinetShader(
+            vfs["shader/cabinet.vert.glsl"].readString(),
+            vfs["shader/cabinet.frag.glsl"].readString()
+        ).also { it.prepare(this) }
+
         input.addInputProcessor(object : InputProcessor {
             override fun touchUp(screenX: Float, screenY: Float, pointer: Pointer): Boolean {
                 if (focused) {
@@ -183,9 +212,20 @@ class Game(
             val scaledHeight = virtualHeight * scale
 
             directRender.resize(width, height)
+            cabinetRender.resize(width, height)
             offsetX = -scaledWidth * 0.5f
             offsetY = -scaledHeight * 0.5f
             focused = false
+
+
+            currentScreenWidth = width.toFloat()
+            currentScreenHeight = height.toFloat()
+            val floatScale =
+                minOf(currentScreenWidth / virtualWidth, currentScreenHeight / virtualHeight)
+            cabinetWidth = virtualWidth * floatScale
+            cabinetHeight = virtualHeight * floatScale
+            cabinetOffsetX = (width - cabinetWidth) / 2f
+            cabinetOffsetY = (height - cabinetHeight) / 2f
         }
 
         onRender { dt ->
@@ -210,17 +250,22 @@ class Game(
                 ghostOverlay.updateAndRender(choreographer.adjustedDt)
             }
 
-            directRender.render(dt)
+            if (useCabinet) {
+                cabinetRender.render(dt)
+            } else {
+                directRender.render(dt)
 
-            framesRenderedInPeriod++
-            fpsCheckTimeout -= dt.milliseconds
-            if (fpsCheckTimeout < 0f) {
-                if (framesRenderedInPeriod < 190) { // average is less than 38 fps
-                    onLowPerformance()
-                }
-                fpsCheckTimeout = 5000f
-                framesRenderedInPeriod = 0
             }
+
+            /*            framesRenderedInPeriod++
+                        fpsCheckTimeout -= dt.milliseconds
+                        if (fpsCheckTimeout < 0f) {
+                            if (framesRenderedInPeriod < 190) { // average is less than 38 fps
+                                onLowPerformance()
+                            }
+                            fpsCheckTimeout = 5000f
+                            framesRenderedInPeriod = 0
+                        }*/
 
             val delay = 1000000000f / 1500000f
             val currentTime = System_nanoTime()
@@ -291,6 +336,35 @@ class Game(
 
             context.gl.disable(State.BLEND)
         }
+    }
+
+    private fun updateCabinet(duration: Duration, camera: Camera) {
+        camera.position.x = currentScreenWidth / 2f
+        camera.position.y = currentScreenHeight / 2f
+    }
+
+    private fun renderCabinet(duration: Duration, batch: Batch) {
+        if (assetsReady) {
+            ghostOverlay.isActive = true
+            ghostOverlay.isMoving = true
+
+            inGame?.texture?.let { gameTexture ->
+                batch.shader = cabinetShader
+                ghostOverlay.texture.bind(1)
+                cabinetShader.fragmentShader.uOverlayTexture.apply(cabinetShader, 1)
+                batch.draw(
+                    gameTexture,
+                    x = cabinetOffsetX,
+                    y = cabinetOffsetY,
+                    width = cabinetWidth,
+                    height = cabinetHeight,
+                    flipY = true
+                )
+            }
+
+
+        }
+
     }
 
     private val slightlyTransparentWhite = Color.WHITE.withAlpha(0.5f)

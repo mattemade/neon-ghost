@@ -8,6 +8,6 @@ fun main() {
         height = 540
         title = "Neon Ghost"
     }.start {
-        Game(it) {}
+        Game(it, onLowPerformance = {}, savedStateOverride = null)
     }
 }

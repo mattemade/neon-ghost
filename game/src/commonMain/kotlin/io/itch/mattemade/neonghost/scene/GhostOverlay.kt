@@ -103,8 +103,6 @@ class GhostOverlay(
                 height = height,
                 flipX = neonGhostFacingLeft,
             )
-        } ?: run {
-            println("not rendering ghost")
         }
     }
 
@@ -113,7 +111,6 @@ class GhostOverlay(
             return
         }
         if (renderJustOneMoreTime) {
-            println("rendering one more time")
             renderJustOneMoreTime = false
         }
         worldRender.render(dt)
@@ -135,10 +132,7 @@ class GhostOverlay(
         neonGhostX = x
         neonGhostY = y
         if (frame == null) {
-            println("asked to clear render one more time")
             renderJustOneMoreTime = true
-        } else if (renderJustOneMoreTime) {
-            println("asked to render a frame after asking to clear one more time")
         }
     }
 
