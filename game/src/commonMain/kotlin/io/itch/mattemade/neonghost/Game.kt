@@ -17,6 +17,9 @@ import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapProcessor
 import com.littlekt.input.InputProcessor
 import com.littlekt.input.Pointer
+import com.littlekt.math.MutableVec2f
+import com.littlekt.math.Vec2f
+import com.littlekt.util.seconds
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.blackcat.input.bindInputs
 import io.itch.mattemade.neonghost.character.rei.Player
@@ -67,10 +70,12 @@ class Game(
     var cabinetWidth: Float = 0f
     var cabinetHeight: Float = 0f
     var scale = 1
+    var floatScale = 1f
     private var audioReady: Boolean = false
     private var assetsReady: Boolean = false
     private var fpsCheckTimeout = 5000f
     private var framesRenderedInPeriod = 0
+    private var absoluteTime = System_nanoTime() / 1000000000f
 
     private val eventState = mutableMapOf<String, Int>()
     private val playerKnowledge = mutableSetOf<String>()
@@ -220,12 +225,14 @@ class Game(
 
             currentScreenWidth = width.toFloat()
             currentScreenHeight = height.toFloat()
-            val floatScale =
+            floatScale =
                 minOf(currentScreenWidth / virtualWidth, currentScreenHeight / virtualHeight)
             cabinetWidth = virtualWidth * floatScale
             cabinetHeight = virtualHeight * floatScale
             cabinetOffsetX = (width - cabinetWidth) / 2f
             cabinetOffsetY = (height - cabinetHeight) / 2f
+
+            //cabinetShader.fragmentShader.uResolution.apply(cabinetShader, Vec2f(currentScreenWidth, currentScreenHeight))
         }
 
         onRender { dt ->
@@ -245,6 +252,7 @@ class Game(
                         resetGame()
                     }
                 }
+                absoluteTime += dt.seconds
                 choreographer.update(dt)
                 inGame?.updateAndRender(choreographer.adjustedDt, dt)
                 ghostOverlay.updateAndRender(choreographer.adjustedDt)
@@ -343,6 +351,7 @@ class Game(
         camera.position.y = currentScreenHeight / 2f
     }
 
+    private val temp = MutableVec2f(0f, 0f)
     private fun renderCabinet(duration: Duration, batch: Batch) {
         if (assetsReady) {
             ghostOverlay.isActive = true
@@ -352,6 +361,9 @@ class Game(
                 batch.shader = cabinetShader
                 ghostOverlay.texture.bind(1)
                 cabinetShader.fragmentShader.uOverlayTexture.apply(cabinetShader, 1)
+                cabinetShader.fragmentShader.uTime.apply(cabinetShader, absoluteTime)
+                cabinetShader.fragmentShader.uScale.apply(cabinetShader, floatScale)
+                cabinetShader.fragmentShader.uResolution.apply(cabinetShader, temp.set(cabinetWidth, cabinetHeight))
                 batch.draw(
                     gameTexture,
                     x = cabinetOffsetX,

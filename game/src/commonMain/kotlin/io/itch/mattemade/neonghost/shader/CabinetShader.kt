@@ -33,8 +33,19 @@ class CabinetFragmentShader(private val sourceText: String) : FragmentShaderMode
     val uOverlayTexture = ShaderParameter.UniformSample2D("u_overlayTexture")
     val uTextureSizes = ShaderParameter.UniformVec4("u_textureSizes")
     val uSampleProperties = ShaderParameter.UniformVec4("u_sampleProperties")
+    val uResolution = ShaderParameter.UniformVec2("u_resolution")
+    val uTime = ShaderParameter.UniformFloat("u_time")
+    val uScale = ShaderParameter.UniformFloat("u_scale")
 
-    override val parameters: LinkedHashSet<ShaderParameter> = linkedSetOf(uTexture, /*uGameTexture, */uOverlayTexture, uTextureSizes, uSampleProperties)
+    override val parameters: LinkedHashSet<ShaderParameter> = linkedSetOf(
+        uTexture, /*uGameTexture, */
+        uOverlayTexture,
+        uTextureSizes,
+        uSampleProperties,
+        uResolution,
+        uTime,
+        uScale,
+    )
 
     override var source: String = sourceText
 }
