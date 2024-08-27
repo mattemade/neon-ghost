@@ -5,9 +5,9 @@
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":5,
          "id":1,
          "name":"floor",
@@ -19,8 +19,8 @@
          "y":0
         }, 
         {
-         "data":[71, 71, 71, 71, 71, 71, 71, 71, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            71, 71, 71, 71, 71, 71, 71, 71, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         "data":[81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -36,7 +36,7 @@
         }, 
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 58, 0, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 68, 0, 0, 77, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -116,7 +116,7 @@
          "name":"trigger",
          "objects":[
                 {
-                 "height":48,
+                 "height":37.3333333333333,
                  "id":10,
                  "name":"our_boss",
                  "properties":[
@@ -148,19 +148,19 @@
                  "y":96
                 }, 
                 {
-                 "height":48,
+                 "height":47.3333333333333,
                  "id":11,
                  "name":"exit_boxing",
                  "properties":[
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"rei<:I'm going home, see you later\nboss>:Take care, Rei\nboss>:I will contact you after\\confirming the mission details\nteleport going_home\nstate 1"
+                         "value":"rei<:I'm going home, see you later\nboss>:Take care, Rei\nboss>:I will contact you after\\confirming the mission details\nmusic stop\nstate 1\nteleport going_home"
                         }, 
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"teleport going_home"
+                         "value":"music stop\nteleport going_home"
                         }, 
                         {
                          "name":"title",
@@ -177,17 +177,22 @@
                  "visible":true,
                  "width":48,
                  "x":240,
-                 "y":96
+                 "y":83.6666666666667
                 }, 
                 {
-                 "height":144,
+                 "height":90.5,
                  "id":24,
                  "name":"start_game_trigger",
                  "properties":[
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"music magical girl 3d\nstate 1"
+                         "value":"music stop\nrei<:Fooh\nmusic bassy_beat\n#music stop\nstate 1"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"forget training"
                         }, 
                         {
                          "name":"type",
@@ -197,9 +202,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":144,
-                 "x":288,
-                 "y":96
+                 "width":624,
+                 "x":0,
+                 "y":149.5
                 }, 
                 {
                  "height":48,
@@ -217,6 +222,33 @@
                  "width":48,
                  "x":336,
                  "y":144
+                }, 
+                {
+                 "height":42,
+                 "id":28,
+                 "name":"inside_boxing_club",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"music bassy_beat\nremember training"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"street"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":624,
+                 "x":0,
+                 "y":96
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -236,7 +268,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":28,
+ "nextobjectid":29,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -247,19 +279,19 @@
          "source":"Outside-Wall 48_48.tsj"
         }, 
         {
-         "firstgid":36,
+         "firstgid":46,
          "source":"Outside-Light 150_150.tsj"
         }, 
         {
-         "firstgid":39,
+         "firstgid":49,
          "source":"Outside-Window 48_48.tsj"
         }, 
         {
-         "firstgid":67,
+         "firstgid":77,
          "source":"terminal_tile.tsj"
-        },
+        }, 
         {
-         "firstgid":68,
+         "firstgid":78,
          "source":"abstract.tsj"
         }],
  "tilewidth":48,

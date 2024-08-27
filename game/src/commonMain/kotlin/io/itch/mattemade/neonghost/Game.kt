@@ -2,15 +2,18 @@ package io.itch.mattemade.neonghost
 
 import com.littlekt.Context
 import com.littlekt.ContextListener
+import com.littlekt.file.createFloatBuffer
 import com.littlekt.graph.node.resource.HAlign
 import com.littlekt.graphics.Camera
 import com.littlekt.graphics.Color
 import com.littlekt.graphics.Fonts
+import com.littlekt.graphics.GL
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.gl.BlendFactor
 import com.littlekt.graphics.gl.ClearBufferMask
+import com.littlekt.graphics.gl.GlVertexArray
 import com.littlekt.graphics.gl.State
 import com.littlekt.graphics.shader.ShaderProgram
 import com.littlekt.graphics.toFloatBits
@@ -18,7 +21,8 @@ import com.littlekt.input.InputMapProcessor
 import com.littlekt.input.InputProcessor
 import com.littlekt.input.Pointer
 import com.littlekt.math.MutableVec2f
-import com.littlekt.math.Vec2f
+import com.littlekt.math.MutableVec4f
+import com.littlekt.util.milliseconds
 import com.littlekt.util.seconds
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.blackcat.input.bindInputs
@@ -27,12 +31,19 @@ import io.itch.mattemade.neonghost.scene.GhostOverlay
 import io.itch.mattemade.neonghost.scene.InGame
 import io.itch.mattemade.neonghost.shader.CabinetFragmentShader
 import io.itch.mattemade.neonghost.shader.CabinetVertexShader
+import io.itch.mattemade.neonghost.shader.ParticleFragmentShader
+import io.itch.mattemade.neonghost.shader.ParticleVertexShader
+import io.itch.mattemade.neonghost.shader.TestFragmentShader
+import io.itch.mattemade.neonghost.shader.TestVertexShader
 import io.itch.mattemade.neonghost.shader.createCabinetShader
+import io.itch.mattemade.neonghost.shader.createParticleShader
+import io.itch.mattemade.neonghost.shader.createTestShader
 import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
 import io.itch.mattemade.utils.render.DirectRender
 import org.jbox2d.internal.System_nanoTime
+import kotlin.random.Random
 import kotlin.time.Duration
 
 class Game(
@@ -60,7 +71,9 @@ class Game(
     val cabinetRender =
         DirectRender(context, virtualWidth, virtualHeight, ::updateCabinet, ::renderCabinet)
     lateinit var cabinetShader: ShaderProgram<CabinetVertexShader, CabinetFragmentShader>
-    var useCabinet = true
+    lateinit var particleShader: ShaderProgram<ParticleVertexShader, ParticleFragmentShader>
+    lateinit var testShader: ShaderProgram<TestVertexShader, TestFragmentShader>
+    var useCabinet = false
     var offsetX = 0f
     var offsetY = 0f
     var cabinetOffsetX = 0f
@@ -75,7 +88,7 @@ class Game(
     private var assetsReady: Boolean = false
     private var fpsCheckTimeout = 5000f
     private var framesRenderedInPeriod = 0
-    private var absoluteTime = System_nanoTime() / 1000000000f
+    private var absoluteTime = Random.nextFloat() * 100f
 
     private val eventState = mutableMapOf<String, Int>()
     private val playerKnowledge = mutableSetOf<String>()
@@ -183,9 +196,21 @@ class Game(
     }
 
     override suspend fun Context.start() {
+        vertexArray // initialize
         cabinetShader = createCabinetShader(
             vfs["shader/cabinet.vert.glsl"].readString(),
             vfs["shader/cabinet.frag.glsl"].readString()
+        ).also { it.prepare(this) }
+
+
+        particleShader = createParticleShader(
+            vfs["shader/particles.vert.glsl"].readString(),
+            vfs["shader/particles.frag.glsl"].readString()
+        ).also { it.prepare(this) }
+
+        testShader = createTestShader(
+            vfs["shader/test.vert.glsl"].readString(),
+            vfs["shader/test.frag.glsl"].readString()
         ).also { it.prepare(this) }
 
         input.addInputProcessor(object : InputProcessor {
@@ -238,6 +263,7 @@ class Game(
         onRender { dt ->
             gl.clear(ClearBufferMask.COLOR_BUFFER_BIT)
             gl.clearColor(Color.CLEAR)
+            absoluteTime += dt.seconds
             if (!audioReady) {
                 audioReady = audio.isReady()
             }
@@ -252,12 +278,10 @@ class Game(
                         resetGame()
                     }
                 }
-                absoluteTime += dt.seconds
                 choreographer.update(dt)
                 inGame?.updateAndRender(choreographer.adjustedDt, dt)
                 ghostOverlay.updateAndRender(choreographer.adjustedDt)
             }
-
             if (useCabinet) {
                 cabinetRender.render(dt)
             } else {
@@ -265,15 +289,19 @@ class Game(
 
             }
 
-            /*            framesRenderedInPeriod++
-                        fpsCheckTimeout -= dt.milliseconds
-                        if (fpsCheckTimeout < 0f) {
-                            if (framesRenderedInPeriod < 190) { // average is less than 38 fps
-                                onLowPerformance()
-                            }
-                            fpsCheckTimeout = 5000f
-                            framesRenderedInPeriod = 0
-                        }*/
+
+
+            if (focused && assetsReady) {
+                framesRenderedInPeriod++
+                fpsCheckTimeout -= dt.milliseconds
+                if (fpsCheckTimeout < 0f) {
+                    if (framesRenderedInPeriod < 190) { // average is less than 38 fps
+                        onLowPerformance()
+                    }
+                    fpsCheckTimeout = 5000f
+                    framesRenderedInPeriod = 0
+                }
+            }
 
             val delay = 1000000000f / 1500000f
             val currentTime = System_nanoTime()
@@ -291,8 +319,57 @@ class Game(
         camera.position.y = 0f
     }
 
+    /*private val arguments = Array<FloatArray>(6) {
+        FloatArray(2048) {
+            Random.nextFloat() * 200f - 100f
+        }
+    }*/
+
+    val locationId = 0
+    val floatBuffer = createFloatBuffer(255 * 2).apply {
+
+        for (i in 0 until 255*2) {
+            set(i, Random.nextFloat() * 400f - 200f)
+            //put(Random.nextFloat() * 400f - 200f)
+        }
+    }
+
+    val vertexArray: GlVertexArray by lazy {
+        context.gl.run {
+            val buffer = createBuffer()
+            bindBuffer(GL.ARRAY_BUFFER, buffer)
+            // generate data...
+            bufferData(GL.ARRAY_BUFFER, floatBuffer, GL.STATIC_DRAW)
+            bindDefaultBuffer(GL.ARRAY_BUFFER)
+
+            val vertexArray = createVertexArray()
+            bindVertexArray(vertexArray)
+            bindBuffer(GL.ARRAY_BUFFER, buffer)
+            vertexAttribPointer(index = locationId, size = 2, type = GL.FLOAT, normalized = false, stride = 0, offset = 0)
+            enableVertexAttribArray(index = locationId)
+            bindDefaultVertexArray()
+
+            vertexArray
+        }
+    }
     private fun render(duration: Duration, batch: Batch) {
         if (!focused) {
+            //batch.shader = particleShader
+            /*particleShader.vertexShader.uTime.apply(particleShader, absoluteTime)
+            context.gl.bindVertexArray(vertexArray)
+
+            val x = Random.nextFloat() * 2000f - 1000f
+            val y = Random.nextFloat() * 2000f - 1000f
+            batch.draw(
+                slice = Textures.white,
+                x = x,
+                y = y,
+                width = 1f * PPU,
+                height = 1f * PPU,
+                *//*instances = 255,*//*
+            )*/
+
+            //batch.useDefaultShader()
             Fonts.default.draw(
                 batch,
                 "CLICK TO FOCUS",
@@ -354,9 +431,6 @@ class Game(
     private val temp = MutableVec2f(0f, 0f)
     private fun renderCabinet(duration: Duration, batch: Batch) {
         if (assetsReady) {
-            ghostOverlay.isActive = true
-            ghostOverlay.isMoving = true
-
             inGame?.texture?.let { gameTexture ->
                 batch.shader = cabinetShader
                 ghostOverlay.texture.bind(1)
@@ -373,10 +447,7 @@ class Game(
                     flipY = true
                 )
             }
-
-
         }
-
     }
 
     private val slightlyTransparentWhite = Color.WHITE.withAlpha(0.5f)

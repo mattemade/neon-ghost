@@ -26,7 +26,7 @@ fun main() {
         var isGhost = false
         var argument = false
         var savedState: Game.SavedState? = null
-        window.location.href.substringAfter('?').split("&").forEach {
+        window.location.href.substringAfter('?').split("&").asSequence().drop(1).forEach {
             argument = true
             val split = it.split("=")
             val key = split[0]

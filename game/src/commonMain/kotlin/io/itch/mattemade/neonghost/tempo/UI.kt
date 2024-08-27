@@ -32,6 +32,7 @@ class UI(
     private val context: Context,
     private val assets: Assets,
     private val player: Player,
+    private val choreographer: Choreographer,
     private val controller: InputMapController<GameInput>,
     private val interactionOverrideMap: Map<String, String>,
     private val advanceDialogue: () -> Unit,
@@ -85,13 +86,19 @@ class UI(
         set(value) {
             field = value
             availableInteractionName =
-                (interactionOverrideMap[value?.name] ?: value?.properties?.get("title")?.string?.uppercase())?.split("\\")
+                (interactionOverrideMap[value?.name]
+                    ?: value?.properties?.get("title")?.string?.uppercase())?.split("\\")
         }
     var activeOptions: List<Pair<List<String>, String>>? = null
     var readyToSelectOption = false
     var activeOption = 0
 
-    fun render(toMeasure: Float, movingToBeat: Boolean, movingOffbeat: Boolean) {
+    fun render(
+        toMeasure: Float,
+        movingToBeat: Boolean,
+        movingOffbeat: Boolean,
+        isFighting: Boolean
+    ) {
         viewport.apply(context)
         batch.begin(camera.viewProjection)
 
@@ -99,47 +106,51 @@ class UI(
             shapeRenderer.filledRectangle(fullscreenRect, color = fadeWorldColor.toFloatBits())
         }
 
-        shapeRenderer.filledCircle(center, 15f, color = Color.WHITE.toFloatBits())
-        shapeRenderer.filledCircle(
-            center,
-            13f,
-            color = (if (movingToBeat) Color.DARK_GREEN else if (movingOffbeat) Color.DARK_RED else Color.DARK_YELLOW).toFloatBits()
-        )
-        for (i in 0 until 4) {
-            tempVec2f.set(15f, 0f).rotate((PI_F * i / 2f).radians).add(center)
-            tempVec2fb.set(10f, 0f).rotate((PI_F * i / 2f).radians).add(center)
-            shapeRenderer.line(tempVec2fb, tempVec2f, color = Color.WHITE, thickness = 1f)
-        }
-        tempVec2f.set(14f, 0f).rotate((toMeasure * PI_F * 2 - PI_F / 2f).radians).add(center)
-        shapeRenderer.line(center, tempVec2f, color = Color.WHITE, thickness = 1f)
-
-        renderProgressbar(
-            34f,
-            healthBarPadding,
-            healthBarWidth,
-            healthBarHeight,
-            player.health.toFloat() / Player.maxPlayerHealth,
-            Color.GRAY,
-            Color.GREEN
-        )
-
-        for (i in 0 until maxHealthSlots) {
-            val enemy = health[i]
-            if (enemy != null) {
-                val isLeft = i % 2 == 1
-                val row = (i + 1) / 2
-                val startX = if (isLeft) 34f else Game.virtualWidth - healthBarWidth - 2f
-                val startY = (row + 1) * healthBarPadding + row * healthBarHeight
-                renderProgressbar(
-                    startX,
-                    startY,
-                    healthBarWidth,
-                    healthBarHeight,
-                    enemy.health.toFloat() / enemy.initialHeath,
-                    Color.GRAY,
-                    Color.RED
-                )
+        // metronome
+        if (isFighting) {
+            shapeRenderer.filledCircle(center, 15f, color = Color.WHITE.toFloatBits())
+            shapeRenderer.filledCircle(
+                center,
+                13f,
+                color = (if (movingToBeat) Color.DARK_GREEN else if (movingOffbeat) Color.DARK_RED else Color.DARK_YELLOW).toFloatBits()
+            )
+            for (i in 0 until 4) {
+                tempVec2f.set(15f, 0f).rotate((PI_F * i / 2f).radians).add(center)
+                tempVec2fb.set(10f, 0f).rotate((PI_F * i / 2f).radians).add(center)
+                shapeRenderer.line(tempVec2fb, tempVec2f, color = Color.WHITE, thickness = 1f)
             }
+            tempVec2f.set(14f, 0f).rotate((toMeasure * PI_F * 2 - PI_F / 2f).radians).add(center)
+            shapeRenderer.line(center, tempVec2f, color = Color.WHITE, thickness = 1f)
+
+            renderProgressbar(
+                34f,
+                healthBarPadding,
+                healthBarWidth,
+                healthBarHeight,
+                player.health.toFloat() / Player.maxPlayerHealth,
+                Color.GRAY,
+                Color.GREEN
+            )
+
+            for (i in 0 until maxHealthSlots) {
+                val enemy = health[i]
+                if (enemy != null) {
+                    val isLeft = i % 2 == 1
+                    val row = (i + 1) / 2
+                    val startX = if (isLeft) 34f else Game.virtualWidth - healthBarWidth - 2f
+                    val startY = (row + 1) * healthBarPadding + row * healthBarHeight
+                    renderProgressbar(
+                        startX,
+                        startY,
+                        healthBarWidth,
+                        healthBarHeight,
+                        enemy.health.toFloat() / enemy.initialHeath,
+                        Color.GRAY,
+                        Color.RED
+                    )
+                }
+            }
+
         }
 
         availableInteractionName?.let {
@@ -297,6 +308,7 @@ class UI(
             activeOptions?.let { options ->
                 val xMovement = controller.axis(GameInput.HORIZONTAL)
                 if (readyToSelectOption && xMovement != 0f) {
+                    choreographer.uiSound(assets.sound.select.sound)
                     readyToSelectOption = false
                     activeOption += if (xMovement < 0f) -1 else 1
                     if (activeOption < 0) {
@@ -309,11 +321,13 @@ class UI(
                     readyToSelectOption = true
                 }
                 if (controller.pressed(GameInput.ANY_ACTION)) {
+                    choreographer.uiSound(assets.sound.click.sound)
                     selectOption(options[activeOption].second)
                     return
                 }
             }
             if (controller.pressed(GameInput.ANY_ACTION)) {
+                choreographer.uiSound(assets.sound.click.sound)
                 advanceDialogue()
                 return
             }
@@ -338,7 +352,8 @@ class UI(
         readyToSelectOption = true
     }
 
-    private var fullscreenRect = Rect(0f, 0f, Game.virtualWidth.toFloat(), Game.virtualHeight.toFloat())
+    private var fullscreenRect =
+        Rect(0f, 0f, Game.virtualWidth.toFloat(), Game.virtualHeight.toFloat())
     private var fadeWorldColor = MutableColor(0f, 0f, 0f, 0f)
     fun setFadeWorldColor(color: Color) {
         fadeWorldColor.set(color)

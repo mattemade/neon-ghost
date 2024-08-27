@@ -1,9 +1,11 @@
 package io.itch.mattemade.neonghost.world
 
+import com.littlekt.Context
 import com.littlekt.util.seconds
 import io.itch.mattemade.neonghost.Game
 import com.soywiz.korma.geom.Angle
 import io.itch.mattemade.neonghost.pixelPerfectPosition
+import io.itch.mattemade.neonghost.tempo.Choreographer
 import org.jbox2d.collision.shapes.ChainShape
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyDef
@@ -13,7 +15,7 @@ import org.jbox2d.dynamics.FixtureDef
 import org.jbox2d.dynamics.World
 import kotlin.time.Duration
 
-class CameraMan(world: World, initialPosition: Vec2) {
+class CameraMan(private val context: Context, private val choreographer: Choreographer, world: World, initialPosition: Vec2) {
 
     private var observing: ((Vec2) -> Unit)? = null
 
@@ -67,6 +69,8 @@ class CameraMan(world: World, initialPosition: Vec2) {
             tempVec2.set(tempVec2.x.pixelPerfectPosition, tempVec2.y.pixelPerfectPosition)
             body.setTransform(tempVec2, Angle.ZERO)
         }
+        choreographer.updatePosition(body.position.x, body.position.y)
+        context.audio.setListenerPosition(body.position.x, body.position.y, -5f)
     }
     private fun interpolate(value: Float): Float = 3 * value * value - 2 * value * value * value
 

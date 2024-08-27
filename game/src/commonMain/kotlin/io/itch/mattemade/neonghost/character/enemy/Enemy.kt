@@ -17,6 +17,7 @@ import com.soywiz.korma.geom.Angle
 import com.soywiz.korma.geom.radians
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.neonghost.pixelPerfectPosition
+import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.utils.animation.SignallingAnimationPlayer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
@@ -35,6 +36,7 @@ class Enemy(
     initialPosition: Vec2,
     private val player: Player,
     private val world: World,
+    private val choreographer: Choreographer,
     private val assets: Assets,
     animations: CharacterAnimations,
     private val controller: InputMapController<GameInput>,
@@ -150,6 +152,7 @@ class Enemy(
         if (health == 0) {
             return
         }
+        choreographer.sound(assets.sound.punch.sound, body.position.x, body.position.y)
         health = max(0, health - strength)
         hitCooldown = if (health == 0) 500f else 300f
         currentMagicalAnimation = hit
@@ -173,9 +176,13 @@ class Enemy(
     private fun onAnimationEvent(event: String) {
         when (event) {
             "enemyPunch" -> {
+                choreographer.sound(assets.sound.whoosh.sound, body.position.x, body.position.y)
                 if (isFacingLeft && leftPunchTargets.isNotEmpty() || !isFacingLeft && rightPunchTargets.isNotEmpty()) {
                     player.hit(body.position, difficulty)
                 }
+            }
+            "enemyFootstep" -> {
+                choreographer.sound(assets.sound.footstep.sound, body.position.x, body.position.y)
             }
         }
     }
@@ -188,7 +195,7 @@ class Enemy(
         body.setTransform(tempVec2, Angle.ZERO)
     }
 
-    override fun update(dt: Duration, millis: Float, notAdjustedDt: Duration, toBeat: Float, toMeasure: Float) {
+    override fun update(dt: Duration, millis: Float, notAdjustedDt: Duration, toBeat: Float, toMeasure: Float, isFighting: Boolean) {
         if (!canAct()) {
             stopBody()
             currentMagicalAnimation.update(dt)

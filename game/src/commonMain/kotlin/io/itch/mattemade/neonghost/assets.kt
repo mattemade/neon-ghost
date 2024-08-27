@@ -1,5 +1,6 @@
 package io.itch.mattemade.neonghost
 
+import co.touchlab.stately.collections.ConcurrentMutableList
 import co.touchlab.stately.collections.ConcurrentMutableMap
 import com.littlekt.Context
 import com.littlekt.PreparableGameAsset
@@ -20,6 +21,7 @@ import com.littlekt.graphics.shader.VertexShader
 import io.itch.mattemade.neonghost.shader.createTestShader
 import io.itch.mattemade.utils.asset.AssetPack
 import io.itch.mattemade.utils.atlas.RuntimeTextureAtlasPacker
+import kotlin.random.Random
 
 class Assets(context: Context, animationEventListener: (String) -> Unit) : AssetPack(context) {
     private val runtimeTextureAtlasPacker = RuntimeTextureAtlasPacker(context).releasing()
@@ -54,6 +56,79 @@ class Textures(context: Context, private val packer: RuntimeTextureAtlasPacker) 
 
 class Sound(context: Context) : AssetPack(context) {
     val speech1 by prepare { context.resourcesVfs["sound/speech1.mp3"].readAudioClipEx() }
+    val punch by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Punches/Punches/Punch - 1.wav",
+                "sound/Punches/Punches/Punch - 2.wav",
+                "sound/Punches/Punches/Punch - 3.wav",
+            )
+        )
+    }
+    val whoosh by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Punches/Whooshes/Whoosh - 1.wav",
+                "sound/Punches/Whooshes/Whoosh - 2.wav",
+            )
+        )
+    }
+    val footstep by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Footsteps/Footstep - 1.wav",
+                "sound/Footsteps/Footstep - 2.wav",
+                "sound/Footsteps/Footstep - 3.wav",
+                "sound/Footsteps/Footstep - 4.wav",
+            )
+        )
+    }
+    val click by pack {
+        SoundPack(
+            context, listOf(
+                "sound/UI/UI - 1.wav",
+            )
+        )
+    }
+    val select by pack {
+        SoundPack(
+            context, listOf(
+                "sound/UI/UI - 2.wav",
+            )
+        )
+    }
+    val transformation by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Transformation.wav",
+            )
+        )
+    }
+}
+
+class SoundPack(context: Context, val fileNames: List<String>, val randomize: Boolean = true) :
+    AssetPack(context) {
+
+    private val size = fileNames.size
+    private var nextIndex = 0
+        get() {
+            val currentValue = field
+            field = (currentValue + 1) % size
+            return currentValue
+        }
+
+    val sound: AudioClipEx
+        get() = concurrentSounds.get(if (randomize) Random.nextInt(size) else nextIndex)
+
+    private val concurrentSounds = ConcurrentMutableList<AudioClipEx>()
+
+    init {
+        fileNames.forEach {
+            prepare {
+                context.resourcesVfs[it].readAudioClipEx().also { concurrentSounds.add(it) }
+            }
+        }
+    }
 }
 
 class Music(context: Context) : AssetPack(context) {
@@ -62,12 +137,15 @@ class Music(context: Context) : AssetPack(context) {
     val concurrentTracks = ConcurrentMutableMap<String, StreamBpm>()
 
     private val preparations = listOf(
-        "sound/magical girl 3d.mp3" to 150f,
-        "sound/magical girl 1c.mp3" to 129.97198f,
+        "music/magical girl 3d.mp3" to 150f,
+        "music/magical girl 1c.mp3" to 129.97198f,
+        "music/stop.mp3" to 120f,
+        "music/bassy_beat.mp3" to 120f,
     ).forEach {
         val name = it.first.mp3name()
         prepare {
-            val track = context.resourcesVfs[it.first].readAudioClipEx().asTrack(name, it.second, 0.0f)
+            val track =
+                context.resourcesVfs[it.first].readAudioClipEx().asTrack(name, it.second, 0.0f)
             concurrentTracks[name] = track
             track
         }
@@ -77,7 +155,8 @@ class Music(context: Context) : AssetPack(context) {
 data class StreamBpm(val name: String, val stream: AudioClipEx, val bpm: Float, val offset: Float) :
     Releasable by stream
 
-private fun AudioClipEx.asTrack(name: String, bpm: Float, offset: Float) = StreamBpm(name, this, bpm, offset)
+private fun AudioClipEx.asTrack(name: String, bpm: Float, offset: Float) =
+    StreamBpm(name, this, bpm, offset)
 
 class Levels(context: Context, private val atlas: TextureAtlas? = null) : AssetPack(context) {
     private fun String.pack(): PreparableGameAsset<TiledMap> =

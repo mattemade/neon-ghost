@@ -103,6 +103,7 @@ class InGame(
             context,
             assets,
             player,
+            choreographer,
             inputController,
             interactionOverride,
             ::advanceDialog,
@@ -171,6 +172,7 @@ class InGame(
     }
 
     private fun musicCommand(command: String) {
+        println("music command: $command")
         when (command) {
             else -> assets.music.concurrentTracks[command]?.let {
                 choreographer.play(it)
@@ -214,6 +216,7 @@ class InGame(
         Player(
             playerSpawnPosition,
             world,
+            choreographer,
             assets,
             inputController,
             assets.objects.particleSimulator,
@@ -298,7 +301,7 @@ class InGame(
 
     private val cameraMan by lazy {
         val tempVec2 = Vec2(playerSpawnPosition.x, if (levelSpec.freeCameraY) playerSpawnPosition.y - Game.visibleWorldHeight / 8f else visibleWorldHeight / 2f)
-        CameraMan(world, tempVec2).apply {
+        CameraMan(context, choreographer, world, tempVec2).apply {
             lookAt { it.set(player.x, if (levelSpec.freeCameraY) player.y - Game.visibleWorldHeight / 8f else visibleWorldHeight / 2f) }
         }
     }
@@ -409,6 +412,11 @@ class InGame(
     private fun createEnemy(
         enemySpec: EventExecutor.EnemySpec
     ): Enemy {
+        if (!choreographer.isActive) {
+            // starting fight, but there is no music - should be fixed ASAP
+            choreographer.play(assets.music.concurrentTracks["magical girl 3d"]!!)
+        }
+
         val offsetX =
             if (enemySpec.fromLeft) -Game.visibleWorldWidth / 2f - 0.5f else Game.visibleWorldWidth / 2f + 0.5f
         val offsetY = enemySpec.verticalPosition
@@ -416,6 +424,7 @@ class InGame(
             Vec2(cameraMan.position.x + offsetX, offsetY),
             player,
             world,
+            choreographer,
             assets,
             enemySpec.characterAnimations,
             inputController,
@@ -451,6 +460,31 @@ class InGame(
     private var music = false
 
     init {
+        if (playerKnowledge.contains("needToWaitABit")) {
+            maxWaitingTime = 2f
+            waitingTime = 2f
+            ui.setFadeEverythingColor(Color.BLACK)
+            ui.setFadeEverything(1f)
+            waitingAction = {
+                maxWaitingTime = 0.5f
+                waitingTime = 0.5f
+                whileWaitingAction = { ui.setFadeEverything(it) }
+                waitingAction = {
+                    ui.setFadeEverything(0f)
+                }
+            }
+        } else {
+            scheduleFadeIn()
+        }
+
+
+        triggers // to initialize
+        if (ghostOverlay.isActive) {
+            createGhostBody()
+        }
+    }
+
+    private fun scheduleFadeIn() {
         maxWaitingTime = 0.5f
         waitingTime = 0.5f
         if (eventState.isEmpty()) {
@@ -468,11 +502,6 @@ class InGame(
                 ui.setFadeWorld(0f)
             }
         }
-
-        triggers // to initialize
-        if (ghostOverlay.isActive) {
-            createGhostBody()
-        }
     }
 
     private val tempVec2 = Vec2()
@@ -484,9 +513,10 @@ class InGame(
             whileWaitingAction?.invoke(waitingTime / maxWaitingTime)
             if (waitingTime <= 0f) {
                 waitingTime = 0f
-                waitingAction?.invoke()
+                val actionToExecute = waitingAction
                 whileWaitingAction = null
                 waitingAction = null
+                actionToExecute?.invoke()
             }
         }
 
@@ -532,7 +562,8 @@ class InGame(
                 millis,
                 notAdjustedDt,
                 choreographer.toBeat,
-                choreographer.toMeasure
+                choreographer.toMeasure,
+                isFighting = enemies.isNotEmpty() || playerKnowledge.isEmpty(),
             )
         }
         if (addNeonGhostToList) {
@@ -638,7 +669,7 @@ class InGame(
     }
 
     private fun renderUi(dt: Duration, camera: Camera, batch: Batch) {
-        ui.render(choreographer.toMeasure, player.movingToBeat, player.movingOffBeat)
+        ui.render(choreographer.toMeasure, player.movingToBeat, player.movingOffBeat, enemies.isNotEmpty() || playerKnowledge.isEmpty())
     }
 
     fun updateAndRender(dt: Duration, notAdjustedDt: Duration) {
@@ -652,6 +683,10 @@ class InGame(
             "punch" -> {
                 player.activatePunch()
                 neonGhost?.activatePunch()
+                choreographer.sound(assets.sound.whoosh.sound, player.x, player.y)
+            }
+            "footstep" -> {
+                choreographer.sound(assets.sound.footstep.sound, player.x, player.y)
             }
         }
     }

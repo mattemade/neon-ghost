@@ -23,6 +23,7 @@ import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.character.DepthBasedRenderable
 import io.itch.mattemade.neonghost.character.enemy.Enemy
 import io.itch.mattemade.neonghost.pixelPerfectPosition
+import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.neonghost.world.ContactBits
 import io.itch.mattemade.utils.animation.SignallingAnimationPlayer
 import io.itch.mattemade.utils.releasing.Releasing
@@ -42,6 +43,7 @@ import kotlin.time.Duration
 class Player(
     initialPosition: Vec2,
     private val world: World,
+    private val choreographer: Choreographer,
     private val assets: Assets,
     private val controller: InputMapController<GameInput>,
     private val particleSimulator: ParticleSimulator,
@@ -86,7 +88,7 @@ class Player(
 
     private var animations = if (isMagicGirl) assets.animation.magicalReiAnimations else assets.animation.normalReiAnimations
 
-    internal var currentAnimation: SignallingAnimationPlayer = animations.walk
+    internal var currentAnimation: SignallingAnimationPlayer = animations.idle
         set(value) {
             if (field != value) {
                 value.restart()
@@ -182,6 +184,7 @@ class Player(
         if (health == 0) {
             return
         }
+        choreographer.sound(assets.sound.punch.sound, body.position.x, body.position.y)
         health = max(0, health - difficulty.toInt())
         if (castingTime > 0f) {
             if (castingTime / castTime > castBeforeSlowingTime) {
@@ -232,7 +235,8 @@ class Player(
         millis: Float,
         notAdjustedDt: Duration,
         toBeat: Float,
-        toMeasure: Float
+        toMeasure: Float,
+        isFighting: Boolean
     ) {
         if (reducingTime > 0f) {
             reducingTime -= notAdjustedDt.seconds
@@ -305,10 +309,11 @@ class Player(
             }
 
 
-            if (matchBeat && !keepMoving) {
+            if (matchBeat && !keepMoving && isFighting) {
                 movingToBeat = true
                 dashCooldown = 200f
                 body.linearVelocity.set(xMovement * 2.5f, yMovement * 2.5f)
+                choreographer.sound(assets.sound.whoosh.sound, body.position.x, body.position.y)
             } else {
                 if (keepMoving) {
                     // was moving before, and continuing to move off-beat
@@ -320,8 +325,13 @@ class Player(
                     movingOffBeat = true
                     movingToBeat = false
                 }
-                body.linearVelocity.set(xMovement, yMovement)
-                speed = body.linearVelocity.length()
+                if (isFighting) {
+                    body.linearVelocity.set(xMovement, yMovement)
+                    speed = body.linearVelocity.length()
+                } else {
+                    body.linearVelocity.set(xMovement, yMovement).mulLocal(1.5f)
+                    speed = body.linearVelocity.length()// / 2f
+                }
             }
             body.isAwake = true
             keepMoving = true
@@ -386,17 +396,19 @@ class Player(
             }
         }
 
-        if (controller.pressed(GameInput.ATTACK) || (!isMagicGirl && controller.pressed(GameInput.MAGIC))) {
-            punchCooldown = 300f//if (wasPunching) 600f else 900f
-            stopBody()
-            currentAnimation = if (nextLeftPunch) {
-                animations.leftPunch
-            } else {
-                animations.rightPunch
+        if (isFighting) {
+            if (controller.pressed(GameInput.ATTACK) /*|| (!isMagicGirl && controller.pressed(GameInput.MAGIC))*/) {
+                punchCooldown = 300f//if (wasPunching) 600f else 900f
+                stopBody()
+                currentAnimation = if (nextLeftPunch) {
+                    animations.leftPunch
+                } else {
+                    animations.rightPunch
+                }
+                wasPunching = true
+                nextLeftPunch = !nextLeftPunch
+                //activateParticles()
             }
-            wasPunching = true
-            nextLeftPunch = !nextLeftPunch
-            //activateParticles()
         }
 
         currentAnimation.update(dt * speed.toDouble()) // will trigger animation callbacks

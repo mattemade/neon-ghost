@@ -32,8 +32,11 @@ class Choreographer(private val context: Context) {
         get() = currentlyPlaying != null
 
     fun play(music: StreamBpm) {
+        if (music === currentlyPlayingTrack) {
+            return
+        }
         currentlyPlaying?.stop(currentlyPlayingId)
-        currentlyPlayingId = music.stream.play(volume = 0.1f, referenceDistance = 10000f, loop = true)
+        currentlyPlayingId = music.stream.play(volume = 0.1f, referenceDistance = 10000f, rolloffFactor = 0f, loop = true)
         music.stream.setPlaybackRate(currentlyPlayingId, playbackRate.toFloat())
         bpm = music.bpm
         currentlyPlaying = music.stream
@@ -42,6 +45,14 @@ class Choreographer(private val context: Context) {
         doubleSecondsPerBeat = secondsPerBeat * 2f
         secondsPerMeasure = secondsPerBeat * 4
         currentlyPlayingTrack = music
+    }
+
+    var xPosition: Float = 0f
+    var yPosition: Float = 0f
+    fun updatePosition(x: Float, y: Float) {
+        xPosition = x
+        yPosition = y
+        currentlyPlaying?.setPosition(currentlyPlayingId, x, y)
     }
 
     fun setPlaybackRate(rate: Float) {
@@ -54,5 +65,15 @@ class Choreographer(private val context: Context) {
         time += adjustedDt.seconds
         toBeat = (time % secondsPerBeat) / secondsPerBeat
         toMeasure = (time % secondsPerMeasure) / secondsPerMeasure
+    }
+    fun uiSound(sound: AudioClipEx) {
+        // +5f is manually discovered constant :shrug:
+        val id = sound.play(positionX = xPosition, positionY = yPosition)
+        sound.setPlaybackRate(id, playbackRate.toFloat())
+    }
+
+    fun sound(sound: AudioClipEx, x: Float, y: Float) {
+        val id = sound.play(positionX = x, positionY = y)
+        sound.setPlaybackRate(id, playbackRate.toFloat())
     }
 }

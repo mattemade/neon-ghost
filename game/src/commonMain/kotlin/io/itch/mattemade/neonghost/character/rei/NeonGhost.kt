@@ -126,7 +126,8 @@ class NeonGhost(
         millis: Float,
         notAdjustedDt: Duration,
         toBeat: Float,
-        toMeasure: Float
+        toMeasure: Float,
+        isFighting: Boolean
     ) {
         val xMovement = controller.axis(GameInput.HORIZONTAL)
         val yMovement = controller.axis(GameInput.VERTICAL)
