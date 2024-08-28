@@ -1,0 +1,512 @@
+# neon ghost - script and VO lines
+
+### Out-of-dialougue voice lines for the Ghost of Magical Girl Mirai
+
+"Wake up!" - quick and stingy ASMR-ish whisper that goes right into the head, like if someone tries to scare you from behind when you don't expect it. It will appear during the dream in Scene 3, and before Rei finds herself in the interrogation room in Scene 7.
+"... me ..." - barely audible telepatic call that could be confused with "help me". Appears in Scene 7, Scene 8, and multiple times as Rei explores the building.
+"Kill me..." - clearly audible telepatic call that Rei hears when getting close to the Power Plant with access to the terminal.
+
+Search "Mirai: " in the document for all the dialogue lines.
+
+
+### Setting
+Loosesly cyberpunk themed. CorpX is controlling 99% of the power grid, supplying its partners with completely green and almost free electricity. Economy is corporation-centric, and "outsiders", people who does not fit the system, have to survive without its goods and services.
+
+### Characters
+* (Magical Girl) Rei, the main character - talented hacker and thief raised by streets, who got caught by CorpX agents during one of her missions. 
+* Magical Girl Mirai, support character - once a powerful (maybe even the strongest one) magical girl; evil forces used her kindness against her, turning her into the first power plant many years ago. In the game she is just a ghost, projected by the remainings of her magical powers.
+* Boss, side character - thief coordinator, a Rei's commander and father figure. Can be contacted via Rei's communicator (optional hidden item).
+* Punk, enemy
+* Security agent, enemy
+* Security officer, enemy boss
+* Demon ghost of the evil army, side character (not sure if we'll be able to include him though) - the one who tricked Mirai and others, and who will try to trick Rei into joining his forces as a Witch
+
+### General game plot
+* Rei is assigned with a mission to steal a very important box from CorpX.
+* Before going to the mission she sees a dream of stars.
+* Rei got caught by agents, who took her into one of the CorpX facilities to interrogate, taking away all her belongings (hacking tools, communicator, etc.)
+* Agents detect magical powers in Rei, and they decide to put her through a brainwashing machine to turn her either into a Witch, an obedient tool of evil army, or into a plant ("this facility's plant is long due to replace").
+* Rei starts a fight, and know needs to find a way out of this. She can either find a quick route to exit, or explore the facility more to recover her tools, access internal data, check the restricted areas, and find out the truth about CorpX and herself.
+
+### Ending 1 - PANDORA PARADOXXX:
+The important item Rei was supposed to steal is a powerful bomb codenamed Pandora Box.
+It is stored in one of the locked rooms, and requires a code to be activated.
+Code is scattered across the facility on different terminals.
+Activating the bomb creates the last game checkpoint and starts the countdown. 
+Rei has to escape within the given time, leaving nothing but a destruction behind.
+
+### Ending 2 - Recollect Lines:
+Get back all Rei's belongings, contact Boss from the roof (the only place with a signal), steal the internal data from hacked computers, and escape.
+
+### Ending 3 - World Vanquisher:
+Mostly the same as Ending 4, but after the final fight agree to become a Witch of the Demon Ghost's army, and defeat the ghost of Magical Girl Mirai.
+
+### Ending 4 - Grievous Lady:
+Find a way to the Power Plant, turn it off to release the ghost of Magical Girl Mirai.
+Agree to help her destoying the brainwashing machine.
+With her help, tranform into a Magical Girl, defeat the remaining secuirty agents and security officer, and do not agree with the Demon Ghost.
+Destroy the washing machine with Mirai's help, which will drain the last bits of her magic powers, ceasing her existence.
+Escape the facility.
+
+### Ending 5 - Freedome Dive
+???? Use the jetpack to escape the building form the roof?? What is the difference from Ending 6??
+
+### Ending 6 - Re:Unknown X
+Escape the building while not meeting any conditions for other endings.
+
+### Ending 0 - Neon Ghost
+Parcially complete conditions for Ending 2 - collect your tools, gather all the information
+Parcially complete conditions for Ending 4 - release Mirai and transform into Magical Girl
+Complete conditions for Ending 1 - activate the Pandora Box, and escape within the countdown
+
+
+### Scene 1 - boxing club, basic training
+
+#### Speak with Boss
+Boss: Try to find the right rhythm for moves and punches
+
+#### Speak with Boss
+Boss: Good job on today's training
+Boss: You can train as long as you like, but having a rest is also important
+
+#### Exit to street
+Rei: I'm going home, see you later
+Boss: Take care, Rei
+Boss: I will contact you after confirming the mission details
+
+
+### Scene 2 - walk home, first fight
+
+#### Boxing club
+
+####
+Punk: Hey, girl!
+Punk: Do you want to have some fun? [Yes, No]
+[Yes] Punk: He he he
+[No] Punk: But I want!
+
+#### Go home
+
+
+### Scene 3 - home
+
+#### Bed
+Bed: Go to sleep? [Yes, No]
+[Yes] <launch the dream sequence, with a "Wake up!" wisper waking Rei up>
+Rei: That dream again...
+Rei: How I wish to see the stars for real.
+Rei: But the smoke and clouds are so thick in this city, you can't tell day from night.
+Phone: (ringing)
+Boss: Good morning, Rei
+Boss: I've sent you the details of the mission
+Boss: Be extra careful, we are onto something big this time
+Rei: I'm on my way
+Phone: (hangs up)
+
+#### Table
+Table: Your hacking instruments are lying on the table, fixed and clean as you like them. [Take them]
+[Take them] Tools: Aquired hacking instruments.
+
+#### Start mission
+[No tools] Rei: I should probably take my tools before I go.
+
+
+### Scene 4 - secret room
+
+<TBD> CorpX agents are secretly selling a small black box to someone covered by shadows. Box was on the table, but FLASH! and there are no box to be found.
+
+
+### Scene 5 - street
+
+#### fight trigger
+Punk: This is that girl!
+Rei: Not you again
+Punk: Come on, guys!
+
+#### fight trigger
+Agent<:Hey girl, we have some questions
+rei>:I don't care
+
+#### fight trigger
+Agent: Here she is!
+Rei: Oh, come on!
+
+#### dead end trigger
+Rei: Dead end...
+
+
+### Scene 6 - back alley
+
+#### fight trigger
+Agent: She is running away! Get her!
+Rei: I need to finish this quickly
+
+
+### Scene 7 - interrogation room, B1
+
+#### trigger
+<black screen, with a "Wake up!" wisper waking Rei up>
+Officer: Oh, you're finally awake
+Rei: Where am I?
+Officer: I'm the one asking the questions here
+Officer: How did you know about the box?
+Rei: I don't know what you are talking about
+Officer: I see...
+Officer: Who should we call to pick you up?
+Rei: I don't have anyone, so good luck with your ransom
+Officer: Good, no one is looking for you then
+Rei: ...
+<barely audible "... me ...">
+Rei: What is that?!
+Officer: I'm the one asking the questions here
+Radio: Sir, the detector reacts on her
+Officer: What??
+Officer: Looks like we got our lucky ticket, guys
+Officer: Bring her to the washing machine!
+Agent: Yes, sir!
+Rei: Hey, I am not that dirty!
+Agent: It is not to clean you... Well, at least not from outside
+Rei: Ewww, that's even worse
+
+
+### Scene 8 - washing machine, B2
+
+### fight trigger
+Rei: So, what did your detector detect?
+Agent: It seems you hold some magical powers
+Rei: Wow, and you are not scared?
+Agent: Well, you would use them already if you know how
+Rei: ...
+Rei: And what is that chair for?
+Agent: That is the brainwashing machine. It will turn you either on our side or into a plant
+Rei: ...
+Agent: But you will be useful anyway, so cheer up!
+Rei: Is that ok for you to tell me that much?
+Agent: Don't worry, you will soon forget about that
+Rei: (Such a lame handcuffs)
+Rei: (If only these guys look away for a moment, I could take them off in no time)
+<barely audible "... me ...">
+Rei: What is that thing again?!
+Agent: Are you turning plant already? I just told you that's a washing machine
+Agent: Now, take a seat
+<the light goes out for a couple of seconds, just enough for Rei to take off the handcuffs>
+Rei: (Here is my chance!)
+<the light turns back on, and Rei had freed her hands, to fight>
+Rei: Good, one problem solved.
+Rei: Magical powers, huh?.. I will think about that later
+
+### Terminal
+Terminal: Operation instructions:
+Terminal: 1) place the subject onto the chair
+Terminal: 2) ensure the subject is properly placed on the chair
+Terminal: 3) insert your security card (do not do it before placing the subject on the chair)
+Terminal: 4) press the button
+Terminal: 5) call for Professor immediately
+Terminal: 6) don't mess it up again!
+Rei: Oh, there is a security card inserted, handy!
+Card: Security card obtained
+
+### Security lift
+[No card] Lift: Access denied
+[No card] Rei: I could hack it open with my tools, but they took eveything somewhere
+[No card] Rei: Let's look around
+[Card] Lift: Access granted
+[Card] Lift: Where to go? [power plant B3, washing machine B2, secured area B1, control room 18, research office 25, roof]
+
+
+### Scene 10 - control room, 18
+
+#### Terminal
+Terminal: Blue doors: locked.
+Terminal: Insert security card to unlock blue doors. [Insert, Leave]
+[Insert]
+
+#### Terminal
+Terminal: Blue doors: unlocked. [Take security card, Leave]
+[Take security card] Terminal: Blue doors: locked.
+
+#### Terminal
+Terminal: Red doors: locked.
+Terminal: Insert security card to unlock red doors. [Insert, Leave]
+[Insert]
+
+#### Terminal
+Terminal: Red doors: unlocked. [Take security card, Leave]
+[Take security card] Terminal: Red doors: locked.
+
+#### Terminal
+[Restricted] Terminal: Security lift status: restricted access.
+[Locked] Terminal: Security lift status: locked. Insert security card to grant restricted access. [Insert, Leave]
+
+#### Terminal
+Terminal: What to show? [Building plan, Power grid]
+[Building plan] <projects the 2d crossection of the building, with playable floors, lifts, red/blue doors and player position>
+[Power grid]
+Mirai: Hmm, how strange
+Mirai: The green dots on this map match my feeling of other magical girls
+Rei: Looks like this triangle on the red dot is where we are
+Rei: So it seems that green dots are active power plants
+Rei: Like the one where I found you...
+Mirai: I see... Poor souls...
+Mirai: May I ask you... to help them the same way you helped me here? [I promise, No]
+[No] Mirai: Sorry... I knew I was asking for impossible...
+[I promise] Mirai: Thank you, you are too kind! No wonder you are a magical girl too!
+[I promise] <promise remembered>
+
+#### Main lift
+Lift: Where to go? [lobby 00, control room 18, research office 25]
+
+
+### Scene 11 - storage room, 00
+
+#### fight trigger in lobby
+
+#### Red door
+[Locked] Rei: It is locked... And I don't think I could hack it.
+
+#### fight trigger in the storage room
+
+#### Storage
+Tools: Hacking tools and communicator obtained
+
+#### Exit
+Rei: Leaving the building through the front door? There is no turning back. [No, Yes]
+[Yes] <depending on conditions, trigger Ending 1, 2, 4, 6 or 0>
+
+
+### Scene 12 - power plant, B3
+
+#### Terminal
+Terminal: Life support system: ON, Main power plant: ON, Reserve generator: OFF [Turn off life support, Leave]
+[Turn off life support] Terminal: Life support system: OFF
+[Turn off life support] <lights go out>
+[Turn off life support] <particle effects, ghost appears>
+[Turn off life support] <lights turn back on>
+[Turn off life support] Terminal: Main power plant:OFF, Reserve generator: ON
+
+#### ghost trigger
+Mirai: Aaaahh!
+Mirai: Was it you who came to my call? Thank you so much! I thought it will never end...
+Rei: Whoaah!
+Mirai: You look like you've seen a ghost! Normally I shouldn't say that, but I am Magical Girl Mirai, nice to meet you!
+Rei: ...
+Rei: I'm just... Surprised
+Rei: Nice to meet you, Mirai, I'm Rei
+Mirai: What is going on here? I feel the fear in you, but that's not a fear of me...
+Rei: Well... Five minutes ago a brainwashing machine was supposed to turn me into a plant, and now I've met... You
+Mirai: Are you the only one here? Let me try to call my friends for help...
+<Mirai sends the signal>
+Mirai: They don't respond...
+Mirai: But I can feel them... suffering... Poor souls...
+Mirai: You are the only magical girl around who respond to my call
+Rei: I am what?! So it is true that I have some magical powers?
+Mirai: Well, if you can hear and see me being a magical beign, you can be sure
+Rei: ...
+Rei: And how can I... use them?
+Mirai: You have to allow the magic to go through your body
+Mirai: Recall the feeling when your dream comes true, and try to focus on it
+Rei: ...
+Rei: I don't recall such a feeling...
+Mirai: Oh, poor soul... We've all met a terrible fate, haven't we?
+Mirai: Maybe you have a dream that you can imagine coming true? I've heard that worked before
+Rei: Hmmm...
+Rei: I wish I could see the stars... But I can't imagine that, I've never seen them before
+Mirai: Wow, that should be easy! Let's go to the roof right now, I can feel the moon shining!
+Rei: Uh, you better see that yourself
+Rei: As a ghost, can you go through the wall to see outside?
+Mirai: I am not a ghost! I am a magical girl, just without a body
+Rei: Well, that's what I would call a ghost...
+Mirai: And it looks like my magical powers are holding onto you
+Mirai: So I will vanish the moment I leave you...
+Rei: ...
+Rei: But you can be with me if I go there, right?
+Mirai: I think so
+Rei: Let's go, I'll show you the roof...
+
+
+### Scene 13 - roof
+
+#### phone trigger
+Rei: Boss, it's me
+Boss: What's going on? Where are you? I've lost your signal
+Rei: They caught me, but now I'm fine
+Rei: In in one of the CorpX research facilities
+Boss: Shit... Forget the mission, prioritize getting away alive
+Boss: But I won't mind you to steal some data while being there
+Rei: Got you, see you later
+
+#### ghost trigger
+Mirai: Oh... I see... You really can't see anything through...
+Rei: Yeah, it was like that as long as I remember
+Rei: Those who can't get the electricity from CorpX just burn whatever fuel they have
+Mirai: I would give you a magical wings to fly above, but I am afraid it will be the last thing I will ever do
+Mirai: Maybe it is a good idea, though... At least you could fight
+Rei: Wait, look there, there is a jetpack
+Rei: It is not fully loaded, but it should be fine
+Rei: Can your wings catch me I will start falling down?
+Mirai: Yes, I have enough powers to land you safely
+Mirai: Are you going to risk your life entrusting me?
+Rei: Yes...
+Rei: I feel this is my first and last chance
+
+#### Jetpack
+Rei: It is not fully loaded, but should be enough to land to the street [Escape the building, Fly to the sky, Leave]
+[Escape the building] <depending on conditions, trigger Ending 1, 2 or 5>
+[Fly to the sky] <fly through the clouds sequence, but there are not enough fuel to pierce through the clouds>
+Rei: Oh no, the tank is empty!
+Rei: Mirai, please, get ready to catch me!
+Mirai: We are so close! Leeet's goooo!
+<Mirai uses her powers to push Rei just a little bit up, and they fly above the couds>
+<star transformation sequence>
+<safe landing on the roof>
+Rei: Wow, what happened to my clothes?!
+Mirai: Ha ha ha, yes, it always happens
+Mirai: Now, try to focus on that feeling a bit longer, and release the power around
+<AOE attack tutorial>
+Mirai: Yes, like that! It is a bit tricky, but I'm sure you will get used to it!
+Mirai: And, as you seem to be a good fighter, you can try to punch with the focused magic
+<projectile attack tutorial>
+Mirai: Awesome, you are a natural! That reminds me of good old times...
+Mirai: We should seek for other magical girls once.. once we... escape... [Mirai tries to cover her anxiety as she know she won't last long, but she don't want Rei to worry about that]
+Mirai: But for now we need to protect them! You've said there is a brainwashing machine? We have to destroy it!
+
+#### fight trigger
+Agent: Turn off the lift!
+<security lift is turned off>
+
+
+#### [anytime after a fight where AOT stop-time attack landed a hit]
+Mirai: How did you do that?
+Rei: I don't know, it's like the time has stopped
+Mirai: So that is you very own magical ability! Amazing! I've never seen a Magical Girl to find it out so quickly!
+Rei: Thanks...
+Mirai: I wish you could meet my friends...
+[promised] Rei: I'll meet them, I promised
+Mirai: Not like that... There were times where we all lived peacefully
+Mirai: But it seems like these times for us had long past
+Mirai: I just wish you won't go through that
+Rei: I hope I won't
+Rei: And for that to happen we need to finish with the washing machine
+Mirai: Yeah!
+
+
+#### Security lift
+[Locked] Rei: Shit, they turned it off, we need to find another way around
+
+
+### Scene 14 - research office, 25
+
+#### Terminal
+Rei: Let's steal some data...
+<fight trigger>
+
+#### Terminal
+Rei: Let's steal some data...
+<fight trigger>
+
+#### Terminal
+Rei: Oh, there is some password
+Rei: Right to my collection!
+<obtain Pandora Code>
+<fight trigger>
+
+#### Main lift
+Lift: Where to go? [00, 18, 25]
+<go to control room 25, and from there turn on security lift and to to B2>
+
+
+### Scene 15 - washing machine, B2
+
+#### boss fight trigger
+Officer: Here you are! Are you ready?
+Rei: Ready for what?
+Officer: I'm the one asking the questions here!
+<boss fight>
+Card: Obtained security card
+<after boss is defeated a ghost shadow of demon appears>
+Demon: Why why, what's going on here?
+Demon: I haven’t seen a magical girl in flesh for many years
+Demon: I wonder how did you manage to wake up in this city of eternal slumber
+Rei: ...
+Demon: Oh, it's you Mirai! Long time no see!
+Demon: I should have figured out you have something to do with all that mess
+Mirai: Uuuhh.... That's you! That's because of you I am like that!
+Demon: Calm down! Save your beautiful voice for insults
+Demon: You, girl! I bet you don't want to end up like that firefly
+Demon: Don't repeat her mistakes, and join me
+Demon: I can teach you to be a perfect Witch with such a power you posses! The whole universe would belong to you!
+Mirai: Don't listen to him, Rei!
+Demon: Rei... You know how this world works, aren't you? Why would you choose to suffer for others when you can delight yourself?
+Demon: Be a good girl, use your powers to get rid of this annoying insect
+Mirai: Mind you manners! Rei, punch his face for me, please
+<ghost Rei can punch either Mirai or Demon>
+
+#### punched Mirai
+Mirai: Oh, poor soul...
+<Mirai disappears>
+Demon: That's my favourite Witch! Now stay here and don't go anywhere, my friends will arrive soon to give you everything you deserve
+Demon: Goodbye, Magical Girl Rei!
+<trigger endless fight with more and more harder enemies, until they take Rei down and turn her into the plant>
+<Ending 3>
+
+#### punched Demon
+Demon: You'll regret that...
+<Demon disappears>
+Mirai: Well done, Rei! Now, let's take care of that thing
+Mirai: It is huge... I don't think you can damage it physically
+Mirai: If I channel my magic through you, you should have enough power to punch through it
+Rei: Do you have any magic left?
+Mirai: Don't worry about me, I'm done for a long time
+Mirai: And I am willing to put what remained from my life in protecting all the future Magical Girls!
+Mirai: Are you ready? [Yes, No]
+[Yes] <triggers destroying washing machine>
+[No] Mirai: Take you time to get ready, but don't take too long!
+[No] <with the second security card you can go to 25, open red doors, and go to B1>
+
+#### destoying washing machine
+Rei: I am ready
+Mirai: Focus you magic as hard as you can, here we go!
+<both girls are focusing their magic>
+Mirai: Just a little more...
+Mirai: Punch! Now!
+<Rei punches, screen fades in white>
+Mirai: Thank you... And goodbye...
+<Mirai disappears, music and metronome disappears>
+<Rei need to escape the building through the front door>
+<depending on conditions, trigger Ending 4 or 0>
+
+
+### Scene 16 - secured area, B1
+
+#### fight trigger
+
+#### Red door - warehouse
+#### fight trigger
+
+#### Red door - jail
+#### fight trigger
+
+#### Red door - interrogation room
+Rei: Oh, this is the room where I woke up!
+Rei: Doesn't it feel nostalgic?
+
+#### Red door - Pandora Box room
+[Locked]
+[Unlocked]
+
+#### Mysterious box
+Box: Connected with many wires, bolts and nuts, impossible to detach
+Rei: Hey, this is the same thing they were trying to sell today!
+Rei: I wonder what is it for
+
+#### Terminal
+Terminal: <TBD some information about the Pandora Self-Destruction Protocol, its activation requires the special password>
+[password] Terminal: Password accepted, are you sure you want to activate the Pandora Self-Descrution Protocol? [No, Yes]
+[Yes]
+<countdown starts>
+Mirai: What is that countdown for?
+Rei: This building will blow up, together with that bloody washing machine
+Mirai: What??? Isn't that too dangeous?
+Rei: Well, I have no idea how to turn it off now, so we just run and figure it out
+<need to escape the building through the front door within the countdown>
+<depending on conditions, trigger Ending 1 or 0>
