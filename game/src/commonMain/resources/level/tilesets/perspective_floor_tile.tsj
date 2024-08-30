@@ -1,0 +1,14 @@
+{ "columns":1,
+ "image":"perspective_floor_tile.png",
+ "imageheight":48,
+ "imagewidth":48,
+ "margin":0,
+ "name":"perspective_floor_tile",
+ "spacing":0,
+ "tilecount":1,
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilewidth":48,
+ "type":"tileset",
+ "version":"1.10"
+}

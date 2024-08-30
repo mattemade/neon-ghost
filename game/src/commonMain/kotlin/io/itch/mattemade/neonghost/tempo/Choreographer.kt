@@ -2,18 +2,24 @@ package io.itch.mattemade.neonghost.tempo
 
 import com.littlekt.Context
 import com.littlekt.audio.AudioClipEx
-import com.littlekt.audio.AudioStreamEx
 import com.littlekt.util.seconds
-import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.StreamBpm
 import kotlin.time.Duration
 
 class Choreographer(private val context: Context) {
 
+    var masterVolume = 1f
+        set(value) {
+            currentlyPlayingTrack?.let {
+                it.stream.setVolume(currentlyPlayingId, it.basicVolume * value)
+            }
+            field = value
+        }
     private var secondsPerBeat = 0f
     private var doubleSecondsPerBeat = 0f
     private var secondsPerMeasure = 0f
-    var adjustedDt: Duration = Duration.ZERO
+    var playbackRateBasedDt: Duration = Duration.ZERO
+    var bpmBasedDt: Duration = Duration.ZERO
     var bpm = 0f
         private set
     var time = 0f
@@ -27,6 +33,7 @@ class Choreographer(private val context: Context) {
     var currentlyPlayingTrack: StreamBpm? = null
         private set
     private var currentlyPlaying: AudioClipEx? = null
+    private val everActiveSoundClips = mutableSetOf<AudioClipEx>()
     private var currentlyPlayingId: Int = 0
     val isActive: Boolean
         get() = currentlyPlaying != null
@@ -36,7 +43,7 @@ class Choreographer(private val context: Context) {
             return
         }
         currentlyPlaying?.stop(currentlyPlayingId)
-        currentlyPlayingId = music.stream.play(volume = 0.1f, referenceDistance = 10000f, rolloffFactor = 0f, loop = true)
+        currentlyPlayingId = music.stream.play(volume = music.basicVolume * masterVolume, referenceDistance = 10000f, rolloffFactor = 0f, loop = true)
         music.stream.setPlaybackRate(currentlyPlayingId, playbackRate.toFloat())
         bpm = music.bpm
         currentlyPlaying = music.stream
@@ -56,24 +63,29 @@ class Choreographer(private val context: Context) {
     }
 
     fun setPlaybackRate(rate: Float) {
+        println("rate: $rate")
         playbackRate = rate.toDouble()
         currentlyPlaying?.setPlaybackRate(currentlyPlayingId, rate)
+        everActiveSoundClips.forEach {
+            it.setPlaybackRateAll(rate)
+        }
     }
 
     fun update(dt: Duration) {
-        adjustedDt = dt.times(playbackRate)
-        time += adjustedDt.seconds
+        playbackRateBasedDt = dt.times(playbackRate)
+        time += playbackRateBasedDt.seconds
         toBeat = (time % secondsPerBeat) / secondsPerBeat
         toMeasure = (time % secondsPerMeasure) / secondsPerMeasure
+        bpmBasedDt = playbackRateBasedDt//if (bpm > 0f) playbackRateBasedDt.times(bpm / 150.0) else playbackRateBasedDt
     }
-    fun uiSound(sound: AudioClipEx) {
-        // +5f is manually discovered constant :shrug:
-        val id = sound.play(positionX = xPosition, positionY = yPosition)
+    fun uiSound(sound: AudioClipEx, volume: Float) {
+        everActiveSoundClips.add(sound)
+        val id = sound.play(positionX = xPosition, positionY = yPosition, volume = volume * masterVolume)
         sound.setPlaybackRate(id, playbackRate.toFloat())
     }
 
     fun sound(sound: AudioClipEx, x: Float, y: Float) {
-        val id = sound.play(positionX = x, positionY = y)
+        val id = sound.play(positionX = x, positionY = y, volume = masterVolume)
         sound.setPlaybackRate(id, playbackRate.toFloat())
     }
 }

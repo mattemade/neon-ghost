@@ -308,7 +308,7 @@ class UI(
             activeOptions?.let { options ->
                 val xMovement = controller.axis(GameInput.HORIZONTAL)
                 if (readyToSelectOption && xMovement != 0f) {
-                    choreographer.uiSound(assets.sound.select.sound)
+                    choreographer.uiSound(assets.sound.select.sound, volume = 0.5f)
                     readyToSelectOption = false
                     activeOption += if (xMovement < 0f) -1 else 1
                     if (activeOption < 0) {
@@ -321,13 +321,13 @@ class UI(
                     readyToSelectOption = true
                 }
                 if (controller.pressed(GameInput.ANY_ACTION)) {
-                    choreographer.uiSound(assets.sound.click.sound)
+                    choreographer.uiSound(assets.sound.click.sound, volume = 0.5f)
                     selectOption(options[activeOption].second)
                     return
                 }
             }
             if (controller.pressed(GameInput.ANY_ACTION)) {
-                choreographer.uiSound(assets.sound.click.sound)
+                choreographer.uiSound(assets.sound.click.sound, volume = 0.5f)
                 advanceDialogue()
                 return
             }

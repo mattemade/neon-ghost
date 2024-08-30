@@ -447,7 +447,8 @@ class InGame(
     }
 
     private fun gameOver() {
-        onGameOver()
+        scheduleGameOver()
+
     }
 
     private var time = 0f
@@ -476,6 +477,7 @@ class InGame(
         } else {
             scheduleFadeIn()
         }
+        choreographer.setPlaybackRate(1f)
 
 
         triggers // to initialize
@@ -504,12 +506,24 @@ class InGame(
         }
     }
 
+    private fun scheduleGameOver() {
+        maxWaitingTime = 0.5f
+        waitingTime = 0.5f
+        ui.setFadeWorldColor(Color.BLACK)
+        ui.setFadeWorld(0f)
+        whileWaitingAction = { ui.setFadeWorld(1f - it) }
+        waitingAction = {
+            ui.setFadeWorld(1f)
+            onGameOver()
+        }
+    }
+
     private val tempVec2 = Vec2()
     private fun updateWorld(dt: Duration, camera: Camera) {
         val millis = dt.milliseconds
         time += dt.seconds
         if (waitingTime > 0f) {
-            waitingTime -= dt.seconds
+            waitingTime -= notAdjustedDt.seconds
             whileWaitingAction?.invoke(waitingTime / maxWaitingTime)
             if (waitingTime <= 0f) {
                 waitingTime = 0f

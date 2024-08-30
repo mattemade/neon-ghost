@@ -9,7 +9,6 @@ import com.littlekt.graphics.Color
 import com.littlekt.graphics.Fonts
 import com.littlekt.graphics.GL
 import com.littlekt.graphics.MutableColor
-import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.gl.BlendFactor
 import com.littlekt.graphics.gl.ClearBufferMask
@@ -21,7 +20,6 @@ import com.littlekt.input.InputMapProcessor
 import com.littlekt.input.InputProcessor
 import com.littlekt.input.Pointer
 import com.littlekt.math.MutableVec2f
-import com.littlekt.math.MutableVec4f
 import com.littlekt.util.milliseconds
 import com.littlekt.util.seconds
 import io.itch.mattemade.blackcat.input.GameInput
@@ -73,7 +71,7 @@ class Game(
     lateinit var cabinetShader: ShaderProgram<CabinetVertexShader, CabinetFragmentShader>
     lateinit var particleShader: ShaderProgram<ParticleVertexShader, ParticleFragmentShader>
     lateinit var testShader: ShaderProgram<TestVertexShader, TestFragmentShader>
-    var useCabinet = false
+    var useCabinet = true
     var offsetX = 0f
     var offsetY = 0f
     var cabinetOffsetX = 0f
@@ -279,8 +277,8 @@ class Game(
                     }
                 }
                 choreographer.update(dt)
-                inGame?.updateAndRender(choreographer.adjustedDt, dt)
-                ghostOverlay.updateAndRender(choreographer.adjustedDt)
+                inGame?.updateAndRender(choreographer.bpmBasedDt, dt)
+                ghostOverlay.updateAndRender(choreographer.bpmBasedDt)
             }
             if (useCabinet) {
                 cabinetRender.render(dt)

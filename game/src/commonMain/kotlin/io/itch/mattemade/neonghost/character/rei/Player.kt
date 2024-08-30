@@ -11,9 +11,9 @@ import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapController
 import com.littlekt.math.MutableVec2f
 import com.littlekt.math.PI2
-import com.littlekt.math.PI_F
 import com.littlekt.math.geom.radians
 import com.littlekt.math.random
+import com.littlekt.util.milliseconds
 import com.littlekt.util.seconds
 import com.soywiz.korma.geom.Angle
 import com.soywiz.korma.geom.radians as boxRadians
@@ -35,7 +35,6 @@ import org.jbox2d.dynamics.BodyType
 import org.jbox2d.dynamics.Filter
 import org.jbox2d.dynamics.FixtureDef
 import org.jbox2d.dynamics.World
-import kotlin.math.PI
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.time.Duration
@@ -168,6 +167,10 @@ class Player(
     private var lastBeatPosition = 0f
     private var dashCooldown = 0f
     private var hitCooldown = 0f
+    private val maxHitCooldown = 300f
+    private val deathCooldown = 1000f
+    private val hitSlomoUntil = 250f
+    private val minHitSlomoRate = 0.1f
 
     private var activatePunch = false
     fun activatePunch() {
@@ -181,7 +184,7 @@ class Player(
     private var reducingTime = 0f
 
     fun hit(from: Vec2, difficulty: Float) {
-        if (health == 0) {
+        if (health <= 0) {
             return
         }
         choreographer.sound(assets.sound.punch.sound, body.position.x, body.position.y)
@@ -193,10 +196,10 @@ class Player(
             castingTime = 0f
         }
         focusCooldown = 0f
-        hitCooldown = 300f
+        hitCooldown = if (health <= 0) deathCooldown else maxHitCooldown
         currentAnimation = animations.hit
         val direction = tempVec2f.set(body.position.x, body.position.y).subtract(from.x, from.y)
-        val force = if (health == 0) 3f else 3f * difficulty
+        val force = if (health <= 0) 3f else 3f * difficulty
         tempVec2f2.set(force, 0f)
         val rotation = direction.angleTo(tempVec2f2)
         if (health > 0) {
@@ -268,13 +271,24 @@ class Player(
         if (hitCooldown > 0f) {
             punchCooldown = 0f
             dashCooldown = 0f
-            hitCooldown -= millis
+            hitCooldown -= if (health <= 0) notAdjustedDt.milliseconds else millis
             if (hitCooldown > 0f) {
+                val rate = if (health <= 0) {
+                    hitCooldown / deathCooldown
+                } else {
+                    minHitSlomoRate + (1f - minHitSlomoRate) * if (hitCooldown > hitSlomoUntil) {
+                        (hitCooldown - hitSlomoUntil) / (maxHitCooldown - hitSlomoUntil)
+                    } else {
+                        (hitSlomoUntil - hitCooldown) / hitSlomoUntil
+                    }
+                }
+                changePlaybackRate(rate)
                 currentAnimation.update(dt)
                 return
             }
+            changePlaybackRate(if (health <= 0) 0f else 1f)
         }
-        if (health == 0) {
+        if (health <= 0) {
             gameOver()
             return
         }

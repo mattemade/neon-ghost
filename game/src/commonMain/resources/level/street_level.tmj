@@ -254,7 +254,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"guard<:Hey girl, we have some questions\nrei>:I don't care\n\nfight guard,guard\nstate 1\nstate 1 second_fight_with_guards"
+                         "value":"guard<:Hey girl, we have some questions\nrei>:I don't care\n\nfight guard<0.5\nstate 1\nstate 1 second_fight_with_guards"
                         }, 
                         {
                          "name":"type",
@@ -276,7 +276,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"rei<:Dead end"
+                         "value":"rei<:Dead end\nstate 1"
                         }, 
                         {
                          "name":"type",
@@ -293,12 +293,12 @@
                 {
                  "height":144,
                  "id":24,
-                 "name":"first_fight_with_guards",
+                 "name":"second_fight_with_guards",
                  "properties":[
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"guard<:Here she is!\nrei>:Oh, come on!\n\nfight guard,guard,guard\nstate 2\n"
+                         "value":"guard<:Here she is!\nrei>:Oh, come on!\n\nfight guard>0.5,guard<0.5\nstate 2\n"
                         }, 
                         {
                          "name":"type",

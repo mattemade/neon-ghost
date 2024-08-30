@@ -139,24 +139,26 @@ class Music(context: Context) : AssetPack(context) {
     private val preparations = listOf(
         "music/magical girl 3d.mp3" to 150f,
         "music/magical girl 1c.mp3" to 129.97198f,
+        "music/magical girl 1c 100.mp3" to 100f,
+        "music/magical girl 1c 115.mp3" to 115f,
         "music/stop.mp3" to 120f,
         "music/bassy_beat.mp3" to 120f,
     ).forEach {
         val name = it.first.mp3name()
         prepare {
             val track =
-                context.resourcesVfs[it.first].readAudioClipEx().asTrack(name, it.second, 0.0f)
+                context.resourcesVfs[it.first].readAudioClipEx().asTrack(name, it.second, basicVolume = 0.1f, offset = 0.0f)
             concurrentTracks[name] = track
             track
         }
     }
 }
 
-data class StreamBpm(val name: String, val stream: AudioClipEx, val bpm: Float, val offset: Float) :
+data class StreamBpm(val name: String, val stream: AudioClipEx, val bpm: Float, val basicVolume: Float, val offset: Float) :
     Releasable by stream
 
-private fun AudioClipEx.asTrack(name: String, bpm: Float, offset: Float) =
-    StreamBpm(name, this, bpm, offset)
+private fun AudioClipEx.asTrack(name: String, bpm: Float, basicVolume: Float, offset: Float) =
+    StreamBpm(name, this, bpm, basicVolume, offset)
 
 class Levels(context: Context, private val atlas: TextureAtlas? = null) : AssetPack(context) {
     private fun String.pack(): PreparableGameAsset<TiledMap> =
@@ -214,6 +216,7 @@ class TileSets(context: Context, private val packer: RuntimeTextureAtlasPacker) 
     val doorTransparent by "level/tilesets/door_transparent.png".pack()
     val redDoor by "level/tilesets/red_door.png".pack()
     val redDoorTransparent by "level/tilesets/red_door_transparent.png".pack()
+    val perspectiveFloorTile by "level/tilesets/perspective_floor_tile.png".pack()
 }
 
 class Animations(
