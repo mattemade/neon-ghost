@@ -9,6 +9,7 @@ import com.littlekt.graphics.Color
 import com.littlekt.graphics.Fonts
 import com.littlekt.graphics.GL
 import com.littlekt.graphics.MutableColor
+import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.gl.BlendFactor
 import com.littlekt.graphics.gl.ClearBufferMask
@@ -31,11 +32,13 @@ import io.itch.mattemade.neonghost.shader.CabinetFragmentShader
 import io.itch.mattemade.neonghost.shader.CabinetVertexShader
 import io.itch.mattemade.neonghost.shader.ParticleFragmentShader
 import io.itch.mattemade.neonghost.shader.ParticleVertexShader
+import io.itch.mattemade.neonghost.shader.Particler
 import io.itch.mattemade.neonghost.shader.TestFragmentShader
 import io.itch.mattemade.neonghost.shader.TestVertexShader
 import io.itch.mattemade.neonghost.shader.createCabinetShader
 import io.itch.mattemade.neonghost.shader.createParticleShader
 import io.itch.mattemade.neonghost.shader.createTestShader
+import io.itch.mattemade.neonghost.shader.representation.BoundableBuffer
 import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
@@ -71,7 +74,7 @@ class Game(
     lateinit var cabinetShader: ShaderProgram<CabinetVertexShader, CabinetFragmentShader>
     lateinit var particleShader: ShaderProgram<ParticleVertexShader, ParticleFragmentShader>
     lateinit var testShader: ShaderProgram<TestVertexShader, TestFragmentShader>
-    var useCabinet = true
+    var useCabinet = false
     var offsetX = 0f
     var offsetY = 0f
     var cabinetOffsetX = 0f
@@ -113,6 +116,7 @@ class Game(
         inGame = InGame(
             context,
             assets,
+            particleShader,
             level,
             inputController,
             choreographer,
@@ -194,12 +198,10 @@ class Game(
     }
 
     override suspend fun Context.start() {
-        vertexArray // initialize
         cabinetShader = createCabinetShader(
             vfs["shader/cabinet.vert.glsl"].readString(),
             vfs["shader/cabinet.frag.glsl"].readString()
         ).also { it.prepare(this) }
-
 
         particleShader = createParticleShader(
             vfs["shader/particles.vert.glsl"].readString(),
@@ -317,57 +319,8 @@ class Game(
         camera.position.y = 0f
     }
 
-    /*private val arguments = Array<FloatArray>(6) {
-        FloatArray(2048) {
-            Random.nextFloat() * 200f - 100f
-        }
-    }*/
-
-    val locationId = 0
-    val floatBuffer = createFloatBuffer(255 * 2).apply {
-
-        for (i in 0 until 255*2) {
-            set(i, Random.nextFloat() * 400f - 200f)
-            //put(Random.nextFloat() * 400f - 200f)
-        }
-    }
-
-    val vertexArray: GlVertexArray by lazy {
-        context.gl.run {
-            val buffer = createBuffer()
-            bindBuffer(GL.ARRAY_BUFFER, buffer)
-            // generate data...
-            bufferData(GL.ARRAY_BUFFER, floatBuffer, GL.STATIC_DRAW)
-            bindDefaultBuffer(GL.ARRAY_BUFFER)
-
-            val vertexArray = createVertexArray()
-            bindVertexArray(vertexArray)
-            bindBuffer(GL.ARRAY_BUFFER, buffer)
-            vertexAttribPointer(index = locationId, size = 2, type = GL.FLOAT, normalized = false, stride = 0, offset = 0)
-            enableVertexAttribArray(index = locationId)
-            bindDefaultVertexArray()
-
-            vertexArray
-        }
-    }
     private fun render(duration: Duration, batch: Batch) {
         if (!focused) {
-            //batch.shader = particleShader
-            /*particleShader.vertexShader.uTime.apply(particleShader, absoluteTime)
-            context.gl.bindVertexArray(vertexArray)
-
-            val x = Random.nextFloat() * 2000f - 1000f
-            val y = Random.nextFloat() * 2000f - 1000f
-            batch.draw(
-                slice = Textures.white,
-                x = x,
-                y = y,
-                width = 1f * PPU,
-                height = 1f * PPU,
-                *//*instances = 255,*//*
-            )*/
-
-            //batch.useDefaultShader()
             Fonts.default.draw(
                 batch,
                 "CLICK TO FOCUS",

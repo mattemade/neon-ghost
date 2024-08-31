@@ -212,8 +212,9 @@ class EventExecutor(
     private fun String?.executeTrigger() {
         if (this != null) {
             onTrigger(this)
+        } else {
+            advance()
         }
-        advance()
     }
 
     private fun String?.executeChoose() {

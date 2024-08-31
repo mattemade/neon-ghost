@@ -38,6 +38,7 @@ class UI(
     private val advanceDialogue: () -> Unit,
     private val activateInteraction: (Trigger) -> Unit,
     private val selectOption: (String) -> Unit,
+    private val isMagic: () -> Boolean,
 ) : Releasing by Self() {
 
     private val batch = SpriteBatch(context).releasing()
@@ -292,7 +293,11 @@ class UI(
     }
 
     fun showDialogLine(portrait: String, isLeft: Boolean, text: String) {
-        activePortrait = portrait
+        if (portrait == "rei" && isMagic()) {
+            activePortrait = "magic"
+        } else {
+            activePortrait = portrait
+        }
         isPortraitLeft = isLeft
         activeLines = text.uppercase().split("\\")
 

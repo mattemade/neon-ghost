@@ -10,6 +10,8 @@ import org.w3c.dom.HTMLCanvasElement
 
 private const val CANVAS_ID = "canvas"
 
+external fun decodeURIComponent(encodedURI: String): String
+
 fun main() {
     createLittleKtApp {
         width = 960
@@ -22,20 +24,21 @@ fun main() {
         var eventState = mutableMapOf<String, Int>()
         var door: String = "player"
         var room: String = "boxing_club"
-        var isMagical = false
-        var isGhost = false
+        var activeMusic: String = "stop"
         var argument = false
         var savedState: Game.SavedState? = null
-        window.location.href.substringAfter('?').split("&").asSequence().drop(1).forEach {
+        window.location.href.substringAfter('?').split("&").asSequence().forEach {
             argument = true
+            println("item: $it")
             val split = it.split("=")
             val key = split[0]
-            val value = split.getOrNull(1)
+            val value = split.getOrNull(1)?.let { decodeURIComponent(it) }
             when (key) {
                 "hp" -> playerHealth = value?.toInt() ?: Player.maxPlayerHealth
                 "remember" -> knowledge.add(value ?: "")
                 "spawn" -> door = value ?: door
                 "room" -> room = value ?: room
+                "music" -> activeMusic = value ?: activeMusic
                 else -> eventState[key] = value?.toIntOrNull() ?: 0
             }
         }
@@ -49,7 +52,7 @@ fun main() {
                 ghostActive = knowledge.contains("ghost"),
                 playerHealth = playerHealth,
                 isMagic = knowledge.contains("magic"),
-                activeMusic = "magical girl 3d"
+                activeMusic = activeMusic
             )
         }
         scheduleCanvasResize(it)

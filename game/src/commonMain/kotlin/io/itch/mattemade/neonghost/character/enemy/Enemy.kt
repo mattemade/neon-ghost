@@ -152,8 +152,16 @@ class Enemy(
         if (health == 0) {
             return
         }
-        choreographer.sound(assets.sound.punch.sound, body.position.x, body.position.y)
+
         health = max(0, health - strength)
+        if (health == 0) {
+            choreographer.sound(assets.sound.enemyDeath.sound, body.position.x, body.position.y)
+        } else {
+            choreographer.sound(
+                if (strength == 1) assets.sound.punch.sound else assets.sound.powerPunch.sound,
+                body.position.x,
+                body.position.y)
+        }
         hitCooldown = if (health == 0) 500f else 300f
         currentMagicalAnimation = hit
         if (strength > 1 || health == 0 || fromSpell) {

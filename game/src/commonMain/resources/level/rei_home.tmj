@@ -5,9 +5,9 @@
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            68, 68, 68, 69, 69, 69, 69, 72, 72, 68, 68, 68, 69, 69, 69, 69, 69, 69, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 0, 0, 0, 0,
-            68, 68, 68, 69, 69, 69, 69, 68, 68, 68, 68, 71, 69, 69, 69, 69, 69, 69, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 0, 0, 0, 0,
-            68, 68, 68, 69, 69, 69, 70, 68, 68, 68, 68, 71, 69, 69, 69, 69, 69, 69, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 0, 0, 0, 0],
+            78, 78, 78, 79, 79, 79, 79, 82, 82, 78, 78, 78, 79, 79, 79, 79, 79, 79, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 0, 0, 0, 0,
+            78, 78, 78, 79, 79, 79, 79, 78, 78, 78, 78, 81, 79, 79, 79, 79, 79, 79, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 0, 0, 0, 0,
+            78, 78, 78, 79, 79, 79, 80, 78, 78, 78, 78, 81, 79, 79, 79, 79, 79, 79, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 0, 0, 0, 0],
          "height":5,
          "id":1,
          "name":"floor",
@@ -19,11 +19,11 @@
          "y":0
         }, 
         {
-         "data":[69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69,
-            69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 69, 69, 69,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 69, 69, 69,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 69, 69, 69],
+         "data":[79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79,
+            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 79, 79, 79,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 79, 79, 79,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 79, 79, 79],
          "height":5,
          "id":3,
          "name":"wall",
@@ -35,8 +35,8 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 76, 76, 76, 76, 76, 0, 0, 0, 0, 70, 70, 0, 0, 0, 0, 70, 70, 0, 0, 71, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 76, 76, 76, 76, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 71, 0, 0, 0, 0, 0,
+         "data":[0, 0, 0, 0, 0, 0, 0, 86, 86, 86, 86, 86, 0, 0, 0, 0, 80, 80, 0, 0, 0, 0, 80, 80, 0, 0, 81, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 86, 86, 86, 86, 86, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 81, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -54,8 +54,8 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 77, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 77, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 87, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 87, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":5,
          "id":10,
          "name":"foreground",
@@ -203,14 +203,19 @@
                  "y":96
                 }, 
                 {
-                 "height":62.3333333333333,
+                 "height":14.3333333333333,
                  "id":22,
                  "name":"rei_home_bed",
                  "properties":[
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"bed<: Go to sleep?\nchoose Yes:yes; No:no\nchoice no\nend\nchoice yes\nstate 1\nscreen fade\ntrigger dream\nbed<: you see a dream\\of starts and clock\nbed<: \"wake up\" says the whisper\nbed<: rei wakes up\nrei<: That dream again...\nrei<: How I wish to see the stars for real\nrei<: But the smoke and clouds are\\so thick in this city,\\you can't tell day from night\nphone>:ring ring ring\nphone>:Good morning, Rei\nphone>:I've sent you the details of the mission\nphone>:Be very careful, we are onto something big this time\nrei<:I'm on my way\nphone>:hangs up\nrei<:gotta take my tools before I go\nstate 1 rei_home_table\nstate 1 enter_home"
+                         "value":"bed<: Go to sleep?\nchoose Yes:yes; No:no\nchoice no\nend\nchoice yes\nstate 1\nteleport dream\n"
+                        }, 
+                        {
+                         "name":"2",
+                         "type":"string",
+                         "value":"wait 2\nscreen fadeIn\nrei<: That dream again...\nrei<: How I wish to see the stars for real\nrei<: But the smoke and clouds are\\so thick in this city,\\you can't tell day from night\nphone>:ring ring ring\nphone>:Good morning, Rei\nphone>:I've sent you the details of the mission\nphone>:Be very careful, we are onto something big this time\nrei<:I'm on my way\nphone>:hangs up\nrei<:gotta take my tools before I go\nstate 1 rei_home_table\nstate 1 enter_home"
                         }, 
                         {
                          "name":"title",
@@ -225,9 +230,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":112,
+                 "width":96,
                  "x":336,
-                 "y":96
+                 "y":144
                 }, 
                 {
                  "height":48,
@@ -282,6 +287,33 @@
                  "width":66.3333333333333,
                  "x":509.666666666667,
                  "y":133.333333333333
+                }, 
+                {
+                 "height":14.3333,
+                 "id":27,
+                 "name":"wake_up_trigger",
+                 "properties":[
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"rei<: That dream again...\nrei<: How I wish to see the stars for real\nrei<: But the smoke and clouds are\\so thick in this city,\\you can't tell day from night\nphone>:ring ring ring\nphone>:Good morning, Rei\nphone>:I've sent you the details of the mission\nphone>:Be very careful, we are onto something big this time\nrei<:I'm on my way\nphone>:hangs up\nrei<:gotta take my tools before I go\nstate 1 rei_home_table\nstate 1 enter_home\nstate 2"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Bed"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":96,
+                 "x":336,
+                 "y":144
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -301,7 +333,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":27,
+ "nextobjectid":28,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -312,19 +344,19 @@
          "source":"Outside-Wall 48_48.tsj"
         }, 
         {
-         "firstgid":36,
+         "firstgid":46,
          "source":"Outside-Light 150_150.tsj"
         }, 
         {
-         "firstgid":39,
+         "firstgid":49,
          "source":"Outside-Window 48_48.tsj"
         }, 
         {
-         "firstgid":67,
+         "firstgid":77,
          "source":"terminal_tile.tsj"
         }, 
         {
-         "firstgid":68,
+         "firstgid":78,
          "source":"abstract.tsj"
         }],
  "tilewidth":48,

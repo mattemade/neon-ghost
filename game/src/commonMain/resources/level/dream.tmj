@@ -1,0 +1,155 @@
+{ "compressionlevel":-1,
+ "height":5,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0],
+         "height":5,
+         "id":1,
+         "name":"floor",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":7,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0],
+         "height":5,
+         "id":3,
+         "name":"wall",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":7,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0],
+         "height":5,
+         "id":4,
+         "name":"decoration",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":7,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[88, 88, 88, 88, 88, 88, 88,
+            88, 88, 88, 88, 88, 88, 88,
+            88, 88, 88, 88, 88, 88, 88,
+            88, 88, 88, 88, 88, 88, 88,
+            88, 88, 88, 88, 88, 88, 88],
+         "height":5,
+         "id":10,
+         "name":"foreground",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":7,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"walls",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"trigger",
+         "objects":[
+                {
+                 "height":48,
+                 "id":22,
+                 "name":"rei_home_bed",
+                 "properties":[
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"trigger dream\nstate 2\nstate 1 wake_up_trigger\nteleport rei_home\nend\n\n\nwait 2\nscreen fadeIn\n\nbed<: you see a dream\\of starts and clock\nbed<: \"wake up\" says the whisper\nbed<: rei wakes up\nstate 2\nteleport rei_home"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":144,
+                 "y":144
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"spawn",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":11,
+ "nextobjectid":27,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"Outside-Wall 48_48.tsj"
+        }, 
+        {
+         "firstgid":46,
+         "source":"Outside-Light 150_150.tsj"
+        }, 
+        {
+         "firstgid":49,
+         "source":"Outside-Window 48_48.tsj"
+        }, 
+        {
+         "firstgid":77,
+         "source":"terminal_tile.tsj"
+        }, 
+        {
+         "firstgid":78,
+         "source":"abstract.tsj"
+        }],
+ "tilewidth":48,
+ "type":"map",
+ "version":"1.10",
+ "width":7
+}

@@ -6,9 +6,9 @@ import com.littlekt.graphics.Color
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.shape.ShapeRenderer
-import com.littlekt.graphics.g2d.tilemap.tiled.TiledMap
 import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
 import com.littlekt.graphics.g2d.tilemap.tiled.TiledTilesLayer
+import com.littlekt.graphics.shader.ShaderProgram
 import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapController
 import com.littlekt.math.MutableVec2f
@@ -30,13 +30,16 @@ import io.itch.mattemade.neonghost.character.enemy.Enemy
 import io.itch.mattemade.neonghost.character.rei.NeonGhost
 import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.event.EventExecutor
+import io.itch.mattemade.neonghost.shader.ParticleFragmentShader
+import io.itch.mattemade.neonghost.shader.ParticleVertexShader
+import io.itch.mattemade.neonghost.shader.Particler
 import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.neonghost.tempo.UI
 import io.itch.mattemade.neonghost.world.CameraMan
-import io.itch.mattemade.neonghost.world.Wall
 import io.itch.mattemade.neonghost.world.GeneralContactListener
 import io.itch.mattemade.neonghost.world.GhostBody
 import io.itch.mattemade.neonghost.world.Trigger
+import io.itch.mattemade.neonghost.world.Wall
 import io.itch.mattemade.utils.math.belongsToEllipse
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
@@ -45,12 +48,12 @@ import io.itch.mattemade.utils.render.createPixelFrameBuffer
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.Body
 import org.jbox2d.dynamics.World
-import kotlin.random.Random
 import kotlin.time.Duration
 
 class InGame(
     private val context: Context,
     private val assets: Assets,
+    private val particleShader: ShaderProgram<ParticleVertexShader, ParticleFragmentShader>,
     private val levelSpec: LevelSpec,
     private val inputController: InputMapController<GameInput>,
     private val choreographer: Choreographer,
@@ -90,6 +93,7 @@ class InGame(
     val texture = sharedFrameBuffer.textures[0]
 
     private val tiledLayers = level.layers.asSequence().filterIsInstance<TiledTilesLayer>()
+    private val backgroundLayer = tiledLayers.firstOrNull { it.name == "background_p0" }
     private val floorLayer = tiledLayers.first { it.name == "floor" }
     private val wallLayer = tiledLayers.first { it.name == "wall" }
     private val decorationLayer = tiledLayers.first { it.name == "decoration" }
@@ -108,7 +112,8 @@ class InGame(
             interactionOverride,
             ::advanceDialog,
             ::activateInteraction,
-            ::selectOption
+            ::selectOption,
+            player::isMagicGirl
         )
     }
 
@@ -136,18 +141,17 @@ class InGame(
 
     private fun openDoor(door: String, toRoom: String) {
         ui.availableInteraction = null
-        maxWaitingTime = 0.5f
-        waitingTime = 0.5f
         ui.setFadeWorldColor(Color.BLACK)
         ui.setFadeWorld(0f)
-        whileWaitingAction = { ui.setFadeWorld(1f - it) }
-        waitingAction = {
+        timedActions.add(TimedAction(0.5f, {
+            ui.setFadeWorld(1f - it)
+        }, {
             ui.setFadeWorld(0f)
             goThroughDoor(door, toRoom, player.health, player.isMagicGirl)
-        }
+        }))
     }
 
-    private val isInDialogue: Boolean get() = eventExecutor.isInDialogue || waitingTime > 0f
+    private val isInDialogue: Boolean get() = eventExecutor.isInDialogue || timedActions.isNotEmpty()
     private fun advanceDialog() {
         eventExecutor.advance()
     }
@@ -160,15 +164,10 @@ class InGame(
         eventExecutor.selectOption(key)
     }
 
-    private var waitingTime: Float = 0f
-    private var maxWaitingTime: Float = 0f
-    private var whileWaitingAction: ((Float) -> Unit)? = null
-    private var waitingAction: (() -> Unit)? = null
+    private val timedActions = mutableListOf<TimedAction>()
     private fun wait(time: Float) {
-        maxWaitingTime = time
-        waitingTime = time
-        whileWaitingAction = null
-        waitingAction = { eventExecutor.advance() }
+        timedActions.clear()
+        timedActions += TimedAction(time, {}, eventExecutor::advance)
     }
 
     private fun musicCommand(command: String) {
@@ -181,7 +180,9 @@ class InGame(
     }
 
     private fun screenCommand(command: String) {
-
+        when (command) {
+            "fadeIn" -> scheduleFadeIn()
+        }
     }
 
 
@@ -205,8 +206,9 @@ class InGame(
     private val neonWorld by lazy { World(gravityX = 0f, gravityY = 0f) }
     private val playerSpawnPosition by lazy {
         val placement =
-            wentThroughDoor?.let {  door ->
-                level.layer("trigger").fastCastTo<TiledObjectLayer>().objects.first { it.name == door }
+            wentThroughDoor?.let { door ->
+                level.layer("trigger")
+                    .fastCastTo<TiledObjectLayer>().objects.first { it.name == door }
             } ?: level.layer("spawn").fastCastTo<TiledObjectLayer>().objects.first()
         val x = placement.bounds.x + placement.bounds.width / 2f
         val y = levelHeight - (placement.bounds.y - placement.bounds.height / 2f)
@@ -229,6 +231,7 @@ class InGame(
             spawnNeonGhost = ::spawnNeonGhost,
             castAoe = ::castAoe,
             castProjectile = ::castProjectile,
+            spawnParticles = ::spawnParticles
         )
     }
     private var neonGhost: NeonGhost? = null
@@ -251,6 +254,7 @@ class InGame(
         )
         addNeonGhostToList = true
     }
+
     private fun removeNeonGhost(ghost: NeonGhost) {
         removeNeonGhostFromList = true
         ghost.release()
@@ -274,7 +278,8 @@ class InGame(
                     Player.spellRx,
                     Player.spellRy,
                     it.extraForEllipseCheck,
-            )) {
+                )
+            ) {
                 it.hit(position, power * 2 + 1, fromSpell = true)
             }
         }
@@ -289,6 +294,33 @@ class InGame(
         println("casting projectile at $position with $power, isLeft = $facingLeft")
     }
 
+    private val particlersToAdd = mutableListOf<Particler>()
+    private val particlersToRemove = mutableListOf<Particler>()
+    private fun spawnParticles(
+        depth: Float, instances: Int, lifeTime: Float,
+        fillData: (
+            index: Int,
+            startColor: FloatArray,
+            endColor: FloatArray,
+            startPosition: FloatArray,
+            endPosition: FloatArray,
+            activeBetween: FloatArray
+        ) -> Unit,
+    ) {
+        particlersToAdd += Particler(
+            context,
+            particleShader,
+            depth,
+            instances,
+            lifeTime,
+            Game.IPPU * 2f,
+            2,
+            fillData
+        ) {
+            particlersToRemove += it
+        }
+    }
+
     private val depthBasedDrawables by lazy {
         mutableListOf<DepthBasedRenderable>(
             player,
@@ -300,9 +332,17 @@ class InGame(
     private val deadEnemies = mutableListOf<Enemy>()
 
     private val cameraMan by lazy {
-        val tempVec2 = Vec2(playerSpawnPosition.x, if (levelSpec.freeCameraY) playerSpawnPosition.y - Game.visibleWorldHeight / 8f else visibleWorldHeight / 2f)
+        val tempVec2 = Vec2(
+            playerSpawnPosition.x,
+            if (levelSpec.freeCameraY) playerSpawnPosition.y - Game.visibleWorldHeight / 8f else visibleWorldHeight / 2f
+        )
         CameraMan(context, choreographer, world, tempVec2).apply {
-            lookAt { it.set(player.x, if (levelSpec.freeCameraY) player.y - Game.visibleWorldHeight / 8f else visibleWorldHeight / 2f) }
+            lookAt {
+                it.set(
+                    player.x,
+                    if (levelSpec.freeCameraY) player.y - Game.visibleWorldHeight / 8f else visibleWorldHeight / 2f
+                )
+            }
         }
     }
 
@@ -313,15 +353,15 @@ class InGame(
                 // do not check for the state, as it can change in runtime
                 /*val triggerState = eventState[it.name]
                 if (triggerState == null || it.properties.containsKey(triggerState.toString())) {*/
-                    result.put(
-                        it.name, Trigger(
-                            world,
-                            it.bounds,
-                            levelHeight,
-                            it.name,
-                            it.properties
-                        )
+                result.put(
+                    it.name, Trigger(
+                        world,
+                        it.bounds,
+                        levelHeight,
+                        it.name,
+                        it.properties
                     )
+                )
                 //}
             }
         result
@@ -340,15 +380,36 @@ class InGame(
         }
     }
 
+    private var dream: Dream? = null
     private fun onTriggerEventCallback(event: String) {
         when (event) {
-            "faster" -> choreographer.setPlaybackRate(choreographer.playbackRate.toFloat() + 0.25f)
-            "slower" -> choreographer.setPlaybackRate(choreographer.playbackRate.toFloat() - 0.25f)
+            "faster" -> {
+                choreographer.setPlaybackRate(choreographer.playbackRate.toFloat() + 0.25f)
+                eventExecutor.advance()
+            }
+            "slower" -> {
+                choreographer.setPlaybackRate(choreographer.playbackRate.toFloat() - 0.25f)
+                eventExecutor.advance()
+            }
             "launchGhost" -> {
                 ghostOverlay.activate()
                 createGhostBody()
+                eventExecutor.advance()
             }
+
             "transform" -> player.transform()
+            "dream" -> {
+                dream = Dream(
+                    player,
+                    context,
+                    assets,
+                    inputController,
+                    particleShader
+                ) {
+                    dream = null
+                    eventExecutor.advance()
+                }
+            }
         }
     }
 
@@ -462,18 +523,9 @@ class InGame(
 
     init {
         if (playerKnowledge.contains("needToWaitABit")) {
-            maxWaitingTime = 2f
-            waitingTime = 2f
             ui.setFadeEverythingColor(Color.BLACK)
             ui.setFadeEverything(1f)
-            waitingAction = {
-                maxWaitingTime = 0.5f
-                waitingTime = 0.5f
-                whileWaitingAction = { ui.setFadeEverything(it) }
-                waitingAction = {
-                    ui.setFadeEverything(0f)
-                }
-            }
+            timedActions += TimedAction(2f, ui::setFadeEverything) { ui.setFadeEverything(0f) }
         } else {
             scheduleFadeIn()
         }
@@ -487,32 +539,19 @@ class InGame(
     }
 
     private fun scheduleFadeIn() {
-        maxWaitingTime = 0.5f
-        waitingTime = 0.5f
         if (eventState.isEmpty()) {
             ui.setFadeEverythingColor(Color.BLACK)
             ui.setFadeEverything(1f)
-            whileWaitingAction = { ui.setFadeEverything(it) }
-            waitingAction = {
-                ui.setFadeEverything(0f)
-            }
+            timedActions += TimedAction(0.5f, ui::setFadeEverything) { ui.setFadeEverything(0f) }
         } else {
             ui.setFadeWorldColor(Color.BLACK)
             ui.setFadeWorld(1f)
-            whileWaitingAction = { ui.setFadeWorld(it) }
-            waitingAction = {
-                ui.setFadeWorld(0f)
-            }
+            timedActions += TimedAction(0.5f, ui::setFadeWorld) { ui.setFadeWorld(0f) }
         }
     }
 
     private fun scheduleGameOver() {
-        maxWaitingTime = 0.5f
-        waitingTime = 0.5f
-        ui.setFadeWorldColor(Color.BLACK)
-        ui.setFadeWorld(0f)
-        whileWaitingAction = { ui.setFadeWorld(1f - it) }
-        waitingAction = {
+        timedActions += TimedAction(0.5f, { ui.setFadeWorld(1f - it) }) {
             ui.setFadeWorld(1f)
             onGameOver()
         }
@@ -520,27 +559,35 @@ class InGame(
 
     private val tempVec2 = Vec2()
     private fun updateWorld(dt: Duration, camera: Camera) {
+        dream?.let {
+            if (it.update(dt.seconds)) {
+                eventExecutor.advance()
+                return
+            }
+        }
+
         val millis = dt.milliseconds
         time += dt.seconds
-        if (waitingTime > 0f) {
-            waitingTime -= notAdjustedDt.seconds
-            whileWaitingAction?.invoke(waitingTime / maxWaitingTime)
-            if (waitingTime <= 0f) {
-                waitingTime = 0f
-                val actionToExecute = waitingAction
-                whileWaitingAction = null
-                waitingAction = null
-                actionToExecute?.invoke()
+        var remainder = dt.seconds
+        while (timedActions.isNotEmpty()) {
+            val activeAction = timedActions.first()
+            val actionRemainder = activeAction.update(remainder)
+            if (actionRemainder > 0f) {
+                break
+            } else {
+                timedActions.removeFirst()
+                remainder = -actionRemainder
             }
         }
 
         ghostBody?.let { ghostBody ->
             if (ghostOverlay.isMoving) {
                 ghostBody.updatePosition(
-                    tempVec2.set(ghostOverlay.ghostPosition.x, ghostOverlay.ghostPosition.y).addLocal(
-                        cameraMan.position.x - visibleWorldWidth / 2f,
-                        cameraMan.position.y - visibleWorldHeight / 2f
-                    )
+                    tempVec2.set(ghostOverlay.ghostPosition.x, ghostOverlay.ghostPosition.y)
+                        .addLocal(
+                            cameraMan.position.x - visibleWorldWidth / 2f,
+                            cameraMan.position.y - visibleWorldHeight / 2f
+                        )
                 )
                 if (ghostCooldown > 0f) {
                     ghostCooldown -= dt.seconds
@@ -599,6 +646,14 @@ class InGame(
                 eventExecutor.advance()
             }
         }
+        if (particlersToAdd.isNotEmpty()) {
+            depthBasedDrawables.addAll(particlersToAdd)
+            particlersToAdd.clear()
+        }
+        if (particlersToRemove.isNotEmpty()) {
+            depthBasedDrawables.removeAll(particlersToRemove)
+            particlersToRemove.clear()
+        }
         //assets.objects.particleSimulator.update(dt)
         worldAccumulator += dt.seconds
         while (worldAccumulator >= worldStep) {
@@ -631,9 +686,15 @@ class InGame(
     private var shapeRenderer: ShapeRenderer? = null
     private val tempVec2f = MutableVec2f()
     private fun renderWorld(dt: Duration, camera: Camera, batch: Batch) {
+        dream?.let {
+            it.render(batch)
+            return
+        }
+
         if (shapeRenderer == null) {
             shapeRenderer = ShapeRenderer(batch)
         }
+        backgroundLayer?.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
         floorLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
         if (ghostOverlay.isActive) {
             tempVec2f.set(ghostOverlay.ghostPosition).add(
@@ -642,7 +703,8 @@ class InGame(
             )
             if (ghostCasting > 0f /*|| ghostStaying > 0f*/) {
                 val casted =
-                    /*if (ghostStaying > 0f) 1f else */(GhostOverlay.castTime - ghostCasting) / GhostOverlay.castTime
+                    /*if (ghostStaying > 0f) 1f else */
+                    (GhostOverlay.castTime - ghostCasting) / GhostOverlay.castTime
                 shapeRenderer!!.filledEllipse(
                     x = tempVec2f.x,
                     y = tempVec2f.y,
@@ -671,7 +733,14 @@ class InGame(
         depthBasedDrawables.forEach { it.renderShadow(shapeRenderer!!) }
         wallLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
         decorationLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
-        decorationLayer2?.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
+        decorationLayer2?.render(
+            batch,
+            camera,
+            x = 0f,
+            y = 0f,
+            scale = IPPU,
+            displayObjects = false
+        )
         depthBasedDrawables.forEach { it.render(batch) }
         foregroundLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
     }
@@ -683,7 +752,12 @@ class InGame(
     }
 
     private fun renderUi(dt: Duration, camera: Camera, batch: Batch) {
-        ui.render(choreographer.toMeasure, player.movingToBeat, player.movingOffBeat, enemies.isNotEmpty() || playerKnowledge.isEmpty())
+        ui.render(
+            choreographer.toMeasure,
+            player.movingToBeat,
+            player.movingOffBeat,
+            enemies.isNotEmpty() || playerKnowledge.isEmpty()
+        )
     }
 
     fun updateAndRender(dt: Duration, notAdjustedDt: Duration) {
@@ -697,8 +771,8 @@ class InGame(
             "punch" -> {
                 player.activatePunch()
                 neonGhost?.activatePunch()
-                choreographer.sound(assets.sound.whoosh.sound, player.x, player.y)
             }
+
             "footstep" -> {
                 choreographer.sound(assets.sound.footstep.sound, player.x, player.y)
             }

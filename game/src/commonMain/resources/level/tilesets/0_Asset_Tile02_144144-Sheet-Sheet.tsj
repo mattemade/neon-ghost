@@ -1,0 +1,14 @@
+{ "columns":15,
+ "image":"0_Asset_Tile02_144144-Sheet-Sheet.png",
+ "imageheight":144,
+ "imagewidth":720,
+ "margin":0,
+ "name":"0_Asset_Tile02_144144-Sheet-Sheet",
+ "spacing":0,
+ "tilecount":45,
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilewidth":48,
+ "type":"tileset",
+ "version":"1.10"
+}

@@ -16,7 +16,6 @@ import com.littlekt.math.random
 import com.littlekt.util.milliseconds
 import com.littlekt.util.seconds
 import com.soywiz.korma.geom.Angle
-import com.soywiz.korma.geom.radians as boxRadians
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.Game
@@ -26,6 +25,7 @@ import io.itch.mattemade.neonghost.pixelPerfectPosition
 import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.neonghost.world.ContactBits
 import io.itch.mattemade.utils.animation.SignallingAnimationPlayer
+import io.itch.mattemade.utils.math.fill
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
 import org.jbox2d.collision.shapes.PolygonShape
@@ -37,7 +37,9 @@ import org.jbox2d.dynamics.FixtureDef
 import org.jbox2d.dynamics.World
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.random.Random
 import kotlin.time.Duration
+import com.soywiz.korma.geom.radians as boxRadians
 
 class Player(
     initialPosition: Vec2,
@@ -55,6 +57,19 @@ class Player(
     private val spawnNeonGhost: (facingLeft: Boolean) -> Unit,
     private val castAoe: (Vec2, Int) -> Unit,
     private val castProjectile: (Vec2, Int, Boolean) -> Unit,
+    private val spawnParticles: (
+        depth: Float,
+        instances: Int,
+        lifeTime: Float,
+        fillData: (
+            index: Int,
+            startColor: FloatArray,
+            endColor: FloatArray,
+            startPosition: FloatArray,
+            endPosition: FloatArray,
+            activeBetween: FloatArray
+        ) -> Unit,
+    ) -> Unit
 ) : Releasing by Self(),
     DepthBasedRenderable {
 
@@ -85,7 +100,8 @@ class Player(
     val y get() = body.position.y
     override val depth: Float get() = y
 
-    private var animations = if (isMagicGirl) assets.animation.magicalReiAnimations else assets.animation.normalReiAnimations
+    private var animations =
+        if (isMagicGirl) assets.animation.magicalReiAnimations else assets.animation.normalReiAnimations
 
     internal var currentAnimation: SignallingAnimationPlayer = animations.idle
         set(value) {
@@ -187,8 +203,8 @@ class Player(
         if (health <= 0) {
             return
         }
-        choreographer.sound(assets.sound.punch.sound, body.position.x, body.position.y)
         health = max(0, health - difficulty.toInt())
+        choreographer.sound(assets.sound.damage.sound, body.position.x, body.position.y)
         if (castingTime > 0f) {
             if (castingTime / castTime > castBeforeSlowingTime) {
                 updateReducingTime()
@@ -250,7 +266,7 @@ class Player(
             }
         }
         if (spellCooldown > 0f) {
-            spellCooldown = max (0f, spellCooldown - dt.seconds)
+            spellCooldown = max(0f, spellCooldown - dt.seconds)
         }
         if (!canAct()) {
             stopBody()
@@ -259,7 +275,8 @@ class Player(
         }
         val xMovement = controller.axis(GameInput.HORIZONTAL)
         val yMovement = controller.axis(GameInput.VERTICAL)
-        val moving = (xMovement != 0f || yMovement != 0f) && castingTime < castTime * castsToStopTime
+        val moving =
+            (xMovement != 0f || yMovement != 0f) && castingTime < castTime * castsToStopTime
         val matchBeat = toBeat < 0.2f || toBeat > 0.9f || toMeasure < 0.075f || toMeasure > 0.9625f
 
         if (toBeat < lastBeatPosition && movingOffBeat) {
@@ -327,7 +344,7 @@ class Player(
                 movingToBeat = true
                 dashCooldown = 200f
                 body.linearVelocity.set(xMovement * 2.5f, yMovement * 2.5f)
-                choreographer.sound(assets.sound.whoosh.sound, body.position.x, body.position.y)
+                choreographer.sound(assets.sound.dash.sound, body.position.x, body.position.y)
             } else {
                 if (keepMoving) {
                     // was moving before, and continuing to move off-beat
@@ -410,8 +427,8 @@ class Player(
             }
         }
 
-        if (isFighting) {
-            if (controller.pressed(GameInput.ATTACK) /*|| (!isMagicGirl && controller.pressed(GameInput.MAGIC))*/) {
+        if (isFighting || isMagicGirl && controller.pressed(GameInput.MAGIC) && castingTime > 0f) {
+            if (controller.pressed(GameInput.ATTACK)) {
                 punchCooldown = 300f//if (wasPunching) 600f else 900f
                 stopBody()
                 currentAnimation = if (nextLeftPunch) {
@@ -431,6 +448,13 @@ class Player(
             activatePunch = false
             movingToBeat = matchBeat
             movingOffBeat = !matchBeat
+
+            choreographer.sound(
+                if (movingToBeat) assets.sound.powerWhoosh.sound else assets.sound.whoosh.sound,
+                x,
+                y
+            )
+
             if (isFacingLeft) {
                 leftPunchTargets.forEach {
                     it.hit(body.position, if (movingToBeat) 2 else 1)
@@ -457,52 +481,48 @@ class Player(
     }
 
     private fun activateParticles() {
-        /*assets.sound.wind.play(
-            volume = 0.5f,
-            positionX = body.position.x,
-            positionY = 0f,
-            referenceDistance = 200f,
-            rolloffFactor = 0.01f
-        )*/
+        val currentKeyFrame = currentAnimation.currentKeyFrame
+        if (currentKeyFrame == null) {
+            currentAnimation.update(Duration.ZERO)
+        }
         currentAnimation.currentKeyFrame?.let { slice ->
             val width = slice.width
             val height = slice.height
+
             val textureData = slice.texture.textureData
             if (textureData is PixmapTextureData) {
-                val xOffset = texturePositionX(width.toFloat())
-                val yOffset = texturePositionY(height.toFloat())
-                val midHeight = height / 2
-                var firstMeaningfulX = 0
-                val endX = slice.x + width
-                val endY = slice.y + height
-                for (sliceX in slice.x until endX step pixelWidthInt) {
-                    for (sliceY in slice.y until endY step pixelHeightInt) {
-                        val x = sliceX - slice.x
-                        val y = sliceY - slice.y
-                        val pixelColor = textureData.pixmap.get(sliceX, sliceY)
-                        if (pixelColor != 0) {
-                            if (firstMeaningfulX == 0) {
-                                firstMeaningfulX = x
-                            }
-                            particleSimulator.alloc(
-                                assets.texture.white,
-                                xOffset + width * 2 - x / Game.PPU,
-                                yOffset + y / Game.PPU
-                            )
-                                .apply {
-                                    scale(Game.IPPU)
-                                    delay =
-                                        ((width - x) / 7.5f + 1f + (-0.2f..0.2f).random()).seconds
-                                    color.setRgba8888(pixelColor)
-                                    xDelta = (0.4f + (-0.25f..0.25f).random()) / Game.PPU
-                                    yDelta =
-                                        (midHeight - y) / 500f / Game.PPU + (-0.45f..0.45f).random() / Game.PPU
-                                    life = 4f.seconds
-                                    friction = 1.03f
-                                    alphaDelta = -0.005f
-                                }
-                        }
+                val xOffset = texturePositionX(width / Game.PPU) * 2f
+                val yOffset = texturePositionY(height / Game.PPU) * 2f
+
+                spawnParticles(
+                    depth,
+                    width * height * 4,
+                    20000f
+                ) { index, startColor, endColor, startPosition, endPosition, activeBetween ->
+                    val x = (index / 4) % width
+                    val y = (index / 4) / width
+                    val pixelColor = textureData.pixmap.get(slice.x + x, slice.y + y)
+                    if (pixelColor == 0) {
+                        startColor.fill(0f)
+                        endColor.fill(0f)
+                        startPosition.fill(0f)
+                        endPosition.fill(0f)
+                        activeBetween.fill(0f)
+                        return@spawnParticles
                     }
+                    tempColor.setRgba8888(pixelColor)
+                    startColor.fill(tempColor.r, tempColor.g, tempColor.b, tempColor.a)
+                    endColor.fill(tempColor.r, tempColor.g, tempColor.b, 0f)
+                    startPosition.fill(
+                        xOffset + x * 2 / Game.PPU,
+                        yOffset + y * 2 / Game.PPU
+                    )//xOffset + width * 2 - x / Game.PPU, yOffset + y / Game.PPU)
+                    endPosition.fill(
+                        startPosition[0] - Random.nextFloat() * 4f * width * Game.IPPU,
+                        startPosition[1] + (-2f + Random.nextFloat() * 4f) * height * Game.IPPU
+                    )
+                    activeBetween[0] = ((width - x) / 17.5f + 1f + (-0.2f..0.2f).random()) * 1000f
+                    activeBetween[1] = activeBetween[0] + 4000f
                 }
             }
         }

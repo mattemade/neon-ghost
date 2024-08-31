@@ -48,10 +48,11 @@ class Textures(context: Context, private val packer: RuntimeTextureAtlasPacker) 
     val white by "texture/misc/white.png".pack()
     val fontWhite by "texture/dialogue/font_white.png".pack()
     val portraits by preparePlain {
-        listOf("rei", "terminal", "punk").associateWith {
+        listOf("rei", "terminal", "punk", "magic", "guard").associateWith {
             packer.pack("texture/portrait/$it.png").await()
         }
     }
+    val pendulum by "texture/dream/pendulum.png".pack()
 }
 
 class Sound(context: Context) : AssetPack(context) {
@@ -65,11 +66,27 @@ class Sound(context: Context) : AssetPack(context) {
             )
         )
     }
+    val powerPunch by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Punches/Powerful/Powerful Punches/Powerful Punch - 1.wav",
+                "sound/Punches/Powerful/Powerful Punches/Powerful Punch - 2.wav",
+            )
+        )
+    }
     val whoosh by pack {
         SoundPack(
             context, listOf(
                 "sound/Punches/Whooshes/Whoosh - 1.wav",
                 "sound/Punches/Whooshes/Whoosh - 2.wav",
+            )
+        )
+    }
+    val powerWhoosh by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Punches/Powerful/Powerful Whooshes/Powerful Whoosh - 1.wav",
+                "sound/Punches/Powerful/Powerful Whooshes/Powerful Whoosh - 2.wav",
             )
         )
     }
@@ -101,6 +118,27 @@ class Sound(context: Context) : AssetPack(context) {
         SoundPack(
             context, listOf(
                 "sound/Transformation.wav",
+            )
+        )
+    }
+    val dash by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Dash.wav",
+            )
+        )
+    }
+    val damage by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Damage.wav",
+            )
+        )
+    }
+    val enemyDeath by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Enemies/Death.wav",
             )
         )
     }
@@ -187,6 +225,7 @@ class Levels(context: Context, private val atlas: TextureAtlas? = null) : AssetP
             "level/control_room.tmj" to true,
             "level/lobby_room.tmj" to true,
             "level/corridor.tmj" to true,
+            "level/dream.tmj" to true,
         ).associate {
             val level = context.resourcesVfs[it.first].readTiledMap(atlas, tilesetBorder = 0)
                 .releasing()
@@ -217,6 +256,7 @@ class TileSets(context: Context, private val packer: RuntimeTextureAtlasPacker) 
     val redDoor by "level/tilesets/red_door.png".pack()
     val redDoorTransparent by "level/tilesets/red_door_transparent.png".pack()
     val perspectiveFloorTile by "level/tilesets/perspective_floor_tile.png".pack()
+    val roofTiles by "level/tilesets/0_Asset_Tile02_144144-Sheet-Sheet.png".pack()
 }
 
 class Animations(

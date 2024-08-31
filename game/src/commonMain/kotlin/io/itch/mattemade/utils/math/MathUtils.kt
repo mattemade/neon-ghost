@@ -24,3 +24,10 @@ fun belongsToEllipse(
     ).length()
     return distance <= referenceDistance + extra
 }
+
+
+fun FloatArray.fill(vararg value: Float) {
+    for (i in indices) {
+        this[i] = value[i % value.size]
+    }
+}

@@ -13,26 +13,19 @@ fun createParticleShader(vertex: String, fragment: String) =
 
 class ParticleVertexShader(private val sourceText: String) : VertexShaderModel() {
     val uProjTrans = ShaderParameter.UniformMat4("u_projTrans")
-    val uTextureSizes = ShaderParameter.UniformVec4("u_textureSizes")
-    val uSampleProperties = ShaderParameter.UniformVec4("u_sampleProperties")
-    val aPosition = ShaderParameter.Attribute("a_position")
-    val aColor = ShaderParameter.Attribute("a_color")
-    val aTexCoord0 = ShaderParameter.Attribute("a_texCoord0")
     val uTime = ShaderParameter.UniformFloat("u_time")
+    val uInterpolation = ShaderParameter.UniformInt("u_interpolation")
 
     override val parameters: LinkedHashSet<ShaderParameter> =
-        linkedSetOf(uProjTrans, uTextureSizes, uSampleProperties, aPosition, aColor, aTexCoord0, uTime)
+        linkedSetOf(uProjTrans, uInterpolation, uTime)
 
     override var source: String = sourceText
 }
 
 class ParticleFragmentShader(private val sourceText: String) : FragmentShaderModel() {
 
-    val uTexture = ShaderParameter.UniformSample2D("u_texture")
-    val uTextureSizes = ShaderParameter.UniformVec4("u_textureSizes")
-    val uSampleProperties = ShaderParameter.UniformVec4("u_sampleProperties")
 
-    override val parameters: LinkedHashSet<ShaderParameter> = linkedSetOf(uTexture, uTextureSizes, uSampleProperties)
+    override val parameters: LinkedHashSet<ShaderParameter> = linkedSetOf()
 
     override var source: String = sourceText
 }
