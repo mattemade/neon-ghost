@@ -114,13 +114,13 @@ class Sound(context: Context) : AssetPack(context) {
             )
         )
     }
-    val transformation by pack {
+    /*val transformation by pack {
         SoundPack(
             context, listOf(
                 "sound/Transformation.wav",
             )
         )
-    }
+    }*/
     val dash by pack {
         SoundPack(
             context, listOf(
@@ -139,6 +139,27 @@ class Sound(context: Context) : AssetPack(context) {
         SoundPack(
             context, listOf(
                 "sound/Enemies/Death.wav",
+            )
+        )
+    }
+    val powerUpLoop by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Powerup/Powerup - loop.wav",
+            )
+        )
+    }
+    /*val powerUpSingleShot by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Powerup/Powerup - single shot.wav",
+            )
+        )
+    }*/
+    val slowMo by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Powerup/Slow-mo.wav",
             )
         )
     }

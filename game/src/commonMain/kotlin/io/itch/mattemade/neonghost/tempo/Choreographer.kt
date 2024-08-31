@@ -84,8 +84,15 @@ class Choreographer(private val context: Context) {
         sound.setPlaybackRate(id, playbackRate.toFloat())
     }
 
-    fun sound(sound: AudioClipEx, x: Float, y: Float) {
-        val id = sound.play(positionX = x, positionY = y, volume = masterVolume)
+    fun sound(sound: AudioClipEx, x: Float, y: Float, looping: Boolean = false): Int {
+        everActiveSoundClips.add(sound)
+        val id = sound.play(positionX = x, positionY = y, volume = masterVolume, loop = looping)
         sound.setPlaybackRate(id, playbackRate.toFloat())
+        return id
+    }
+
+    fun soundIgnoringPlaybackRate(sound: AudioClipEx, x: Float, y: Float, looping: Boolean = false): Int {
+        val id = sound.play(positionX = x, positionY = y, volume = masterVolume, loop = looping)
+        return id
     }
 }

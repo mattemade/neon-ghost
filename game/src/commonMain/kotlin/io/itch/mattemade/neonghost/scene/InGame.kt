@@ -227,7 +227,7 @@ class InGame(
             initialHealth = playerHealth,
             canAct = { !isInDialogue },
             gameOver = ::gameOver,
-            changePlaybackRate = ::changePlaybackRate,
+            changePlaybackRateExternal = ::changePlaybackRate,
             spawnNeonGhost = ::spawnNeonGhost,
             castAoe = ::castAoe,
             castProjectile = ::castProjectile,

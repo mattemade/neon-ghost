@@ -53,7 +53,7 @@ class Player(
     var isMagicGirl: Boolean = false,
     private val canAct: () -> Boolean,
     val gameOver: () -> Unit,
-    private val changePlaybackRate: (Float) -> Unit,
+    private val changePlaybackRateExternal: (Float) -> Unit,
     private val spawnNeonGhost: (facingLeft: Boolean) -> Unit,
     private val castAoe: (Vec2, Int) -> Unit,
     private val castProjectile: (Vec2, Int, Boolean) -> Unit,
@@ -198,6 +198,14 @@ class Player(
     //private var castingTimes = 0
     private var castingTime = 0f
     private var reducingTime = 0f
+    private var castingSound = -1
+
+    fun changePlaybackRate(value: Float) {
+        changePlaybackRateExternal(value)
+        if (castingSound != -1) {
+            assets.sound.powerUpLoop.sound.setPlaybackRate(castingSound, value)
+        }
+    }
 
     fun hit(from: Vec2, difficulty: Float) {
         if (health <= 0) {
@@ -394,15 +402,34 @@ class Player(
                         focusCooldown = 0f
                     } else { // just holding the Magic button
                         if (moving) {
+                            if (castingSound != -1) {
+                                assets.sound.powerUpLoop.sound.stop(castingSound)
+                                castingSound = -1
+                            }
                             // moving while holding magic - it will drain focus
                             castingTime = max(0f, castingTime - notAdjustedSeconds / 2f)
                             recalculatePlaybackRate()
                         } else {
+                            if (castingSound != -1) {
+                                assets.sound.powerUpLoop.sound.setPosition(castingSound, x, y)
+                            } else {
+                                castingSound = choreographer.sound(
+                                    assets.sound.powerUpLoop.sound,
+                                    x,
+                                    y,
+                                    looping = true
+                                )
+                            }
                             stopBody()
                             currentAnimation = animations.prepare
                             if (castingTime < castTime * castsToStopTime) {
                                 castingTime += notAdjustedSeconds
                                 if (castingTime / castTime >= castsToStopTime) {
+                                    if (castingSound != -1) {
+                                        assets.sound.powerUpLoop.sound.stop(castingSound)
+                                        castingSound = -1
+                                    }
+                                    choreographer.soundIgnoringPlaybackRate(assets.sound.slowMo.sound, x, y)
                                     spawnNeonGhost(isFacingLeft)
                                     changePlaybackRate(0.000000000001f)
                                 } else {
@@ -413,6 +440,10 @@ class Player(
                     }
                 }
             } else if (castingTime > 0f) { // releasing after casting
+                if (castingSound != -1) {
+                    assets.sound.powerUpLoop.sound.stop(castingSound)
+                    castingSound = -1
+                }
                 if (castingTime / castTime < castsToStopTime) {
                     val castPower = (castingTime / castTime).toInt()
                     castAoe(body.position, castPower)
@@ -423,11 +454,15 @@ class Player(
                 castingTime = 0f
                 focusCooldown = 0f
             } else {
+                if (castingSound != -1) {
+                    assets.sound.powerUpLoop.sound.stop(castingSound)
+                    castingSound = -1
+                }
                 focusCooldown = max(0f, focusCooldown - dt.seconds)
             }
         }
 
-        if (isFighting || isMagicGirl && controller.pressed(GameInput.MAGIC) && castingTime > 0f) {
+        if (isFighting || reducingTime > 0f) {
             if (controller.pressed(GameInput.ATTACK)) {
                 punchCooldown = 300f//if (wasPunching) 600f else 900f
                 stopBody()
