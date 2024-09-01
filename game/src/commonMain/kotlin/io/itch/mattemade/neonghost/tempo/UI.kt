@@ -39,6 +39,8 @@ class UI(
     private val activateInteraction: (Trigger) -> Unit,
     private val selectOption: (String) -> Unit,
     private val isMagic: () -> Boolean,
+    private val canAct: () -> Boolean,
+    private val canInteract: () -> Boolean,
 ) : Releasing by Self() {
 
     private val batch = SpriteBatch(context).releasing()
@@ -155,20 +157,22 @@ class UI(
         }
 
         availableInteractionName?.let {
-            shapeRenderer.filledRectangle(
-                (Game.virtualWidth - interactionTitleWidth) / 2f,
-                dialogPadding,
-                interactionTitleWidth,
-                interactionTitleHeight,
-                color = Color.BLACK.toFloatBits()
-            )
-            textDrawer.drawText(
-                batch,
-                it,
-                (Game.virtualWidth / 2f).screenSpacePixelPerfect,
-                (dialogPadding + interactionTitleHeight / 2f).screenSpacePixelPerfect + if (it.size % 2 == 1) 0.5f else 0f,
-                vAlign = VAlign.CENTER
-            )
+            if (canInteract()) {
+                shapeRenderer.filledRectangle(
+                    (Game.virtualWidth - interactionTitleWidth) / 2f,
+                    dialogPadding,
+                    interactionTitleWidth,
+                    interactionTitleHeight,
+                    color = Color.BLACK.toFloatBits()
+                )
+                textDrawer.drawText(
+                    batch,
+                    it,
+                    (Game.virtualWidth / 2f).screenSpacePixelPerfect,
+                    (dialogPadding + interactionTitleHeight / 2f).screenSpacePixelPerfect + if (it.size % 2 == 1) 0.5f else 0f,
+                    vAlign = VAlign.CENTER
+                )
+            }
         }
 
         activeLines?.let { lines ->
@@ -325,20 +329,20 @@ class UI(
                 if (xMovement == 0f) {
                     readyToSelectOption = true
                 }
-                if (controller.pressed(GameInput.ANY_ACTION)) {
+                if (controller.pressed(GameInput.ANY_ACTION) && canAct()) {
                     choreographer.uiSound(assets.sound.click.sound, volume = 0.5f)
                     selectOption(options[activeOption].second)
                     return
                 }
             }
-            if (controller.pressed(GameInput.ANY_ACTION)) {
+            if (controller.pressed(GameInput.ANY_ACTION) && canAct()) {
                 choreographer.uiSound(assets.sound.click.sound, volume = 0.5f)
                 advanceDialogue()
                 return
             }
         }
         availableInteraction?.let {
-            if (controller.pressed(GameInput.ANY_ACTION)) {
+            if (controller.pressed(GameInput.ANY_ACTION) && canAct()) {
                 player.stopBody(resetAnimationToIdle = true)
                 activateInteraction(it)
                 return

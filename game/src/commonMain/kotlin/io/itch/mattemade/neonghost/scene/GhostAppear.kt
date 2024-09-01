@@ -3,13 +3,18 @@ package io.itch.mattemade.neonghost.scene
 import com.littlekt.Context
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.Batch
+import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
 import com.littlekt.graphics.gl.PixmapTextureData
 import com.littlekt.graphics.shader.ShaderProgram
 import com.littlekt.input.InputMapController
+import com.littlekt.math.MutableVec2f
+import com.littlekt.math.Vec2f
 import com.littlekt.math.random
+import com.soywiz.kds.fastCastTo
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.Game
+import io.itch.mattemade.neonghost.LevelSpec
 import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.shader.ParticleFragmentShader
 import io.itch.mattemade.neonghost.shader.ParticleVertexShader
@@ -18,8 +23,7 @@ import io.itch.mattemade.utils.math.fill
 import kotlin.random.Random
 import kotlin.time.Duration
 
-class Dream(
-    player: Player,
+class GhostAppear(
     context: Context,
     assets: Assets,
     private val input: InputMapController<GameInput>,
@@ -27,27 +31,37 @@ class Dream(
     val complete: () -> Unit
 ) {
 
-    private val slice = assets.animation.magicalReiAnimations.idle.run {
+    private val slice = assets.animation.ghostGrayAnimations.idle.run {
         update(Duration.ZERO)
         currentKeyFrame!!
     }
+
+    val quadrants = listOf(
+        Vec2f(-1f, 0f),
+        Vec2f(1f, 0f),
+        Vec2f(0f, -1f),
+        Vec2f(0f, 1f),
+        Vec2f(-1f, 1f),
+        Vec2f(1f, 1f),
+        Vec2f(1f, -1f),
+        Vec2f(-1f, -1f),
+    )
+
     val width = slice.width
     val height = slice.height
     val textureData = slice.texture.textureData
-    val centerX = player.x * 2f
-    val centerY = player.y * 2f
-    val xOffset = centerX - width / 2f * Game.IPPU
-    val yOffset = centerY - height * 2f * Game.IPPU
+    val centerX = Game.virtualWidth.toFloat() - width /*/ 2f*///centerPoint.x * 2f
+    val centerY = Game.virtualHeight.toFloat() - height /*/ 2f*///centerPoint.y * 2f
     private val tempColor = MutableColor()
-    private val doubles = 1
+    private val doubles = 3
     private val particler = Particler(
         context,
         particleShader,
         0f,
         width * height * doubles,
-        11000f,
+        9000f,
         2f * Game.IPPU,
-        interpolation = 3,
+        interpolation = 1,
         fillData = {
             index, startColor, endColor, startPosition, endPosition, activeBetween ->
             val x = (index / doubles) % width
@@ -61,20 +75,23 @@ class Dream(
                 activeBetween.fill(0f)
             } else {
                 tempColor.setRgba8888(pixelColor)
-                startColor.fill(1f, 1f, 1f, tempColor.a)
-                //endColor.fill(1f, 1f, 1f, tempColor.a)
+                startColor.fill(tempColor.r, tempColor.g, tempColor.b, tempColor.a)
                 endColor.fill(tempColor.r, tempColor.g, tempColor.b, tempColor.a)
-                startPosition.fill(
-                    centerX + Game.visibleWorldWidth * (Random.nextFloat() - 0.5f) * 8f,
-                    centerY + Game.visibleWorldHeight * (Random.nextFloat() - 0.5f) * 8f
-                )
                 endPosition.fill(
-                    xOffset + x * 2 / Game.PPU,
-                    yOffset + y * 2 / Game.PPU
-                )//xOffset + width * 2 - x / Game.PPU, yOffset + y / Game.PPU)
-
-                activeBetween[0] = 5000f + Random.nextFloat() * 2000f
-                activeBetween[1] = activeBetween[0] + 4000f + Random.nextFloat() * 4000f
+                    centerX + x * 2,
+                    centerY + y * 2
+                )
+                val quadraint = quadrants.random()
+                startPosition.fill(
+                    endPosition[0] + Game.virtualWidth * (Random.nextFloat() - 0.5f) * 2f + Game.virtualWidth * quadraint.x * 3f,
+                    endPosition[1] + Game.virtualHeight * (Random.nextFloat() - 0.5f) * 2f + Game.virtualHeight * quadraint.y * 3f
+                )
+                startPosition[0] = startPosition[0] * Game.IPPU
+                startPosition[1] = startPosition[1] * Game.IPPU
+                endPosition[0] = endPosition[0] * Game.IPPU
+                endPosition[1] = endPosition[1] * Game.IPPU
+                activeBetween[0] = /*5000f +*/ Random.nextFloat() * 3000f
+                activeBetween[1] = activeBetween[0] + 3000f + Random.nextFloat() * 3000f
             }
         },
         die = {
@@ -83,6 +100,12 @@ class Dream(
     )
 
     private var presses = 0
+
+
+    init {
+        centerX
+    }
+
     fun update(seconds: Float): Boolean {
         particler.update(Duration.ZERO, seconds * 1000f, Duration.ZERO, 0f, 0f, false)
         if (input.pressed(GameInput.ANY_ACTION)) {

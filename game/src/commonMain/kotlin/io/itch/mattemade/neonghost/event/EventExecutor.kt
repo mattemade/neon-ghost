@@ -1,5 +1,6 @@
 package io.itch.mattemade.neonghost.event
 
+import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
 import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.CharacterAnimations
 import io.itch.mattemade.neonghost.Game
@@ -8,6 +9,7 @@ import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.tempo.UI
 import io.itch.mattemade.neonghost.world.CameraMan
 import io.itch.mattemade.neonghost.world.Trigger
+import io.itch.mattemade.neonghost.world.Wall
 import kotlin.random.Random
 
 class EventExecutor(
@@ -251,6 +253,7 @@ class EventExecutor(
             "lock" -> lockCamera()
             "trigger" -> makeCameraFollowTrigger()
             "follow" -> makeCameraFollowPlayer()
+            else -> makeCameraFollowObject(this)
         }
         advance()
     }
@@ -304,7 +307,7 @@ class EventExecutor(
             return
         }
         onScreen(this)
-        advance()
+        //advance()
     }
 
     private fun executeSave() {
@@ -345,6 +348,22 @@ class EventExecutor(
                 player.x,
                 if (levelSpec.freeCameraY) player.y - Game.visibleWorldHeight / 8f else Game.visibleWorldHeight / 2f
             )
+        }
+    }
+
+    private fun makeCameraFollowObject(s: String?) {
+        levelSpec.level.layers.asSequence().filterIsInstance<TiledObjectLayer>().forEach {
+            if (it.name == "trigger") {
+                it.objects.forEach { obj ->
+                    if (obj.name == s) {
+                        val mapHeight = levelSpec.level.height * levelSpec.level.tileHeight
+                        cameraMan.lookAt(withinSeconds = 2f) {
+                            it.set(obj.bounds.x + obj.bounds.width / 2f, mapHeight - (obj.bounds.y - obj.bounds.height / 2f)).mulLocal(Game.IPPU)
+                        }
+                        return
+                    }
+                }
+            }
         }
     }
 

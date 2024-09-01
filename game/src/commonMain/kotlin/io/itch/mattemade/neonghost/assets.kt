@@ -197,9 +197,10 @@ class Music(context: Context) : AssetPack(context) {
 
     private val preparations = listOf(
         "music/magical girl 3d.mp3" to 150f,
-        "music/magical girl 1c.mp3" to 129.97198f,
-        "music/magical girl 1c 100.mp3" to 100f,
+        //"music/magical girl 1c.mp3" to 129.97198f,
+        //"music/magical girl 1c 100.mp3" to 100f,
         "music/magical girl 1c 115.mp3" to 115f,
+        "music/mg safe area.mp3" to 50.9845f,
         "music/stop.mp3" to 120f,
         "music/bassy_beat.mp3" to 120f,
     ).forEach {

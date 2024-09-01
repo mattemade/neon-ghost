@@ -67,7 +67,7 @@ class Game(
     val assets = Assets(context, ::onAnimationEvent).releasing()
     val inputController = context.bindInputs()
     var inGame: InGame? = null
-    val ghostOverlay by lazy { GhostOverlay(context, assets, choreographer) }
+    val ghostOverlay by lazy { GhostOverlay(context, assets, choreographer, inputController, particleShader) }
     val directRender = DirectRender(context, virtualWidth, virtualHeight, ::update, ::render)
     val cabinetRender =
         DirectRender(context, virtualWidth, virtualHeight, ::updateCabinet, ::renderCabinet)

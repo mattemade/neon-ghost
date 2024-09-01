@@ -6,11 +6,11 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88,
-            88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88,
-            88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88,
-            88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88,
-            88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88],
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89],
          "height":8,
          "id":1,
          "name":"floor",
@@ -22,11 +22,11 @@
          "y":0
         }, 
         {
-         "data":[95, 96, 97, 98, 93, 94, 94, 94, 95, 90, 91, 92, 93,
-            107, 108, 109, 110, 105, 106, 106, 106, 107, 102, 103, 104, 105,
-            119, 120, 121, 122, 117, 118, 118, 118, 119, 114, 115, 116, 117,
-            0, 0, 0, 0, 142, 143, 144, 145, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 147, 148, 149, 150, 0, 0, 0, 0, 0,
+         "data":[96, 97, 98, 99, 94, 95, 95, 95, 96, 91, 92, 93, 94,
+            108, 109, 110, 111, 106, 107, 107, 107, 108, 103, 104, 105, 106,
+            120, 121, 122, 123, 118, 119, 119, 119, 120, 115, 116, 117, 118,
+            0, 0, 0, 0, 143, 144, 145, 146, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 148, 149, 150, 151, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -43,7 +43,7 @@
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 137, 138, 139, 140, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 138, 139, 140, 141, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -62,8 +62,8 @@
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 151, 152, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 161, 162, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 152, 153, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 162, 163, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -79,11 +79,11 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 126, 127, 128, 129, 130, 0, 0, 0, 0, 0,
-            0, 0, 0, 131, 132, 133, 134, 135, 0, 0, 0, 0, 0,
-            0, 0, 0, 136, 137, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 141, 142, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 146, 147, 0, 0, 0, 0, 0, 0, 0, 0,
+         "data":[0, 0, 0, 127, 128, 129, 130, 131, 0, 0, 0, 0, 0,
+            0, 0, 0, 132, 133, 134, 135, 136, 0, 0, 0, 0, 0,
+            0, 0, 0, 137, 138, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 142, 143, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 147, 148, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -154,7 +154,7 @@
                         {
                          "name":"2",
                          "type":"string",
-                         "value":"save\nmusic magical girl 1c 115\nrei<:So, what did your detector detect?\nguard>:It seems you hold some magical powers\nrei<:Wow, and you are not scared?\nguard>:Well, you would use them already\\if you know how\nguard>:Now, take a seat\nrei<:Is that ok for you to tell me that much?\nguard>:Don't worry, you will soon forget about that\\Take a seat now\nrei<:(oh, they didn't find my lockpick\\so I can free myself)\nguard>:How did you take that off??\nfight guard<0, guard<1, guard>0.5\nstate 3\nrei>:I need to get out of here\nrei>:It's a shame they took all my stuff though\n"
+                         "value":"save\nmusic magical girl 1c 115\nrei<:So, what did your detector detect?\nguard>:It seems you hold some magical powers\nrei<:Wow, and you are not scared?\nguard>:Well, you would use them already\\if you know how\nguard>:Now, take a seat\nrei<:Is that ok for you to tell me that much?\nguard>:Don't worry, you will soon forget about that\\Take a seat now\nscreen fadeOut\nrei<:(oh, they didn't find my lockpick\\so I can free myself)\nscreen fadeIn\nguard>:How did you take that off??\nmusic magical girl 3d\nfight guard<0, guard<1, guard>0.5\nstate 3\nmusic mg safe area\nrei>:I need to get out of here\nrei>:It's a shame they took all my stuff though\n"
                         }, 
                         {
                          "name":"title",
@@ -392,19 +392,19 @@
          "source":"abstract.tsj"
         }, 
         {
-         "firstgid":88,
+         "firstgid":89,
          "source":"tilesets\/0_Asset_Floor_4848.tsj"
         }, 
         {
-         "firstgid":90,
+         "firstgid":91,
          "source":"tilesets\/0_Asset_Wall_144144.tsj"
         }, 
         {
-         "firstgid":126,
+         "firstgid":127,
          "source":"tilesets\/0_Asset_Chair_240240.tsj"
         }, 
         {
-         "firstgid":151,
+         "firstgid":152,
          "source":"tilesets\/0_Asset_Control_9696.tsj"
         }],
  "tilewidth":48,

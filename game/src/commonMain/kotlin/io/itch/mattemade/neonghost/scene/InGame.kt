@@ -113,7 +113,13 @@ class InGame(
             ::advanceDialog,
             ::activateInteraction,
             ::selectOption,
-            player::isMagicGirl
+            player::isMagicGirl,
+            canAct = {
+                timedActions.isEmpty()
+            },
+            canInteract = {
+                timedActions.isEmpty() && !isInDialogue && enemies.isEmpty()
+            }
         )
     }
 
@@ -166,7 +172,7 @@ class InGame(
 
     private val timedActions = mutableListOf<TimedAction>()
     private fun wait(time: Float) {
-        timedActions.clear()
+        //timedActions.clear()
         timedActions += TimedAction(time, {}, eventExecutor::advance)
     }
 
@@ -181,7 +187,10 @@ class InGame(
 
     private fun screenCommand(command: String) {
         when (command) {
+            "fadeOut" -> scheduleFadeOut()
             "fadeIn" -> scheduleFadeIn()
+            "slowFadeIn" -> scheduleFadeIn(maxValue = 0.8f, length = 1f) { eventExecutor.advance() }
+            "slowFadeOut" -> scheduleFadeOut(maxValue = 0.8f, length = 1f) { eventExecutor.advance() }
         }
     }
 
@@ -381,6 +390,7 @@ class InGame(
     }
 
     private var dream: Dream? = null
+    private var ghostFromPowerPlant: GhostFromPowerPlant? = null
     private fun onTriggerEventCallback(event: String) {
         when (event) {
             "faster" -> {
@@ -392,9 +402,29 @@ class InGame(
                 eventExecutor.advance()
             }
             "launchGhost" -> {
-                ghostOverlay.activate()
+                ghostFromPowerPlant = GhostFromPowerPlant(
+                    player,
+                    context,
+                    assets,
+                    levelSpec,
+                    inputController,
+                    particleShader,
+                ) {
+                    ghostFromPowerPlant = null
+                }
+                timedActions += TimedAction(3f, {}) {
+                    ghostOverlay.appear()
+                    timedActions += TimedAction(4f, {}) {
+                        eventExecutor.advance()
+                    }
+                }
+
+                // activate particler from power plant
+                // add timed action with delay to activate particler in ghost overlay
+                // once finished activate ghost overlay
+                /*ghostOverlay.activate()
                 createGhostBody()
-                eventExecutor.advance()
+                eventExecutor.advance()*/
             }
 
             "transform" -> player.transform()
@@ -538,15 +568,29 @@ class InGame(
         }
     }
 
-    private fun scheduleFadeIn() {
+    private fun scheduleFadeIn(maxValue: Float = 1f, length: Float = 0.5f, post: (() -> Unit)? = null) {
         if (eventState.isEmpty()) {
             ui.setFadeEverythingColor(Color.BLACK)
-            ui.setFadeEverything(1f)
-            timedActions += TimedAction(0.5f, ui::setFadeEverything) { ui.setFadeEverything(0f) }
+            ui.setFadeEverything(maxValue)
+            timedActions += TimedAction(length, { ui.setFadeEverything (maxValue * it) }, {
+                ui.setFadeEverything(0f)
+                post?.invoke()
+            })
         } else {
             ui.setFadeWorldColor(Color.BLACK)
-            ui.setFadeWorld(1f)
-            timedActions += TimedAction(0.5f, ui::setFadeWorld) { ui.setFadeWorld(0f) }
+            ui.setFadeWorld(maxValue)
+            timedActions += TimedAction(length, { ui.setFadeWorld (maxValue * it) }) {
+                ui.setFadeWorld(0f)
+                post?.invoke() }
+        }
+    }
+
+    private fun scheduleFadeOut(maxValue: Float = 1f, length: Float = 0.5f, post: (() -> Unit)? = null) {
+        ui.setFadeWorldColor(Color.BLACK)
+        ui.setFadeWorld(0f)
+        timedActions += TimedAction(length, { ui.setFadeWorld (maxValue * (1f - it)) }) {
+            ui.setFadeWorld(maxValue)
+            post?.invoke()
         }
     }
 
@@ -565,6 +609,12 @@ class InGame(
                 return
             }
         }
+        ghostFromPowerPlant?.let {
+            if (it.update(dt.seconds)) {
+                eventExecutor.advance()
+                return
+            }
+        }
 
         val millis = dt.milliseconds
         time += dt.seconds
@@ -575,6 +625,7 @@ class InGame(
             if (actionRemainder > 0f) {
                 break
             } else {
+                println("removing timed action")
                 timedActions.removeFirst()
                 remainder = -actionRemainder
             }
@@ -696,7 +747,7 @@ class InGame(
         }
         backgroundLayer?.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
         floorLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
-        if (ghostOverlay.isActive) {
+        if (ghostOverlay.isActive && enemies.isNotEmpty()) {
             tempVec2f.set(ghostOverlay.ghostPosition).add(
                 cameraMan.position.x - visibleWorldWidth / 2f,
                 cameraMan.position.y - visibleWorldHeight / 2f
@@ -758,6 +809,7 @@ class InGame(
             player.movingOffBeat,
             enemies.isNotEmpty() || playerKnowledge.isEmpty()
         )
+        ghostFromPowerPlant?.render(batch)
     }
 
     fun updateAndRender(dt: Duration, notAdjustedDt: Duration) {
