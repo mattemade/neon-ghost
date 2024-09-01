@@ -470,7 +470,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"rei<:Oh, someone left a jetpack\\It is half empty though\n\nchoice ghost\nchoose Leave:leave; Fly to\\the sky:sky; Fly to the\\street:street\nchoice\n\nnot ghost\nchoose Leave:leave; Fly to the\\street:street\nchoice\nnot\n\nchoice leave\nend\n\nchoice street\njetpack<:ENDING 5 FREEDOM DIVE\nend\n\nchoice sky\ntrigger transform\nremember magic\nstate 1\nstate 1 roof_fight\nend\n"
+                         "value":"rei<:Oh, someone left a jetpack\\It is half empty though\n\nchoice ghost\nchoose Leave:leave; Fly to\\the sky:sky; Fly to the\\street:street\nchoice\n\nnot ghost\nchoose Leave:leave; Fly to the\\street:street\nchoice\nnot\n\nchoice leave\nend\n\nchoice street\njetpack<:ENDING 5 FREEDOM DIVE\nend\n\nchoice sky\nstop\ntrigger transform\nremember magic\nstate 1\nstate 1 roof_fight\nend\n"
                         }, 
                         {
                          "name":"title",

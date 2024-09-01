@@ -115,7 +115,7 @@ class InGame(
             ::selectOption,
             player::isMagicGirl,
             canAct = {
-                timedActions.isEmpty()
+                timedActions.isEmpty() && dream == null && transformation == null && ghostFromPowerPlant == null
             },
             canInteract = {
                 timedActions.isEmpty() && !isInDialogue && enemies.isEmpty()
@@ -190,7 +190,10 @@ class InGame(
             "fadeOut" -> scheduleFadeOut()
             "fadeIn" -> scheduleFadeIn()
             "slowFadeIn" -> scheduleFadeIn(maxValue = 0.8f, length = 1f) { eventExecutor.advance() }
-            "slowFadeOut" -> scheduleFadeOut(maxValue = 0.8f, length = 1f) { eventExecutor.advance() }
+            "slowFadeOut" -> scheduleFadeOut(
+                maxValue = 0.8f,
+                length = 1f
+            ) { eventExecutor.advance() }
         }
     }
 
@@ -391,16 +394,19 @@ class InGame(
 
     private var dream: Dream? = null
     private var ghostFromPowerPlant: GhostFromPowerPlant? = null
+    private var transformation: Transformation? = null
     private fun onTriggerEventCallback(event: String) {
         when (event) {
             "faster" -> {
                 choreographer.setPlaybackRate(choreographer.playbackRate.toFloat() + 0.25f)
                 eventExecutor.advance()
             }
+
             "slower" -> {
                 choreographer.setPlaybackRate(choreographer.playbackRate.toFloat() - 0.25f)
                 eventExecutor.advance()
             }
+
             "launchGhost" -> {
                 ghostFromPowerPlant = GhostFromPowerPlant(
                     player,
@@ -427,7 +433,22 @@ class InGame(
                 eventExecutor.advance()*/
             }
 
-            "transform" -> player.transform()
+            "transform" -> {
+                transformation = Transformation(
+                    player,
+                    context,
+                    assets,
+                    inputController,
+                    particleShader
+                ) {
+                    transformation = null
+                    player.transform()
+                    eventExecutor.advance()
+                }
+
+
+            }
+
             "dream" -> {
                 dream = Dream(
                     player,
@@ -568,27 +589,36 @@ class InGame(
         }
     }
 
-    private fun scheduleFadeIn(maxValue: Float = 1f, length: Float = 0.5f, post: (() -> Unit)? = null) {
+    private fun scheduleFadeIn(
+        maxValue: Float = 1f,
+        length: Float = 0.5f,
+        post: (() -> Unit)? = null
+    ) {
         if (eventState.isEmpty()) {
             ui.setFadeEverythingColor(Color.BLACK)
             ui.setFadeEverything(maxValue)
-            timedActions += TimedAction(length, { ui.setFadeEverything (maxValue * it) }, {
+            timedActions += TimedAction(length, { ui.setFadeEverything(maxValue * it) }, {
                 ui.setFadeEverything(0f)
                 post?.invoke()
             })
         } else {
             ui.setFadeWorldColor(Color.BLACK)
             ui.setFadeWorld(maxValue)
-            timedActions += TimedAction(length, { ui.setFadeWorld (maxValue * it) }) {
+            timedActions += TimedAction(length, { ui.setFadeWorld(maxValue * it) }) {
                 ui.setFadeWorld(0f)
-                post?.invoke() }
+                post?.invoke()
+            }
         }
     }
 
-    private fun scheduleFadeOut(maxValue: Float = 1f, length: Float = 0.5f, post: (() -> Unit)? = null) {
+    private fun scheduleFadeOut(
+        maxValue: Float = 1f,
+        length: Float = 0.5f,
+        post: (() -> Unit)? = null
+    ) {
         ui.setFadeWorldColor(Color.BLACK)
         ui.setFadeWorld(0f)
-        timedActions += TimedAction(length, { ui.setFadeWorld (maxValue * (1f - it)) }) {
+        timedActions += TimedAction(length, { ui.setFadeWorld(maxValue * (1f - it)) }) {
             ui.setFadeWorld(maxValue)
             post?.invoke()
         }
@@ -610,6 +640,12 @@ class InGame(
             }
         }
         ghostFromPowerPlant?.let {
+            if (it.update(dt.seconds)) {
+                eventExecutor.advance()
+                return
+            }
+        }
+        transformation?.let {
             if (it.update(dt.seconds)) {
                 eventExecutor.advance()
                 return
@@ -745,7 +781,14 @@ class InGame(
         if (shapeRenderer == null) {
             shapeRenderer = ShapeRenderer(batch)
         }
-        backgroundLayer?.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
+        backgroundLayer?.render(
+            batch,
+            camera,
+            x = 0f,
+            y = 0f,
+            scale = IPPU,
+            displayObjects = false
+        )
         floorLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
         if (ghostOverlay.isActive && enemies.isNotEmpty()) {
             tempVec2f.set(ghostOverlay.ghostPosition).add(
@@ -783,7 +826,14 @@ class InGame(
         }
         depthBasedDrawables.forEach { it.renderShadow(shapeRenderer!!) }
         wallLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
-        decorationLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
+        decorationLayer.render(
+            batch,
+            camera,
+            x = 0f,
+            y = 0f,
+            scale = IPPU,
+            displayObjects = false
+        )
         decorationLayer2?.render(
             batch,
             camera,
@@ -793,7 +843,17 @@ class InGame(
             displayObjects = false
         )
         depthBasedDrawables.forEach { it.render(batch) }
-        foregroundLayer.render(batch, camera, x = 0f, y = 0f, scale = IPPU, displayObjects = false)
+        if (transformation == null) {
+            foregroundLayer.render(
+                batch,
+                camera,
+                x = 0f,
+                y = 0f,
+                scale = IPPU,
+                displayObjects = false
+            )
+        }
+        transformation?.render(batch)
     }
 
     private fun updateUi(dt: Duration, camera: Camera) {

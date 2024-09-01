@@ -171,7 +171,7 @@ class Player(
     private val zeroVec2 = Vec2()
     private val tempColor = MutableColor()
 
-    private var isFacingLeft = false
+    var isFacingLeft = false
     private var wasPunching = false
     private var nextLeftPunch = true
     private var punchCooldown = 0f

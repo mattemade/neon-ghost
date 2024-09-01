@@ -154,7 +154,7 @@
                         {
                          "name":"2",
                          "type":"string",
-                         "value":"save\nmusic magical girl 1c 115\nrei<:So, what did your detector detect?\nguard>:It seems you hold some magical powers\nrei<:Wow, and you are not scared?\nguard>:Well, you would use them already\\if you know how\nguard>:Now, take a seat\nrei<:Is that ok for you to tell me that much?\nguard>:Don't worry, you will soon forget about that\\Take a seat now\nscreen fadeOut\nrei<:(oh, they didn't find my lockpick\\so I can free myself)\nscreen fadeIn\nguard>:How did you take that off??\nmusic magical girl 3d\nfight guard<0, guard<1, guard>0.5\nstate 3\nmusic mg safe area\nrei>:I need to get out of here\nrei>:It's a shame they took all my stuff though\n"
+                         "value":"save\nrei<:So, what did your detector detect?\nguard>:It seems you hold some magical powers\nrei<:Wow, and you are not scared?\nguard>:Well, you would use them already\\if you know how\nguard>:Now, take a seat\nrei<:Is that ok for you to tell me that much?\nguard>:Don't worry, you will soon forget about that\\Take a seat now\nscreen fadeOut\nwait 1\nrei<:(oh, they didn't find my lockpick\\so I can free myself)\nwait 1\nscreen fadeIn\nwait 1\nguard>:How did you take that off??\nmusic magical girl 3d\nfight guard<0, guard<1, guard>0.5\nstate 3\nmusic mg safe area\nrei>:I need to get out of here\nrei>:It's a shame they took all my stuff though\n"
                         }, 
                         {
                          "name":"title",
