@@ -4,11 +4,11 @@
  "layers":[
         {
          "data":[0, 0, 0,
-            78, 78, 78,
-            79, 78, 79,
-            78, 79, 78,
-            79, 78, 79,
-            78, 79, 78],
+            89, 89, 89,
+            90, 89, 90,
+            89, 90, 89,
+            90, 89, 90,
+            89, 90, 89],
          "height":6,
          "id":1,
          "name":"floor",
@@ -20,9 +20,9 @@
          "y":0
         }, 
         {
-         "data":[89, 90, 91,
-            101, 102, 103,
-            113, 114, 115,
+         "data":[100, 101, 102,
+            112, 113, 114,
+            124, 125, 126,
             0, 0, 0,
             0, 0, 0,
             0, 0, 0],
@@ -57,8 +57,8 @@
         {
          "data":[0, 0, 0,
             0, 0, 0,
-            141, 142, 0,
-            151, 152, 0,
+            152, 153, 0,
+            162, 163, 0,
             0, 0, 0,
             0, 0, 0],
          "height":6,
@@ -75,9 +75,9 @@
          "data":[0, 0, 0,
             0, 0, 0,
             0, 0, 0,
-            161, 162, 163,
-            164, 165, 166,
-            167, 168, 169],
+            172, 173, 174,
+            175, 176, 177,
+            178, 179, 180],
          "height":6,
          "id":10,
          "name":"foreground",
@@ -157,7 +157,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal>:Where to go?\nchoose Cancel:cancel;B3:b3;B2:b2;B1:b1;18:18;25:25;Roof:roof\n\nchoice cancel\nend\n\nchoice b3\nrename security_lift_exit:Level B3\nstate 0 security_lift_exit\nend\n\nchoice b2\nrename security_lift_exit:Level B2\nstate 1 security_lift_exit\nend\n\nchoice b1\nrename security_lift_exit:Level B1\nstate 2 security_lift_exit\nend\n\nchoice 18\nrename security_lift_exit:Level 18\nstate 3 security_lift_exit\nend\n\nchoice 25\nrename security_lift_exit:Level 25\nstate 4 security_lift_exit\nend\n\nchoice roof\nrename security_lift_exit:Roof\nstate 5 security_lift_exit\nend\n"
+                         "value":"terminal>:Where to go?\n\nchoose Cancel:cancel;B3:b3;B2:b2;B1:b1;18:18;25:25;Roof:roof\n\nchoice cancel\nend\n\nchoice b3,b3_unlocked\nrename security_lift_exit:Level B3\nstate 0 security_lift_exit\nend\n\nchoice b3\nterminal>:Floor access denied\\Contact the control room\\at level 18\n\nchoice b2\nrename security_lift_exit:Level B2\nstate 1 security_lift_exit\nend\n\nchoice b1\nrename security_lift_exit:Level B1\nstate 2 security_lift_exit\nend\n\nchoice 18\nrename security_lift_exit:Level 18\nstate 3 security_lift_exit\nend\n\nchoice 25\nrename security_lift_exit:Level 25\nstate 4 security_lift_exit\nend\n\nchoice roof\nrename security_lift_exit:Roof\nstate 5 security_lift_exit\nend\n"
                         }, 
                         {
                          "name":"title",
@@ -259,42 +259,42 @@
          "source":"Outside-Wall 48_48.tsj"
         }, 
         {
-         "firstgid":36,
+         "firstgid":46,
          "source":"Outside-Light 150_150.tsj"
         }, 
         {
-         "firstgid":39,
+         "firstgid":49,
          "source":"Outside-Window 48_48.tsj"
         },
     
         {
-         "firstgid":67,
+         "firstgid":77,
          "source":"terminal_tile.tsj"
         }, 
         {
-         "firstgid":68,
+         "firstgid":78,
          "source":"abstract.tsj"
         }, 
         {
-         "firstgid":78,
+         "firstgid":89,
          "source":"tilesets\/0_Asset_Floor_4848.tsj"
         },
     
         {
-         "firstgid":80,
+         "firstgid":91,
          "source":"tilesets\/0_Asset_Wall_144144.tsj"
         }, 
         {
-         "firstgid":116,
+         "firstgid":127,
          "source":"tilesets\/0_Asset_Chair_240240.tsj"
         }, 
         {
-         "firstgid":141,
+         "firstgid":152,
          "source":"tilesets\/0_Asset_Control_9696.tsj"
         },
     
         {
-         "firstgid":161,
+         "firstgid":172,
          "source":"tilesets\/door_transparent.tsj"
         }],
  "tilewidth":48,

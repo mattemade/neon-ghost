@@ -52,6 +52,11 @@ class Textures(context: Context, private val packer: RuntimeTextureAtlasPacker) 
             packer.pack("texture/portrait/$it.png").await()
         }
     }
+    val objects by preparePlain {
+        listOf("terminal").associateWith {
+            packer.pack("texture/object/$it.png").await()
+        }
+    }
     val pendulum by "texture/dream/pendulum.png".pack()
 }
 

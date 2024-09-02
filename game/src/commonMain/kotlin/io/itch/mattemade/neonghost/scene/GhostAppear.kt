@@ -108,13 +108,13 @@ class GhostAppear(
 
     fun update(seconds: Float): Boolean {
         particler.update(Duration.ZERO, seconds * 1000f, Duration.ZERO, 0f, 0f, false)
-        if (input.pressed(GameInput.ANY_ACTION)) {
+       /* if (input.pressed(GameInput.ANY_ACTION)) {
             presses++
             if (presses > 2) {
                 complete()
                 return true
             }
-        }
+        }*/
         return false
     }
 

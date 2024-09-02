@@ -13,6 +13,7 @@ import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapController
 import com.littlekt.math.MutableVec2f
 import com.littlekt.math.PI2
+import com.littlekt.math.Vec2f
 import com.littlekt.math.geom.radians
 import com.littlekt.util.datastructure.BiMap
 import com.littlekt.util.milliseconds
@@ -26,6 +27,7 @@ import io.itch.mattemade.neonghost.Game.Companion.visibleWorldHeight
 import io.itch.mattemade.neonghost.Game.Companion.visibleWorldWidth
 import io.itch.mattemade.neonghost.LevelSpec
 import io.itch.mattemade.neonghost.character.DepthBasedRenderable
+import io.itch.mattemade.neonghost.character.VisibleObject
 import io.itch.mattemade.neonghost.character.enemy.Enemy
 import io.itch.mattemade.neonghost.character.rei.NeonGhost
 import io.itch.mattemade.neonghost.character.rei.Player
@@ -115,7 +117,7 @@ class InGame(
             ::selectOption,
             player::isMagicGirl,
             canAct = {
-                timedActions.isEmpty() && dream == null && transformation == null && ghostFromPowerPlant == null
+                timedActions.isEmpty() && dream == null && transformation == null && ghostFromPowerPlant == null && enemies.isEmpty()
             },
             canInteract = {
                 timedActions.isEmpty() && !isInDialogue && enemies.isEmpty()
@@ -243,9 +245,12 @@ class InGame(
             spawnNeonGhost = ::spawnNeonGhost,
             castAoe = ::castAoe,
             castProjectile = ::castProjectile,
-            spawnParticles = ::spawnParticles
+            spawnParticles = ::spawnParticles,
+            canPunch = ::canPunch
         )
     }
+    private fun canPunch(): Boolean = enemies.isNotEmpty() || ui.availableInteraction == null
+
     private var neonGhost: NeonGhost? = null
     private var addNeonGhostToList = false
     private var removeNeonGhostFromList = false
@@ -341,6 +346,7 @@ class InGame(
         )
     }
     private val enemies = mutableListOf<Enemy>()
+    private val staticEnemies = mutableListOf<Enemy>()
     private val deadEnemies = mutableListOf<Enemy>()
 
     private val cameraMan by lazy {
@@ -378,6 +384,7 @@ class InGame(
             }
         result
     }
+
 
     private val worldStep = 1f / 60f
     private var worldAccumulator = 0f
@@ -522,7 +529,9 @@ class InGame(
     }
 
     private fun createEnemy(
-        enemySpec: EventExecutor.EnemySpec
+        enemySpec: EventExecutor.EnemySpec,
+        overrideX: Float? = null,
+        overrideY: Float? = null,
     ): Enemy {
         if (!choreographer.isActive) {
             // starting fight, but there is no music - should be fixed ASAP
@@ -533,7 +542,8 @@ class InGame(
             if (enemySpec.fromLeft) -Game.visibleWorldWidth / 2f - 0.5f else Game.visibleWorldWidth / 2f + 0.5f
         val offsetY = enemySpec.verticalPosition
         val enemy = Enemy(
-            Vec2(cameraMan.position.x + offsetX, offsetY),
+            enemySpec.name,
+            Vec2(overrideX ?: (cameraMan.position.x + offsetX), overrideY ?: offsetY),
             player,
             world,
             choreographer,
@@ -544,18 +554,33 @@ class InGame(
             context.vfs,
             difficulty = enemySpec.difficulty,
             initialHeath = enemySpec.health,
+            initialFacingLeft = !enemySpec.fromLeft,
             canAct = { !isInDialogue },
-            ::onEnemyDeath
+            onDeath = ::onEnemyDeath,
+            onBecomingAggessive = ::onEnemyBecomesAggressive
         )
-        enemies.add(enemy)
         depthBasedDrawables.add(enemy)
-        ui.showHealth(enemy)
-        enemy.isAggressive = true
+        if (overrideX != null || overrideY != null) {
+            staticEnemies.add(enemy)
+        } else {
+            enemies.add(enemy)
+            ui.showHealth(enemy)
+            enemy.isAggressive = true
+        }
         return enemy
     }
 
     private fun onEnemyDeath(enemy: Enemy) {
+        if (enemy.name != null) {
+            eventState[enemy.name] = 1
+        }
         deadEnemies += enemy
+    }
+
+    private fun onEnemyBecomesAggressive(enemy: Enemy) {
+        staticEnemies.remove(enemy)
+        enemies.add(enemy)
+        ui.showHealth(enemy)
     }
 
     private fun gameOver() {
@@ -572,6 +597,36 @@ class InGame(
 
     private var music = false
 
+    private fun initVisibleObjects() {
+        level.layer("spawn").fastCastTo<TiledObjectLayer>().objects.forEach { obj ->
+            val x = (obj.bounds.x + obj.bounds.width / 2f) * IPPU
+            val topY = (levelHeight - obj.bounds.y) * IPPU
+            val bottomY = (levelHeight - (obj.bounds.y - obj.bounds.height)) * IPPU
+            val midY = (topY + bottomY) / 2f
+
+            assets.texture.objects[obj.name]?.let { slice ->
+                depthBasedDrawables.add(
+                    VisibleObject(
+                        position = Vec2f(x, bottomY),
+                        slice = slice,
+                        depth = midY
+                    )
+                )
+            } ?: run {
+                val name = obj.name
+                if (eventState[name] != 1) {
+                    val type = obj.properties["type"]?.string ?: "punk"
+                    val facingLeft = obj.properties["facingLeft"]?.bool ?: false
+
+                    eventExecutor.enemySpec(type, !facingLeft, 0f, name)?.let {
+                        createEnemy(it, x, midY)
+                    }
+                }
+            }
+        }
+
+    }
+
     init {
         if (playerKnowledge.contains("needToWaitABit")) {
             ui.setFadeEverythingColor(Color.BLACK)
@@ -584,6 +639,7 @@ class InGame(
 
 
         triggers // to initialize
+        initVisibleObjects()
         if (ghostOverlay.isActive) {
             createGhostBody()
         }

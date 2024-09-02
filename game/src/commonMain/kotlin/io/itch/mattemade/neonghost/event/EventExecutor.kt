@@ -158,37 +158,7 @@ class EventExecutor(
 
                 val verticalPosition = trigger.bottom + verticalPositionRate * trigger.height
 
-                when (spec) {
-                    "punk" -> spawnEnemy(
-                        EnemySpec(
-                            assets.animation.punkAnimations,
-                            1f,
-                            5,
-                            fromLeft,
-                            verticalPosition
-                        )
-                    )
-
-                    "guard" -> spawnEnemy(
-                        EnemySpec(
-                            assets.animation.guardAnimations,
-                            3f,
-                            8,
-                            fromLeft,
-                            verticalPosition
-                        )
-                    )
-
-                    "officer" -> spawnEnemy(
-                        EnemySpec(
-                            assets.animation.officerAnimations,
-                            5f,
-                            20,
-                            fromLeft,
-                            verticalPosition
-                        )
-                    )
-                }
+                enemySpec(spec, fromLeft, verticalPosition)?.let(spawnEnemy)
             }
             isFighting = true
             ui.stopDialog()
@@ -198,6 +168,43 @@ class EventExecutor(
         }
 
     }
+
+    fun enemySpec(
+        spec: String,
+        fromLeft: Boolean,
+        verticalPosition: Float,
+        name: String? = null
+    ): EnemySpec? =
+        when (spec) {
+            "punk" ->
+                EnemySpec(
+                    assets.animation.punkAnimations,
+                    1f,
+                    5,
+                    fromLeft,
+                    verticalPosition,
+                    name,
+                )
+            "guard" ->
+                EnemySpec(
+                    assets.animation.guardAnimations,
+                    3f,
+                    8,
+                    fromLeft,
+                    verticalPosition,
+                    name,
+                )
+            "officer" ->
+                EnemySpec(
+                    assets.animation.officerAnimations,
+                    5f,
+                    20,
+                    fromLeft,
+                    verticalPosition,
+                    name,
+                )
+            else -> null
+        }
 
     private fun String?.executeState() {
         if (this == null) {
@@ -391,5 +398,6 @@ class EventExecutor(
         val health: Int,
         val fromLeft: Boolean,
         val verticalPosition: Float,
+        val name: String? = null
     )
 }

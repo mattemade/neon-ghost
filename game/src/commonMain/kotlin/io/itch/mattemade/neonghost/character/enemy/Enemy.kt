@@ -33,6 +33,7 @@ import kotlin.math.min
 import kotlin.time.Duration
 
 class Enemy(
+    val name: String? = null,
     initialPosition: Vec2,
     private val player: Player,
     private val world: World,
@@ -44,8 +45,10 @@ class Enemy(
     private val vfs: Vfs,
     private val difficulty: Float = 1f,
     val initialHeath: Int = 3,
+    val initialFacingLeft: Boolean = false,
     private val canAct: () -> Boolean,
     private val onDeath: (Enemy) -> Unit,
+    private val onBecomingAggessive: (Enemy) -> Unit
 ) : Releasing by Self(),
     DepthBasedRenderable {
 
@@ -141,7 +144,7 @@ class Enemy(
     private val zeroVec2 = Vec2()
     private val tempColor = MutableColor()
 
-    private var isFacingLeft = false
+    private var isFacingLeft = initialFacingLeft
     private var wasPunching = false
     private var nextLeftPunch = true
     private var punchCooldown = 0f
@@ -151,6 +154,10 @@ class Enemy(
     fun hit(from: Vec2, strength: Int, fromSpell: Boolean = false) {
         if (health == 0) {
             return
+        }
+        if (!isAggressive) {
+            isAggressive = true
+            onBecomingAggessive(this)
         }
 
         health = max(0, health - strength)
@@ -247,14 +254,20 @@ class Enemy(
 
         val inverseBeat = 1f - toBeat
         val direction = tempVec2f2.set(player.x - x, player.y - y)
-        if (player.x < x) {
-            direction.x += punchDistance
-        } else {
-            direction.x -= punchDistance
+        if (!isAggressive && direction.length() < 1f) {
+            val isFacingPlayer = isFacingLeft && player.x < x || !isFacingLeft && player.x > x
+            if (isFacingPlayer && direction.length() < 1.5f) {
+                isAggressive = true
+                onBecomingAggessive(this)
+            }
         }
-        /*if (distance < 1.5f) {
-            isAggressive = true
-        }*/
+        if (isAggressive) {
+            if (player.x < x) {
+                direction.x += punchDistance
+            } else {
+                direction.x -= punchDistance
+            }
+        }
         direction
             .scale(inverseBeat * inverseBeat * inverseBeat)
         val length = direction.length()
@@ -264,11 +277,13 @@ class Enemy(
         //}
         val speed = direction.length() / 100f * Game.PPU
 
-        if (direction.x != 0f) {
-            if (isFacingLeft && direction.x > 0f) {
-                isFacingLeft = false
-            } else if (!isFacingLeft && direction.x < 0f) {
-                isFacingLeft = true
+        if (isAggressive) {
+            if (direction.x != 0f) {
+                if (isFacingLeft && direction.x > 0f) {
+                    isFacingLeft = false
+                } else if (!isFacingLeft && direction.x < 0f) {
+                    isFacingLeft = true
+                }
             }
         }
 

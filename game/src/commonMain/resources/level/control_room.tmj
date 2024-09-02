@@ -56,15 +56,15 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0,
-            0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0,
-            0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0,
-            0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0,
-            0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0,
-            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0,
-            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0,
-            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0,
-            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0,
+            0, 0, 0, 0, 0, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0,
+            0, 0, 0, 0, 0, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0,
+            0, 0, 0, 0, 0, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0,
+            0, 0, 0, 0, 0, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0,
+            0, 0, 0, 0, 0, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":14,
@@ -78,14 +78,14 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 84, 85, 86, 87, 88, 83, 84, 84, 85, 80, 81, 82, 83, 84, 0, 0,
-            0, 0, 0, 0, 0, 96, 97, 98, 99, 100, 95, 96, 96, 97, 92, 93, 94, 95, 96, 0, 0,
-            0, 0, 0, 0, 0, 108, 109, 110, 111, 112, 107, 108, 108, 109, 104, 105, 106, 107, 108, 0, 0,
+         "data":[0, 0, 0, 0, 0, 95, 96, 97, 98, 99, 94, 95, 95, 96, 91, 92, 93, 94, 95, 0, 0,
+            0, 0, 0, 0, 0, 107, 108, 109, 110, 111, 106, 107, 107, 108, 103, 104, 105, 106, 107, 0, 0,
+            0, 0, 0, 0, 0, 119, 120, 121, 122, 123, 118, 119, 119, 120, 115, 116, 117, 118, 119, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            85, 80, 81, 82, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            97, 92, 93, 94, 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            109, 104, 105, 106, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            96, 91, 92, 93, 94, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            108, 103, 104, 105, 106, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            120, 115, 116, 117, 118, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -203,6 +203,28 @@
                  "width":263,
                  "x":-12,
                  "y":130.666666666667
+                }, 
+                {
+                 "height":48,
+                 "id":79,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":336,
+                 "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":81,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":576,
+                 "y":96
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -312,6 +334,70 @@
                  "width":144,
                  "x":672,
                  "y":144
+                }, 
+                {
+                 "height":96,
+                 "id":80,
+                 "name":"control_room_red_doors_terminal",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"terminal>:Insert security card\\to unlock red doors\n\nnot card\nrei<:I don't have a security card\nend\n\nchoose Insert:insert;Leave:leave\n\n\nchoice insert\nforget card\nstate 1 red_door\nstate 1 red_door_1\nstate 1 red_door_2\nstate 1 red_door_3\nstate 1 red_door_4\nstate 1 red_door_5\nstate 1 corridor_punks_fight\nstate 1 lobby_punks_fight\nterminal>:Red doors unlocked\nstate 1"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"terminal>:Red doors unlocked\nrei<:There is a security card inserted\n\nchoose Take card:take;Leave:leave\n\nchoice take\nremember card\nstate 0 red_door\nstate 0 red_door_1\nstate 0 red_door_2\nstate 0 red_door_3\nstate 0 red_door_4\nstate 0 red_door_5\nstate 0 corridor_punks_fight\nstate 0 lobby_punks_fight\ncard<:Obtained security card\nterminal>Level B3 access denied\nstate 0"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Use terminal"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":144,
+                 "x":288,
+                 "y":144
+                }, 
+                {
+                 "height":96,
+                 "id":84,
+                 "name":"control_room_b3_terminal",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"terminal>:Insert security card\\To access Level B3\n\nnot card\nrei<:I don't have a security card\nend\n\nchoose Insert:insert;Leave:leave\n\n\nchoice insert\nforget card\nremember b3_unlock\nterminal>:Level B3 access granted\nstate 1"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"terminal>:Level B3 access granted\nrei<:There is a security card inserted\n\nchoose Take card:take;Leave:leave\n\nchoice take\nforget b3_unlock\nremember card\ncard<:Obtained security card\nterminal>Level B3 access denied\nstate 0"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Use terminal"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":144,
+                 "x":480,
+                 "y":144
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -323,7 +409,95 @@
          "draworder":"topdown",
          "id":7,
          "name":"spawn",
-         "objects":[],
+         "objects":[
+                {
+                 "height":48,
+                 "id":78,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":336,
+                 "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":85,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":528,
+                 "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":86,
+                 "name":"dsfv4",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":528,
+                 "y":288
+                }, 
+                {
+                 "height":48,
+                 "id":87,
+                 "name":"09sdfobi",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":384,
+                 "y":288
+                }, 
+                {
+                 "height":48,
+                 "id":88,
+                 "name":"ascvb",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":672,
+                 "y":288
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -331,7 +505,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":78,
+ "nextobjectid":89,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -342,43 +516,43 @@
          "source":"Outside-Wall 48_48.tsj"
         }, 
         {
-         "firstgid":36,
+         "firstgid":46,
          "source":"Outside-Light 150_150.tsj"
         }, 
         {
-         "firstgid":39,
+         "firstgid":49,
          "source":"Outside-Window 48_48.tsj"
         }, 
         {
-         "firstgid":67,
+         "firstgid":77,
          "source":"terminal_tile.tsj"
         }, 
         {
-         "firstgid":68,
+         "firstgid":78,
          "source":"abstract.tsj"
         }, 
         {
-         "firstgid":78,
+         "firstgid":89,
          "source":"tilesets\/0_Asset_Floor_4848.tsj"
         }, 
         {
-         "firstgid":80,
+         "firstgid":91,
          "source":"tilesets\/0_Asset_Wall_144144.tsj"
         }, 
         {
-         "firstgid":116,
+         "firstgid":127,
          "source":"tilesets\/0_Asset_Chair_240240.tsj"
         }, 
         {
-         "firstgid":141,
+         "firstgid":152,
          "source":"tilesets\/0_Asset_Control_9696.tsj"
         }, 
         {
-         "firstgid":161,
+         "firstgid":172,
          "source":"tilesets\/door_transparent.tsj"
         }, 
         {
-         "firstgid":170,
+         "firstgid":181,
          "source":"tilesets\/red_door.tsj"
         }],
  "tilewidth":48,

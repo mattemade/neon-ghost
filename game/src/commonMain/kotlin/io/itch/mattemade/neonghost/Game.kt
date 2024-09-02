@@ -50,6 +50,7 @@ import kotlin.time.Duration
 class Game(
     context: Context,
     private val onLowPerformance: () -> Unit,
+    private val drawCabinet: Boolean = false,
     savedStateOverride: SavedState? = null
 ) : ContextListener(context),
     Releasing by Self() {
@@ -74,7 +75,7 @@ class Game(
     lateinit var cabinetShader: ShaderProgram<CabinetVertexShader, CabinetFragmentShader>
     lateinit var particleShader: ShaderProgram<ParticleVertexShader, ParticleFragmentShader>
     lateinit var testShader: ShaderProgram<TestVertexShader, TestFragmentShader>
-    var useCabinet = false
+    var useCabinet = drawCabinet
     var offsetX = 0f
     var offsetY = 0f
     var cabinetOffsetX = 0f
@@ -356,19 +357,21 @@ class Game(
                 )
             }
 
-            batch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.DST_ALPHA)
-            batch.shader = assets.shader.test
-            batch.draw(
-                ghostOverlay.texture,
-                x = offsetX,
-                y = offsetY,
-                originX = 0f,
-                originY = 0f,
-                width = virtualWidth.toFloat() * scale,
-                height = virtualHeight.toFloat() * scale,
-                colorBits = slightlyTransparentWhite.toFloatBits(),
-                flipY = true
-            )
+            if (ghostOverlay.isActive) {
+                batch.setBlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.DST_ALPHA)
+                //batch.shader = assets.shader.test
+                batch.draw(
+                    ghostOverlay.texture,
+                    x = offsetX,
+                    y = offsetY,
+                    originX = 0f,
+                    originY = 0f,
+                    width = virtualWidth.toFloat() * scale,
+                    height = virtualHeight.toFloat() * scale,
+                    colorBits = slightlyTransparentWhite.toFloatBits(),
+                    flipY = true
+                )
+            }
 
             context.gl.disable(State.BLEND)
         }

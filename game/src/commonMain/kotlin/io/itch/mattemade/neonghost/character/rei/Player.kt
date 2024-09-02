@@ -69,7 +69,8 @@ class Player(
             endPosition: FloatArray,
             activeBetween: FloatArray
         ) -> Unit,
-    ) -> Unit
+    ) -> Unit,
+    private val canPunch: () -> Boolean,
 ) : Releasing by Self(),
     DepthBasedRenderable {
 
@@ -462,7 +463,7 @@ class Player(
             }
         }
 
-        if (isFighting || reducingTime > 0f) {
+        if (isFighting || reducingTime > 0f || canPunch()) {
             if (controller.pressed(GameInput.ATTACK)) {
                 punchCooldown = 300f//if (wasPunching) 600f else 900f
                 stopBody()
@@ -484,19 +485,21 @@ class Player(
             movingToBeat = matchBeat
             movingOffBeat = !matchBeat
 
+            val strongPunch = movingToBeat || !isFighting
+
             choreographer.sound(
-                if (movingToBeat) assets.sound.powerWhoosh.sound else assets.sound.whoosh.sound,
+                if (strongPunch) assets.sound.powerWhoosh.sound else assets.sound.whoosh.sound,
                 x,
                 y
             )
 
             if (isFacingLeft) {
                 leftPunchTargets.forEach {
-                    it.hit(body.position, if (movingToBeat) 2 else 1)
+                    it.hit(body.position, if (strongPunch) 2 else 1)
                 }
             } else {
                 rightPunchTargets.forEach {
-                    it.hit(body.position, if (movingToBeat) 2 else 1)
+                    it.hit(body.position, if (strongPunch) 2 else 1)
                 }
             }
         }
