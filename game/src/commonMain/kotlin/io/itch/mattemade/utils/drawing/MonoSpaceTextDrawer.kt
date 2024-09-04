@@ -89,7 +89,7 @@ class MonoSpaceTextDrawer(
         text.forEachIndexed { row, line ->
             val lineStartX = startPositionX + (textBoxWidth - line.length.drawingWidth) / 2f
             line.forEachIndexed { column, char ->
-                if (char != ' ' && drawnCharacters < characterLimit) {
+                if (/*char != ' ' && */drawnCharacters < characterLimit) {
                     drawnCharacters++
                     letters[char]?.let { letter ->
                         batch.draw(

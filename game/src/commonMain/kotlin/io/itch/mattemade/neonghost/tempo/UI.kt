@@ -14,6 +14,7 @@ import com.littlekt.math.Rect
 import com.littlekt.math.Vec2f
 import com.littlekt.math.geom.radians
 import com.littlekt.util.Scaler
+import com.littlekt.util.milliseconds
 import com.littlekt.util.viewport.ScalingViewport
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.neonghost.Assets
@@ -52,7 +53,8 @@ class UI(
     }
     val textDrawer = MonoSpaceTextDrawer(
         font = assets.texture.fontWhite,
-        alphabet = ('A'..'Z').joinToString(separator = "") + ".,'0123456789:",
+        // TODO: add "()!?"
+        alphabet = ('A'..'Z').joinToString(separator = "") + ".,'0123456789:_?)(!",
         fontLetterWidth = 5,
         fontLetterHeight = 9,
         fontHorizontalSpacing = 1,
@@ -60,9 +62,15 @@ class UI(
         fontHorizontalPadding = 1,
     )
     private val delayedTextDrawer = DelayedTextDrawer(
-        textDrawer,
-        { 16f }
-    )
+        textDrawer
+    ) { c, last ->
+        if (last) {
+            256f
+        } else when (c) {
+            ' ' -> 96f
+            else -> 64f
+        }
+    }
     private val center = Vec2f(16f, 16f)
     private val tempVec2f = MutableVec2f(0f)
     private val tempVec2fb = MutableVec2f(0f)
@@ -204,12 +212,13 @@ class UI(
                 }
             }
 
-            textDrawer.drawText(
-                batch,
-                lines,
-                (Game.virtualWidth / 2f).screenSpacePixelPerfect,
-                (dialogPadding + portraitPadding).screenSpacePixelPerfect,
-            )
+            if (delayedTextDrawer.text !== lines) {
+                delayedTextDrawer.startDrawing(
+                    lines, (Game.virtualWidth / 2f).screenSpacePixelPerfect,
+                    (dialogPadding + portraitPadding).screenSpacePixelPerfect,
+                )
+            }
+            delayedTextDrawer.updateAndDraw(currentDtMillis, batch)
 
             activeOptions?.let { options ->
                 val count = options.size
@@ -238,13 +247,15 @@ class UI(
                 }
 
             } ?: run {
-                batch.draw(
-                    dialogArrow,
-                    Game.virtualWidth / 2f - dialogArrow.width / 2f,
-                    dialogPadding + dialogHeight - portraitPadding - dialogArrow.height,
-                    width = dialogArrow.width.toFloat(),
-                    height = dialogArrow.height.toFloat()
-                )
+                if (delayedTextDrawer.isFinished) {
+                    batch.draw(
+                        dialogArrow,
+                        Game.virtualWidth / 2f - dialogArrow.width / 2f,
+                        dialogPadding + dialogHeight - portraitPadding - dialogArrow.height,
+                        width = dialogArrow.width.toFloat(),
+                        height = dialogArrow.height.toFloat()
+                    )
+                }
             }
         }
         if (fadeEverythingColor.a > 0f) {
@@ -312,7 +323,9 @@ class UI(
         activeLines = null
     }
 
+    private var currentDtMillis: Float = 0f
     fun update(dt: Duration) {
+        currentDtMillis = dt.milliseconds
         activeLines?.let {
             activeOptions?.let { options ->
                 val xMovement = controller.axis(GameInput.HORIZONTAL)
@@ -336,8 +349,12 @@ class UI(
                 }
             }
             if (controller.pressed(GameInput.ANY_ACTION) && canAct()) {
-                choreographer.uiSound(assets.sound.click.sound, volume = 0.5f)
-                advanceDialogue()
+                if (delayedTextDrawer.isFinished) {
+                    choreographer.uiSound(assets.sound.click.sound, volume = 0.5f)
+                    advanceDialogue()
+                } else {
+                    delayedTextDrawer.advance()
+                }
                 return
             }
         }
