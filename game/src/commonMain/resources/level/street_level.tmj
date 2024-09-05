@@ -188,7 +188,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"punk>:This is that girl!\nrei<:Not you again\nmusic magical girl 3d\npunk>:Come on, guys!\n\nchoice test\npunk>:All you base are belong to us\nchoose ok:ok;fight:fight\nmusic magical girl 3d\nrei<:Whad do you mean\nfight punk>0\nfight punk>0,punk<0.5\nstate 1\nend\nchoice\n\nfight punk>0,punk<0.5,punk>1\nstate 1"
+                         "value":"punk>:This is that girl!\nrei<:Not you again\npunk>:Come on, guys!\n\nchoice test\npunk>:All you base are belong to us\nchoose ok:ok;fight:fight\nmusic magical girl 3d\nrei<:Whad do you mean\nfight punk>0.1\nfight punk>0.1,punk<0.5\nstate 1\nend\nchoice\n\nfight punk>0.1,punk<0.5,punk>0.9\nstate 1"
                         }, 
                         {
                          "name":"type",
@@ -232,7 +232,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"#music magical girl 3d\nforget needToWaitABit"
+                         "value":"save\n#music magical girl 3d\nforget needToWaitABit\nstate 2"
                         }, 
                         {
                          "name":"type",
@@ -254,7 +254,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"guard<:Hey girl, we have some questions\nrei>:I don't care\n\nfight guard<0.5\nstate 1\nstate 1 second_fight_with_guards"
+                         "value":"guard<:Hey girl, I have some questions\nrei>:I don't care\n\nfight guard<0.5\nstate 1\nstate 1 second_fight_with_guards"
                         }, 
                         {
                          "name":"type",
@@ -276,7 +276,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"rei<:Dead end\nstate 1"
+                         "value":"rei<:Dead end...\nstate 1"
                         }, 
                         {
                          "name":"type",
@@ -298,7 +298,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"guard<:Here she is!\nrei>:Oh, come on!\n\nfight guard>0.5,guard<0.5\nstate 2\n"
+                         "value":"guard<:Here she is!\nrei>:Oh, come on!\n\nfight guard>0.5,guard<0.5\nstate 2\n\nstate 1 third_fight_with_guards"
                         }, 
                         {
                          "name":"type",
@@ -338,6 +338,28 @@
                  "width":48,
                  "x":660,
                  "y":48
+                }, 
+                {
+                 "height":144,
+                 "id":33,
+                 "name":"third_fight_with_guards",
+                 "properties":[
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"officer>:She is cornered!\\Get her!\nfight guard>0.1,guard>0.9\nfight guard>0.1,guard>0.9,guard>0.5\nfight guard>0.1,officer>0.5,guard>0.9,guard>0.7\nfight officer>0.1,officer>0.5,officer>0.9,officer>0.7\nfight officer>,officer>,officer>,officer>,officer>\nfight officer>,officer>,officer>,officer>,officer>\nfight officer>,officer>,officer>,officer>,officer>\nfight officer>,officer>,officer>,officer>,officer>\n\n"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":144,
+                 "x":192,
+                 "y":96
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -357,7 +379,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":33,
+ "nextobjectid":34,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

@@ -1,6 +1,7 @@
 package io.itch.mattemade.neonghost.character.rei
 
 import com.littlekt.file.Vfs
+import com.littlekt.graphics.Color
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.ParticleSimulator
@@ -71,6 +72,8 @@ class Player(
         ) -> Unit,
     ) -> Unit,
     private val canPunch: () -> Boolean,
+    private val updateEnemyAi: () -> Unit,
+    private val resetEnemyAi: () -> Unit,
 ) : Releasing by Self(),
     DepthBasedRenderable {
 
@@ -79,13 +82,12 @@ class Player(
     val pixelWidthInt = pixelWidth.toInt()
     val pixelHeight = 1f//textureSizeInWorldUnits.y
     val pixelHeightInt = pixelHeight.toInt()
-    private val physicalHw = 1f / Game.PPU
-    private val physicalHh = 1f / Game.PPU
+    private val physicalHw = 10f / Game.PPU
+    private val physicalHh = 4f / Game.PPU
     private val punchDistance = 28f / Game.PPU
     private val punchWidth = 16f / Game.PPU
     private val punchDepth = 10f / Game.PPU
     var health: Int = initialHealth
-        private set
 
 
     private val body = world.createBody(
@@ -183,7 +185,7 @@ class Player(
     var movingOffBeat = false
     private var lastBeatPosition = 0f
     private var dashCooldown = 0f
-    private var hitCooldown = 0f
+    var hitCooldown = 0f
     private val maxHitCooldown = 300f
     private val deathCooldown = 1000f
     private val hitSlomoUntil = 250f
@@ -212,6 +214,7 @@ class Player(
         if (health <= 0) {
             return
         }
+        resetEnemyAi()
         health = max(0, health - difficulty.toInt())
         choreographer.sound(assets.sound.damage.sound, body.position.x, body.position.y)
         if (castingTime > 0f) {
@@ -325,6 +328,7 @@ class Player(
             punchCooldown -= millis
             if (punchCooldown > 0f) {
                 currentAnimation.update(dt)
+                updateEnemyAi()
                 return
             }
             movingToBeat = false
@@ -332,6 +336,7 @@ class Player(
         if (dashCooldown > 0f) {
             dashCooldown -= millis
             if (dashCooldown > 0f) {
+                updateEnemyAi()
                 return
             }
             movingToBeat = false
@@ -352,6 +357,7 @@ class Player(
             if (matchBeat && !keepMoving && isFighting) {
                 movingToBeat = true
                 dashCooldown = 200f
+                resetEnemyAi()
                 body.linearVelocity.set(xMovement * 2.5f, yMovement * 2.5f)
                 choreographer.sound(assets.sound.dash.sound, body.position.x, body.position.y)
             } else {
@@ -503,6 +509,8 @@ class Player(
                 }
             }
         }
+
+        updateEnemyAi()
     }
 
     private fun recalculatePlaybackRate() {

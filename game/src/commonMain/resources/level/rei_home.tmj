@@ -3,66 +3,66 @@
  "infinite":false,
  "layers":[
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            78, 78, 78, 79, 79, 79, 79, 82, 82, 78, 78, 78, 79, 79, 79, 79, 79, 79, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 0, 0, 0, 0,
-            78, 78, 78, 79, 79, 79, 79, 78, 78, 78, 78, 81, 79, 79, 79, 79, 79, 79, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 0, 0, 0, 0,
-            78, 78, 78, 79, 79, 79, 80, 78, 78, 78, 78, 81, 79, 79, 79, 79, 79, 79, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 0, 0, 0, 0],
+         "data":[0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            82, 82, 78, 78, 78,
+            78, 78, 78, 78, 81,
+            78, 78, 78, 78, 81],
          "height":5,
          "id":1,
          "name":"floor",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":32,
+         "width":5,
          "x":0,
          "y":0
         }, 
         {
-         "data":[79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79,
-            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 79, 79, 79,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 79, 79, 79,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 79, 79, 79],
+         "data":[79, 79, 79, 79, 79,
+            79, 79, 79, 79, 79,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0],
          "height":5,
          "id":3,
          "name":"wall",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":32,
+         "width":5,
          "x":0,
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 86, 86, 86, 86, 86, 0, 0, 0, 0, 80, 80, 0, 0, 0, 0, 80, 80, 0, 0, 81, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 86, 86, 86, 86, 86, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 81, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "data":[86, 86, 86, 86, 86,
+            86, 86, 86, 86, 86,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0],
          "height":5,
          "id":4,
          "name":"decoration",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":32,
+         "width":5,
          "x":0,
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 87, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 87, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "data":[0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 87, 0, 0,
+            0, 0, 87, 0, 0],
          "height":5,
          "id":10,
          "name":"foreground",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":32,
+         "width":5,
          "x":0,
          "y":0
         }, 
@@ -78,19 +78,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":288,
-                 "x":288,
-                 "y":96
-                }, 
-                {
-                 "height":96,
-                 "id":21,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":55.75,
-                 "x":288,
+                 "width":240,
+                 "x":0,
                  "y":96
                 }, 
                 {
@@ -101,7 +90,7 @@
                  "type":"",
                  "visible":true,
                  "width":52.3333333333334,
-                 "x":523.666666666667,
+                 "x":187.666666666667,
                  "y":144
                 }, 
                 {
@@ -112,7 +101,7 @@
                  "type":"",
                  "visible":true,
                  "width":96,
-                 "x":336,
+                 "x":0,
                  "y":96
                 }],
          "opacity":1,
@@ -120,34 +109,13 @@
          "visible":true,
          "x":0,
          "y":0
-        }, 
+        },
+    
         {
          "draworder":"topdown",
          "id":5,
          "name":"trigger",
          "objects":[
-                {
-                 "height":144,
-                 "id":14,
-                 "name":"first_fight_with_punk",
-                 "properties":[
-                        {
-                         "name":"0",
-                         "type":"string",
-                         "value":"punk>:Hey you\npunk>:Do you want to have some fun?\n\nchoose Yes:yes; No:no\nchoice yes\npunk>:He he he\nchoice no\npunk>:But I want\nchoice\n\nfight punk\n\nrei<: Remember your place!\npunk>: Oh, be sure, I'll remember\nstate 1\n"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"trigger"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":864,
-                 "y":96
-                }, 
                 {
                  "height":48,
                  "id":18,
@@ -156,7 +124,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"choice tools\nmusic fade\nteleport strange_room\nend\n\nchoice\nrei<:Should I really go without my tools?\nchoose Yes:yes; no:no\nchoice yes\nmusic fade\nteleport strange_room\n"
+                         "value":"choice tools\nteleport strange_room\nend\n\nchoice\nrei<:I should probably\\take my tools\\before I go\nchoose Stay home:no; Leave without tools:yes\nchoice yes\nremember no_tools\nteleport strange_room\n"
                         }, 
                         {
                          "name":"title",
@@ -172,38 +140,11 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":432,
+                 "x":96,
                  "y":192
                 }, 
                 {
-                 "height":48,
-                 "id":20,
-                 "name":"exit_boxing",
-                 "properties":[
-                        {
-                         "name":"0",
-                         "type":"string",
-                         "value":"teleport boxing_club"
-                        }, 
-                        {
-                         "name":"title",
-                         "type":"string",
-                         "value":"boxing club"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"interaction"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":1248,
-                 "y":96
-                }, 
-                {
-                 "height":14.3333333333333,
+                 "height":27.3333333333333,
                  "id":22,
                  "name":"rei_home_bed",
                  "properties":[
@@ -230,36 +171,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":96,
-                 "x":336,
-                 "y":144
-                }, 
-                {
-                 "height":48,
-                 "id":23,
-                 "name":"rei_home_shower",
-                 "properties":[
-                        {
-                         "name":"0",
-                         "type":"string",
-                         "value":"Shower<: Take a shower?\nchoose Yes:yes; No:no\nchoice no\nend\nchoice yes\nstate 1\ntrigger heal\nrei<:that was refreshing"
-                        }, 
-                        {
-                         "name":"title",
-                         "type":"string",
-                         "value":"Shower"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"interaction"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":288,
-                 "y":192
+                 "width":114,
+                 "x":-10,
+                 "y":137.5
                 }, 
                 {
                  "height":106.666666666667,
@@ -267,9 +181,14 @@
                  "name":"rei_home_table",
                  "properties":[
                         {
+                         "name":"0",
+                         "type":"string",
+                         "value":"table>: Your hacking instruments are lying on the table,\\fixed and clean as you like them\n"
+                        }, 
+                        {
                          "name":"1",
                          "type":"string",
-                         "value":"table<: Take the hacking tools?\nchoose Yes:yes; No:no\nchoice no\nend\nchoice yes\nremember tools\nstate 2\n"
+                         "value":"table>: Your hacking instruments are lying on the table,\\fixed and clean as you like them\nchoose Take them:yes; Leave:no\nchoice no\nend\nchoice yes\nremember tools\nsound got\ntools>:Tools obtained\nstate 2\n"
                         }, 
                         {
                          "name":"title",
@@ -285,7 +204,7 @@
                  "type":"",
                  "visible":true,
                  "width":66.3333333333333,
-                 "x":509.666666666667,
+                 "x":173.666666666667,
                  "y":133.333333333333
                 }, 
                 {
@@ -296,7 +215,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"rei<: That dream again...\nrei<: How I wish to see the stars for real\nrei<: But the smoke and clouds are\\so thick in this city,\\you can't tell day from night\nphone>:ring ring ring\nphone>:Good morning, Rei\nphone>:I've sent you the details of the mission\nphone>:Be very careful, we are onto something big this time\nrei<:I'm on my way\nphone>:hangs up\nrei<:gotta take my tools before I go\nstate 1 rei_home_table\nstate 1 enter_home\nstate 2"
+                         "value":"rei<: That dream again...\nrei<: How I wish to see\\the stars for real\nrei<: But the smoke and clouds are\\so thick in this city,\\you can't tell day from night\nphone>:(phone ringing)\nphone>:Good morning, Rei\nphone>:I've sent you the details\\of the mission\nphone>:Be extra careful,\\we are onto something big\\this time\nrei<:I'm on my way\nphone>:(call hangs up)\ntrigger heal\nstate 1 rei_home_table\nstate 1 enter_home\nstate 2"
                         }, 
                         {
                          "name":"title",
@@ -312,7 +231,7 @@
                  "type":"",
                  "visible":true,
                  "width":96,
-                 "x":336,
+                 "x":0,
                  "y":144
                 }],
          "opacity":1,
@@ -362,5 +281,5 @@
  "tilewidth":48,
  "type":"map",
  "version":"1.10",
- "width":32
+ "width":5
 }

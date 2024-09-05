@@ -165,7 +165,7 @@ Officer: Looks like we got our lucky ticket, guys
 Officer: Bring her to the washing machine!
 Agent: Yes, sir!
 Rei: Hey, I am not that dirty!
-Agent: It is not to clean you... Well, at least not from outside
+Agent: It is not to clean you... Well, at least not from the outside
 Rei: Ewww, that's even worse
 
 
@@ -173,9 +173,9 @@ Rei: Ewww, that's even worse
 
 ### fight trigger
 Rei: So, what did your detector detect?
-Agent: It seems you hold some magical powers
+Agent: It seems you hold some magical power
 Rei: Wow, and you are not scared?
-Agent: Well, you would use them already if you know how
+Agent: Well, you would use it already if you know how
 Rei: ...
 Rei: And what is that chair for?
 Agent: That is the brainwashing machine. It will turn you either on our side or into a plant
@@ -249,8 +249,8 @@ Rei: So it seems that green dots are active power plants
 Rei: Like the one where I found you...
 Mirai: I see... Poor souls...
 Mirai: May I ask you... to help them the same way you helped me here? [I promise, No]
-[No] Mirai: Sorry... I knew I was asking for impossible...
-[I promise] Mirai: Thank you, you are too kind! No wonder you are a magical girl too!
+[No] Mirai: Sorry... I knew I was asking for the impossible...
+[I promise] Mirai: Thank you, you are too kind! It's no wonder you are a magical girl too!
 [I promise] <promise remembered>
 
 #### Main lift
@@ -298,7 +298,7 @@ Mirai: Are you the only one here? Let me try to call my friends for help...
 <Mirai sends the signal>
 Mirai: They don't respond...
 Mirai: But I can feel them... suffering... Poor souls...
-Mirai: You are the only magical girl around who respond to my call
+Mirai: You are the only magical girl around who responded to my call
 Rei: I am what?! So it is true that I have some magical powers?
 Mirai: Well, if you can hear and see me being a magical beign, you can be sure
 Rei: ...
@@ -339,8 +339,8 @@ Rei: Got you, see you later
 Mirai: Oh... I see... You really can't see anything through...
 Rei: Yeah, it was like that as long as I remember
 Rei: Those who can't get the electricity from CorpX just burn whatever fuel they have
-Mirai: I would give you a magical wings to fly above, but I am afraid it will be the last thing I will ever do
-Mirai: Maybe it is a good idea, though... At least you could fight
+Mirai: I could lift you up with my magic... But I am afraid it will be the last thing I will ever do
+Mirai: Maybe it is a good idea, though...
 Rei: Wait, look there, there is a jetpack
 Rei: It is not fully loaded, but it should be fine
 Rei: Can your wings catch me I will start falling down?
@@ -366,7 +366,7 @@ Mirai: Now, try to focus on that feeling a bit longer, and release the power aro
 Mirai: Yes, like that! It is a bit tricky, but I'm sure you will get used to it!
 Mirai: And, as you seem to be a good fighter, you can try to punch with the focused magic
 <projectile attack tutorial>
-Mirai: Awesome, you are a natural! That reminds me of good old times...
+Mirai: Awesome, you are natural! That reminds me of good old times...
 Mirai: We should seek for other magical girls once.. once we... escape... [Mirai tries to cover her anxiety as she know she won't last long, but she don't want Rei to worry about that]
 Mirai: But for now we need to protect them! You've said there is a brainwashing machine? We have to destroy it!
 
@@ -378,7 +378,7 @@ Agent: Turn off the lift!
 #### [anytime after a fight where AOT stop-time attack landed a hit]
 Mirai: How did you do that?
 Rei: I don't know, it's like the time has stopped
-Mirai: So that is you very own magical ability! Amazing! I've never seen a Magical Girl to find it out so quickly!
+Mirai: So that is you very own magical ability! Amazing! I've never seen a Magical Girl find it out so quickly!
 Rei: Thanks...
 Mirai: I wish you could meet my friends...
 [promised] Rei: I'll meet them, I promised
@@ -430,7 +430,7 @@ Demon: I wonder how did you manage to wake up in this city of eternal slumber
 Rei: ...
 Demon: Oh, it's you Mirai! Long time no see!
 Demon: I should have figured out you have something to do with all that mess
-Mirai: Uuuhh.... That's you! That's because of you I am like that!
+Mirai: Uuuhh.... It's you! it's because of you that I am like this!
 Demon: Calm down! Save your beautiful voice for insults
 Demon: You, girl! I bet you don't want to end up like that firefly
 Demon: Don't repeat her mistakes, and join me
@@ -456,8 +456,8 @@ Mirai: Well done, Rei! Now, let's take care of that thing
 Mirai: It is huge... I don't think you can damage it physically
 Mirai: If I channel my magic through you, you should have enough power to punch through it
 Rei: Do you have any magic left?
-Mirai: Don't worry about me, I'm done for a long time
-Mirai: And I am willing to put what remained from my life in protecting all the future Magical Girls!
+Mirai: Don't worry about me, I've been done for a long time
+Mirai: And I am willing to put down what remains from my life in protecting all the future Magical Girls!
 Mirai: Are you ready? [Yes, No]
 [Yes] <triggers destroying washing machine>
 [No] Mirai: Take you time to get ready, but don't take too long!

@@ -1,68 +1,80 @@
 { "compressionlevel":-1,
- "height":5,
+ "height":8,
  "infinite":false,
  "layers":[
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            78, 78, 78, 79, 79, 79, 79, 78, 78, 78, 78, 78, 79, 79, 79, 79, 79, 79, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 0, 0, 0, 0,
-            78, 78, 78, 79, 79, 79, 79, 78, 78, 78, 78, 78, 79, 79, 79, 79, 79, 79, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 0, 0, 0, 0,
-            78, 78, 78, 79, 79, 79, 78, 78, 78, 78, 78, 78, 79, 79, 79, 79, 79, 79, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 0, 0, 0, 0],
-         "height":5,
+         "data":[0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            79, 79, 79, 79, 79,
+            79, 79, 79, 79, 79,
+            78, 78, 78, 78, 78,
+            78, 78, 78, 78, 78,
+            78, 78, 78, 78, 78],
+         "height":8,
          "id":1,
          "name":"floor",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":32,
+         "width":5,
          "x":0,
          "y":0
         }, 
         {
-         "data":[79, 79, 79, 79, 79, 79, 79, 0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79,
-            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 79, 79, 79,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 79, 79, 79,
-            0, 0, 0, 0, 0, 0, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 79, 79, 79],
-         "height":5,
+         "data":[0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 83, 0, 0,
+            0, 0, 0, 0, 0],
+         "height":8,
          "id":3,
          "name":"wall",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":32,
+         "width":5,
          "x":0,
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 80, 80, 0, 0, 0, 0, 80, 80, 0, 0, 81, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 81, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         "height":5,
+         "data":[0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0],
+         "height":8,
          "id":4,
          "name":"decoration",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":32,
+         "width":5,
          "x":0,
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 86, 86, 86, 86, 86, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         "height":5,
+         "data":[0, 88, 88, 88, 0,
+            0, 88, 88, 88, 0,
+            0, 88, 88, 88, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0],
+         "height":8,
          "id":10,
          "name":"foreground",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":32,
+         "width":5,
          "x":0,
          "y":0
         }, 
@@ -79,7 +91,7 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":432,
+                 "x":96,
                  "y":48
                 }],
          "opacity":1,
@@ -87,34 +99,13 @@
          "visible":true,
          "x":0,
          "y":0
-        }, 
+        },
+    
         {
          "draworder":"topdown",
          "id":5,
          "name":"trigger",
          "objects":[
-                {
-                 "height":144,
-                 "id":14,
-                 "name":"first_fight_with_punk",
-                 "properties":[
-                        {
-                         "name":"0",
-                         "type":"string",
-                         "value":"punk>:Hey you\npunk>:Do you want to have some fun?\n\nchoose Yes:yes; No:no\nchoice yes\npunk>:He he he\nchoice no\npunk>:But I want\nchoice\n\nfight punk\n\nrei<: Remember your place!\npunk>: Oh, be sure, I'll remember\nstate 1\n"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"trigger"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":864,
-                 "y":96
-                }, 
                 {
                  "height":48,
                  "id":18,
@@ -123,7 +114,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"officer<:ok here we go\n#remember needToWaitABit\nmusic stop\nrei>:breaks the glass and steals the thing\nteleport street_level"
+                         "value":"camera strange_camera\nmusic mg safe area\nofficer<:Here is the box\npunk<:It's so small, are you sure?\nguard>:That's the top stuff,\\what would you expect?\npunk<:I don't know,\\usually you have bigger\\things things for that money\nguard>:I would also like\\to put a bigger thing\\into your...\nofficer>:Calm down you both\nstop\nmusic stop\nscreen splashOut:0.1\nwait 1.1\nguard>:What's going on?!\nmusic magical girl 3d\nrei<:(I'll take that)\nstop\nscreen splashIn:2\nofficer<:Where is the box?!\nofficer<:Looks like we have\\a rat to catch!\\Come on, guys!\nteleport street_level"
                         }, 
                         {
                          "name":"type",
@@ -134,35 +125,30 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":432,
+                 "x":96,
                  "y":48
                 }, 
                 {
                  "height":48,
-                 "id":20,
-                 "name":"exit_boxing",
+                 "id":28,
+                 "name":"strange_camera",
                  "properties":[
                         {
-                         "name":"0",
+                         "name":"1",
                          "type":"string",
-                         "value":"teleport boxing_club"
-                        }, 
-                        {
-                         "name":"title",
-                         "type":"string",
-                         "value":"boxing club"
+                         "value":"camera trigger\nmusic mg safe area\nofficer<:Here is the box\npunk<:It's so small, are you sure?\nguard>:That's the top thing, what would you expect?\npunk<:I don't know, usually you have bigger things\nguard>:\nofficer>:Calm down you both\nscreen fadeOut\nmusic magical girl 3d\nguard>:What's going on?!\nrei<:(I'll take that)\nscreen fadeIn\nofficer<:Where is the box?!\nofficer<:Looks like we have a rat to catch!\\Come on, guys!\nteleport street_level"
                         }, 
                         {
                          "name":"type",
                          "type":"string",
-                         "value":"interaction"
+                         "value":"trigger"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":1248,
-                 "y":96
+                 "x":96,
+                 "y":192
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -174,7 +160,73 @@
          "draworder":"topdown",
          "id":7,
          "name":"spawn",
-         "objects":[],
+         "objects":[
+                {
+                 "height":48,
+                 "id":25,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"officer"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":144,
+                 "y":288
+                }, 
+                {
+                 "height":48,
+                 "id":26,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"punk"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":0,
+                 "y":288
+                }, 
+                {
+                 "height":48,
+                 "id":27,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":96,
+                 "y":240
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -182,7 +234,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":25,
+ "nextobjectid":29,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -211,5 +263,5 @@
  "tilewidth":48,
  "type":"map",
  "version":"1.10",
- "width":32
+ "width":5
 }

@@ -7,10 +7,12 @@ import io.itch.mattemade.neonghost.character.DepthBasedRenderable
 import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.world.ContactBits
 import com.littlekt.file.Vfs
+import com.littlekt.graphics.Color
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.ParticleSimulator
 import com.littlekt.graphics.g2d.shape.ShapeRenderer
+import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapController
 import com.littlekt.math.MutableVec2f
 import com.soywiz.korma.geom.Angle
@@ -51,6 +53,7 @@ class Enemy(
     private val onBecomingAggessive: (Enemy) -> Unit
 ) : Releasing by Self(),
     DepthBasedRenderable {
+    private val isDummy = name == "dummy"
 
     val pixelWidth = 1f//textureSizeInWorldUnits.x
     val pixelWidthInt = pixelWidth.toInt()
@@ -58,7 +61,7 @@ class Enemy(
     val pixelHeightInt = pixelHeight.toInt()
     private val physicalWidth = 30f / Game.PPU
     private val physicalHeight = 10f / Game.PPU
-    private val punchDistance = 28f / Game.PPU
+    private val punchDistance = defaultPunchDistance
     private val punchWidth = 16f / Game.PPU + (difficulty - 1f) / Game.PPU
     private val punchDepth = 10f / Game.PPU
     var health = initialHeath
@@ -86,7 +89,7 @@ class Enemy(
 
     //private val animations = assets.animation.punkAnimations
     private var currentMagicalAnimation: SignallingAnimationPlayer =
-        walk
+        idle
         set(value) {
             if (field != value) {
                 value.restart()
@@ -101,7 +104,7 @@ class Enemy(
             },
             filter = Filter().apply {
                 categoryBits = ContactBits.ENEMY
-                maskBits = ContactBits.WALL or ContactBits.REI_PUNCH or ContactBits.ENEMY or ContactBits.GHOST_AOE
+                maskBits = ContactBits.WALL or ContactBits.REI_PUNCH /*or ContactBits.ENEMY*/ or ContactBits.GHOST_AOE
             },
             friction = 2f,
             userData = this
@@ -148,14 +151,26 @@ class Enemy(
     private var wasPunching = false
     private var nextLeftPunch = true
     private var punchCooldown = 0f
-    private var hitCooldown = 0f
+    var hitCooldown = 0f
     var isAggressive = false
+    var target: EnemyAi.TargetPoint? = null
+        set(value) {
+            field?.occupiedBy = null
+            value?.occupiedBy = this
+            field = value
+        }
+
+    init {
+        if (isDummy) {
+            target = EnemyAi.TargetPoint(player, x, y)
+        }
+    }
 
     fun hit(from: Vec2, strength: Int, fromSpell: Boolean = false) {
         if (health == 0) {
             return
         }
-        if (!isAggressive) {
+        if (!isAggressive && !isDummy) {
             isAggressive = true
             onBecomingAggessive(this)
         }
@@ -171,21 +186,23 @@ class Enemy(
         }
         hitCooldown = if (health == 0) 500f else 300f
         currentMagicalAnimation = hit
-        if (strength > 1 || health == 0 || fromSpell) {
+        if (strength > 1 || health == 0 || fromSpell || isDummy) {
+            if (!isDummy) {
+                target = null
+            }
+
             val direction = tempVec2f.set(body.position.x, body.position.y).subtract(from.x, from.y)
-            val force = if (health == 0) 3f else 5f / difficulty
+            val force = if (isDummy) {
+                if (strength > 1) 1.5f else 0.3f
+            } else {
+                if (health == 0) 1.0f else 1.5f// / difficulty
+            } / difficulty
             tempVec2f2.set(force, 0f)
             val rotation = direction.angleTo(tempVec2f2)
-            if (health > 0) {
-                val distance = direction.length()
-                tempVec2f2.scale(1f / distance)
-                tempVec2f2.x = min(2f / difficulty, tempVec2f2.x)
-            }
             tempVec2f2.rotate(rotation)
             body.linearVelocity.set(tempVec2f2.x, tempVec2f2.y)
             body.isAwake = true
         }
-        //body.applyLinearImpulse(tempVec2, body.position, true)
     }
 
     private fun onAnimationEvent(event: String) {
@@ -241,60 +258,68 @@ class Enemy(
         if (leftPunchTargets.isNotEmpty()) {
             isFacingLeft = true
             currentMagicalAnimation = punch
+            currentMagicalAnimation.restart()
             punchCooldown = 2000f
             currentMagicalAnimation.update(dt, ::onAnimationEvent)
             return
         } else if (rightPunchTargets.isNotEmpty()) {
             isFacingLeft = false
             currentMagicalAnimation = punch
+            currentMagicalAnimation.restart()
             punchCooldown = 2000f
             currentMagicalAnimation.update(dt, ::onAnimationEvent)
             return
         }
 
         val inverseBeat = 1f - toBeat
-        val direction = tempVec2f2.set(player.x - x, player.y - y)
-        if (!isAggressive && direction.length() < 1f) {
-            val isFacingPlayer = isFacingLeft && player.x < x || !isFacingLeft && player.x > x
-            if (isFacingPlayer && direction.length() < 1.5f) {
-                isAggressive = true
-                onBecomingAggessive(this)
-            }
-        }
-        if (isAggressive) {
-            if (player.x < x) {
-                direction.x += punchDistance
-            } else {
-                direction.x -= punchDistance
-            }
-        }
-        direction
-            .scale(inverseBeat * inverseBeat * inverseBeat)
-        val length = direction.length()
-        val maxSpeed = 2f + (difficulty - 1f) * 0.5f
-        //if (length > maxSpeed) {
-            direction.setLength(maxSpeed).scale(inverseBeat * inverseBeat * inverseBeat)
-        //}
-        val speed = direction.length() / 100f * Game.PPU
 
-        if (isAggressive) {
-            if (direction.x != 0f) {
-                if (isFacingLeft && direction.x > 0f) {
-                    isFacingLeft = false
-                } else if (!isFacingLeft && direction.x < 0f) {
-                    isFacingLeft = true
+
+        if (!isAggressive && !isDummy) {
+            val isFacingPlayer = isFacingLeft && player.x < x || !isFacingLeft && player.x > x
+            if (isFacingPlayer) {
+                if (tempVec2f2.set(player.x, player.y).subtract(x, y).length() < 1f) {
+                    isAggressive = true
+                    onBecomingAggessive(this)
                 }
             }
         }
+        var speed = 0f
+        target?.let {
+            tempVec2f2.set(it.position).subtract(x, y)
+            val distanceToTarget = tempVec2f2.length()
+            if (distanceToTarget > 0.1f) {
+                val beatFactor = inverseBeat * inverseBeat * inverseBeat
+                val maxSpeed = 2f + (difficulty - 1f) * 0.5f
+                // move horizontally if to the opposite side of player
+                if (x < it.position.x && player.x < it.position.x || x > it.position.x && player.x > it.position.x) {
+                    tempVec2f2.y = 0f
+                }
+                tempVec2f2.setLength(maxSpeed).scale(beatFactor)
+                if (tempVec2f2.length() / 120f > distanceToTarget) { // target is within 2 frames of simulation
+                    tempVec2f2.setLength(distanceToTarget / 120f)
+                }
+                speed = distanceToTarget / 100f * Game.PPU
+                if (speed != 0f) {
+                    currentMagicalAnimation = walk
+                    body.linearVelocity.set(tempVec2f2.x, tempVec2f2.y)
+                    body.isAwake = true
+                }
+            } else {
+                stopBody()
+            }
+            if (isFacingLeft && player.x > x) {
+                isFacingLeft = false
+            } else if (!isFacingLeft && player.x < x) {
+                isFacingLeft = true
+            }
+            /*if (tempVec2f2.x != 0f) {
 
-        if (direction.x == 0f && direction.y == 0f || !isAggressive) {
+            }*/
+        } ?: run {
             currentMagicalAnimation = idle
             stopBody()
-        } else if (speed != 0f) {
-            currentMagicalAnimation = walk
-            body.linearVelocity.set(direction.x, direction.y)
-            body.isAwake = true
         }
+
         currentMagicalAnimation.update(dt * speed.toDouble(), ::onAnimationEvent)
     }
 
@@ -359,4 +384,13 @@ class Enemy(
 
     private fun texturePositionX(width: Float) = body.position.x - width / 2f
     private fun texturePositionY(height: Float) = body.position.y - height
+
+    val str = "$name"
+    override fun toString(): String {
+        return str
+    }
+
+    companion object {
+        const val defaultPunchDistance = 28f / Game.PPU
+    }
 }

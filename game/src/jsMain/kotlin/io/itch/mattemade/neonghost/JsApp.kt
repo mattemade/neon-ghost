@@ -20,15 +20,23 @@ fun main() {
         canvasId = CANVAS_ID
     }.start {
         var playerHealth = Player.maxPlayerHealth
-        var knowledge = mutableSetOf<String>()
-        var eventState = mutableMapOf<String, Int>()
-        var door: String = "player"
-        var room: String = "boxing_club"
+        var knowledge = mutableSetOf<String>().apply {
+            add("training")
+            //add("no_tools")
+            add("tools")
+        }
+        var eventState = mutableMapOf<String, Int>().apply {
+            put("enter_home", 1)
+            put("officer_catch", 3)
+        }
+        var door: String = "security_lift_exit"
+        var room: String = "power_plant"
         var activeMusic: String = "stop"
-        var argument = false
+        var argument = true
+        var cabinet = false
         var savedState: Game.SavedState? = null
         window.location.href.substringAfter('?').split("&").asSequence().forEach {
-            argument = true
+            //argument = true
             println("item: $it")
             val split = it.split("=")
             val key = split[0]
@@ -39,6 +47,7 @@ fun main() {
                 "spawn" -> door = value ?: door
                 "room" -> room = value ?: room
                 "music" -> activeMusic = value ?: activeMusic
+                "cabinet" -> cabinet = true
                 else -> eventState[key] = value?.toIntOrNull() ?: 0
             }
         }
@@ -56,7 +65,7 @@ fun main() {
             )
         }
         scheduleCanvasResize(it)
-        val game = Game(it, ::onLowPerformance, savedState)
+        val game = Game(it, ::onLowPerformance, cabinet, savedState)
         window.addEventListener("blur", {
             game.focused = false
         })

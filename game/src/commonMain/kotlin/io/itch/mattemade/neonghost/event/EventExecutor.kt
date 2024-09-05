@@ -1,5 +1,7 @@
 package io.itch.mattemade.neonghost.event
 
+import com.littlekt.Audio
+import com.littlekt.audio.AudioClipEx
 import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
 import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.CharacterAnimations
@@ -9,7 +11,6 @@ import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.tempo.UI
 import io.itch.mattemade.neonghost.world.CameraMan
 import io.itch.mattemade.neonghost.world.Trigger
-import io.itch.mattemade.neonghost.world.Wall
 import kotlin.random.Random
 
 class EventExecutor(
@@ -27,9 +28,11 @@ class EventExecutor(
     private val onForget: (String) -> Unit,
     private val onTeleport: (door: String, toRoom: String) -> Unit,
     private val onMusic: (String) -> Unit,
-    private val onScreen: (String) -> Unit,
+    private val onSound: (String, Float) -> Int,
+    private val onScreen: (String, Float?) -> Unit,
     private val onSave: () -> Unit,
     private val wait: (Float) -> Unit,
+    private val onClearQueue: () -> Unit,
 ) {
 
     private var activeTrigger: Trigger? = null
@@ -38,11 +41,16 @@ class EventExecutor(
     private var activeEventPosition = 0
     private var currentChoice = mutableSetOf<String>()
     private var currentRequirements = mutableSetOf<String>()
+    private var anyOfRequirementsIsEnough = false
     private var negativeRequirements = mutableSetOf<String>()
     var isFighting = false
         private set
     val isInDialogue: Boolean
         get() = activeEvent != null && !isFighting
+    private var skipSpeechOnNextText = false
+
+    private var currentPlayingSound: AudioClipEx? = null
+    private var currentPlayingSoundId: Int = -1
 
     fun execute(trigger: Trigger, knowledge: Set<String>) {
         activeTrigger = trigger
@@ -55,9 +63,14 @@ class EventExecutor(
     }
 
     fun advance(forceEnd: Boolean = false) {
+        if (currentPlayingSound != null) {
+            currentPlayingSound?.stop(currentPlayingSoundId)
+            currentPlayingSoundId = -1
+            currentPlayingSound = null
+        }
         if (isFighting) {
             isFighting = false
-            makeCameraFollowPlayer()
+            makeCameraFollowPlayer(null)
         }
         activeEventPosition++
         if (forceEnd || activeEventPosition == (activeEvent?.size ?: 0)) {
@@ -98,14 +111,18 @@ class EventExecutor(
             "camera" -> action.checkingChoice().executeCamera()
             "choose" -> action.checkingChoice().executeChoose()
             "choice" -> action.updateRequirements()
+            "or" -> action.updateRequirements(anyEnough = true)
             "not" -> action.updateNegativeRequirements()
             "remember" -> action.checkingChoice().executeRemember()
             "forget" -> action.checkingChoice().executeForget()
             "rename" -> action.checkingChoice().executeRename()
             "teleport" -> action.checkingChoice().executeTeleport()
             "music" -> action.checkingChoice().executeMusic()
+            "sound" -> action.checkingChoice().executeSound(0.5f)
+            "voice" -> action.checkingChoice().executeSound(4f)
             "screen" -> action.checkingChoice().executeScreen()
             "wait" -> action.checkingChoice().executeWait()
+            "clearQueue" -> executeClearQueue()
             "save" -> executeSave()
             "stop" -> executeStopDialog()
             "end" -> advance(forceEnd = requirementsFulfilled())
@@ -117,10 +134,9 @@ class EventExecutor(
         takeIf { requirementsFulfilled() }
 
     private fun requirementsFulfilled(): Boolean =
-        (currentRequirements.isEmpty() || currentChoice.containsAll(currentRequirements))
-                && (negativeRequirements.isEmpty() || !currentChoice.containsAll(
-            negativeRequirements
-        ))
+        (currentRequirements.isEmpty() || currentChoice.containsAll(currentRequirements)
+                || anyOfRequirementsIsEnough && currentChoice.any(currentRequirements::contains))
+                && (negativeRequirements.isEmpty() || !currentChoice.containsAll(negativeRequirements))
 
     private fun String?.executeForPlayer() {
         when (this) {
@@ -162,7 +178,7 @@ class EventExecutor(
             }
             isFighting = true
             ui.stopDialog()
-            lockCamera()
+            lockCamera(null)
         } ?: run {
             advance()
         }
@@ -185,6 +201,7 @@ class EventExecutor(
                     verticalPosition,
                     name,
                 )
+
             "guard" ->
                 EnemySpec(
                     assets.animation.guardAnimations,
@@ -194,6 +211,7 @@ class EventExecutor(
                     verticalPosition,
                     name,
                 )
+
             "officer" ->
                 EnemySpec(
                     assets.animation.officerAnimations,
@@ -203,6 +221,17 @@ class EventExecutor(
                     verticalPosition,
                     name,
                 )
+
+            "dummy" ->
+                EnemySpec(
+                    assets.animation.dummyAnimations,
+                    1f,
+                    Int.MAX_VALUE,
+                    fromLeft,
+                    verticalPosition,
+                    "dummy",
+                )
+
             else -> null
         }
 
@@ -238,7 +267,8 @@ class EventExecutor(
         ui.showOptions(options)
     }
 
-    private fun String?.updateRequirements() {
+    private fun String?.updateRequirements(anyEnough: Boolean = false) {
+        anyOfRequirementsIsEnough = anyEnough
         currentRequirements.clear()
         if (this != null) {
             currentRequirements.addAll(this.split(",").map { it.trim() })
@@ -256,11 +286,19 @@ class EventExecutor(
     }
 
     private fun String?.executeCamera() {
-        when (this) {
-            "lock" -> lockCamera()
-            "trigger" -> makeCameraFollowTrigger()
-            "follow" -> makeCameraFollowPlayer()
-            else -> makeCameraFollowObject(this)
+        if (this == null) {
+            advance()
+            return
+        }
+        val args = this.split(":", limit = 2)
+        val command = args[0]
+        val delay = args.getOrNull(1)?.toFloatOrNull()
+
+        when (command) {
+            "lock" -> lockCamera(delay)
+            "trigger" -> makeCameraFollowTrigger(delay)
+            "follow" -> makeCameraFollowPlayer(delay)
+            else -> makeCameraFollowObject(command, delay)
         }
         advance()
     }
@@ -308,12 +346,26 @@ class EventExecutor(
         advance()
     }
 
+    private fun String?.executeSound(volume: Float) {
+        if (this == null) {
+            advance()
+            return
+        }
+        skipSpeechOnNextText = true
+        advance()
+        currentPlayingSound = assets.sound.concurrentClips[this]
+        currentPlayingSoundId = onSound(this, volume)
+    }
+
     private fun String?.executeScreen() {
         if (this == null) {
             advance()
             return
         }
-        onScreen(this)
+        val args = this.split(":", limit = 2)
+        val command = args[0]
+        val delay = args.getOrNull(1)?.toFloatOrNull()
+        onScreen(command, delay)
         //advance()
     }
 
@@ -343,14 +395,26 @@ class EventExecutor(
         }
     }
 
-    private fun makeCameraFollowTrigger() {
+    private fun executeClearQueue() {
+        if (requirementsFulfilled()) {
+            onClearQueue()
+        }
+        advance()
+    }
+
+    private fun makeCameraFollowTrigger(delay: Float?) {
         activeTrigger?.let { trigger ->
-            cameraMan.lookAt(withinSeconds = 2f) { it.set(trigger.centerX, trigger.centerY) }
+            cameraMan.lookAt(withinSeconds = delay ?: 2f) {
+                it.set(
+                    trigger.centerX,
+                    trigger.centerY
+                )
+            }
         }
     }
 
-    private fun makeCameraFollowPlayer() {
-        cameraMan.lookAt(withinSeconds = 2f) {
+    private fun makeCameraFollowPlayer(delay: Float?) {
+        cameraMan.lookAt(withinSeconds = delay ?: 2f) {
             it.set(
                 player.x,
                 if (levelSpec.freeCameraY) player.y - Game.visibleWorldHeight / 8f else Game.visibleWorldHeight / 2f
@@ -358,14 +422,17 @@ class EventExecutor(
         }
     }
 
-    private fun makeCameraFollowObject(s: String?) {
+    private fun makeCameraFollowObject(s: String?, delay: Float?) {
         levelSpec.level.layers.asSequence().filterIsInstance<TiledObjectLayer>().forEach {
             if (it.name == "trigger") {
                 it.objects.forEach { obj ->
                     if (obj.name == s) {
                         val mapHeight = levelSpec.level.height * levelSpec.level.tileHeight
-                        cameraMan.lookAt(withinSeconds = 2f) {
-                            it.set(obj.bounds.x + obj.bounds.width / 2f, mapHeight - (obj.bounds.y - obj.bounds.height / 2f)).mulLocal(Game.IPPU)
+                        cameraMan.lookAt(withinSeconds = delay ?: 2f) {
+                            it.set(
+                                obj.bounds.x + obj.bounds.width / 2f,
+                                mapHeight - (obj.bounds.y - obj.bounds.height / 2f)
+                            ).mulLocal(Game.IPPU)
                         }
                         return
                     }
@@ -382,13 +449,14 @@ class EventExecutor(
         // TODO: ask UI to show dialogue line
         val isLeft = this.contains("<:")
         val (portrait, text) = this.split("<:", ">:", limit = 2)
-        ui.showDialogLine(portrait, isLeft, text)
+        ui.showDialogLine(portrait, isLeft, text, skipSpeechOnNextText)
+        skipSpeechOnNextText = false
         player.stopBody(resetAnimationToIdle = true)
         // TODO: when UI finishes showing dialogue line, it should call back "advance()"
     }
 
-    private fun lockCamera() {
-        cameraMan.lookAt(withinSeconds = 0f, null)
+    private fun lockCamera(delay: Float?) {
+        cameraMan.lookAt(withinSeconds = delay ?: 0f, null)
     }
 
 

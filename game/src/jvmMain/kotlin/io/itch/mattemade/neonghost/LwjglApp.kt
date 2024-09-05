@@ -10,22 +10,25 @@ fun main() {
         title = "Neon Ghost"
     }.start {
         var playerHealth = Player.maxPlayerHealth
-        var knowledge = mutableSetOf<String>()
-        var eventState = mutableMapOf<String, Int>()
-        var door: String = "jetpack"
-        var room: String = "roof"
+        var knowledge = mutableSetOf<String>().apply {
+            add("training")
+            //add("no_tools")
+            add("tools")
+        }
+        var eventState = mutableMapOf<String, Int>().apply {
+            put("enter_home", 1)
+            put("officer_catch", 3)
+        }
+        var door: String = "security_lift_exit"
+        var room: String = "power_plant"
+        var activeMusic: String = "stop"
         var argument = true
-        /*var door: String = "enter_home"
-var room: String = "rei_home"*/
-        /*var isMagical = false
-        var isGhost = false
-        var argument = true*/
         var savedState: Game.SavedState? = null
 
         if (argument) {
             knowledge.add("training")
-            knowledge.add("magic")
-            knowledge.add("ghost")
+            //knowledge.add("magic")
+            //knowledge.add("ghost")
             savedState = Game.SavedState(
                 door = door,
                 room = room,
@@ -35,7 +38,7 @@ var room: String = "rei_home"*/
                 ghostActive = knowledge.contains("ghost"),
                 playerHealth = playerHealth,
                 isMagic = knowledge.contains("magic"),
-                activeMusic = "stop"
+                activeMusic = activeMusic
             )
         }
         Game(it, onLowPerformance = {}, savedStateOverride = savedState)

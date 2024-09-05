@@ -6,9 +6,9 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89],
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90],
          "height":6,
          "id":1,
          "name":"floor",
@@ -20,9 +20,9 @@
          "y":0
         }, 
         {
-         "data":[99, 99, 100, 101, 93, 94, 95, 126, 127, 128, 93,
-            111, 111, 112, 113, 105, 106, 107, 129, 130, 131, 105,
-            123, 123, 124, 125, 117, 118, 119, 132, 133, 134, 117,
+         "data":[100, 100, 101, 102, 94, 95, 96, 127, 128, 129, 94,
+            112, 112, 113, 114, 106, 107, 108, 130, 131, 132, 106,
+            124, 124, 125, 126, 118, 119, 120, 133, 134, 135, 118,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -105,7 +105,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"officer>:Oh, you're finally awake\nrei<:Where am I?\nofficer>:I am the one who ask questions here\nofficer>:How did you know about the box?\nrei<:I don't know what you are talking about\nofficer>:I see...\nofficer>:Who should we call to pick you up?\nrei<:I don't have anyone,\\so good luck with your ransom\nofficer>:Good, no one is looking for you then\nrei<:...\nradio>:Sir, the detector reacts on her\nofficer>:What??\nofficer>:Looks like we got our lucky ticket, guys\nofficer>:Bring her to the washing machine!\nguard>:Yes, sir!\nrei<:Hey, I am not that dirty!\nguard>:This machine won't clean you from outside\nrei<:Ewww, that's even worse\nstate 2\nteleport washing_room\n"
+                         "value":"clearQueue\ncamera interrogation_camera:0\nscreen fadeOut:0\nwait 2\n#voice wake up\nscreen fadeIn:1\n\nchoice tools\nforget tools\nremember no_tools\ntools<:Tools lost\nchoice\n\nmusic mg safe area\nofficer>:Oh, you're finally awake\nrei<:Where am I?\nofficer>:I'm the one asking\\the questions here\nofficer>:How did you know\\about the box?\nrei<:I don't know what\\you are talking about\nofficer>:I see...\nofficer>:Who should we call\\to pick you up?\nrei<:I don't have anyone,\\so good luck with your ransom\nofficer>:Good, no one is\\looking for you then\nrei<:...\n#voice me\nrei<:What is that?!\nofficer>:I'm the one asking\\the questions here\nguard>:Sir, the detector\\reacts on her\nofficer>:What??\nofficer>:Looks like we've got\\our lucky ticket, guys\nofficer>:Bring her to\\the washing machine!\nguard>:Yes, sir!\nrei<:Hey, I am not that dirty!\nguard>:It is not to clean you...\\Well, at least\\not from the outside\nrei<:Ewww, that's even worse\nstate 2\nstate 1 interrogation_officer\nstate 1 interrogation_guard\nteleport washing_room\n"
                         }, 
                         {
                          "name":"title",
@@ -123,23 +123,6 @@
                  "width":48,
                  "x":240,
                  "y":144
-                }, 
-                {
-                 "height":48,
-                 "id":27,
-                 "name":"spawn",
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"trigger"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":432,
-                 "y":192
                 }, 
                 {
                  "height":48,
@@ -172,6 +155,23 @@
                  "width":144,
                  "x":336,
                  "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":35,
+                 "name":"interrogation_camera",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":263.333333333333,
+                 "y":88
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -183,7 +183,73 @@
          "draworder":"topdown",
          "id":7,
          "name":"spawn",
-         "objects":[],
+         "objects":[
+                {
+                 "height":48,
+                 "id":33,
+                 "name":"interrogation_officer",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"officer"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":336,
+                 "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":34,
+                 "name":"interrogation_guard",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":316,
+                 "y":198.666666666667
+                }, 
+                {
+                 "height":48,
+                 "id":36,
+                 "name":"interrogation_guard",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":144,
+                 "y":192
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -191,7 +257,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":33,
+ "nextobjectid":37,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -218,15 +284,15 @@
          "source":"abstract.tsj"
         }, 
         {
-         "firstgid":88,
+         "firstgid":89,
          "source":"tilesets\/0_Asset_Floor_4848.tsj"
         }, 
         {
-         "firstgid":90,
+         "firstgid":91,
          "source":"tilesets\/0_Asset_Wall_144144.tsj"
         }, 
         {
-         "firstgid":126,
+         "firstgid":127,
          "source":"tilesets\/red_door.tsj"
         }],
  "tilewidth":48,

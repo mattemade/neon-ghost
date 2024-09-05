@@ -133,6 +133,11 @@
                  "name":"security_lift_enter",
                  "properties":[
                         {
+                         "name":"0",
+                         "type":"string",
+                         "value":"music mg safe area"
+                        }, 
+                        {
                          "name":"title",
                          "type":"string",
                          "value":"security lift"
@@ -157,7 +162,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal>:Where to go?\n\nchoose Cancel:cancel;B3:b3;B2:b2;B1:b1;18:18;25:25;Roof:roof\n\nchoice cancel\nend\n\nchoice b3,b3_unlocked\nrename security_lift_exit:Level B3\nstate 0 security_lift_exit\nend\n\nchoice b3\nterminal>:Floor access denied\\Contact the control room\\at level 18\n\nchoice b2\nrename security_lift_exit:Level B2\nstate 1 security_lift_exit\nend\n\nchoice b1\nrename security_lift_exit:Level B1\nstate 2 security_lift_exit\nend\n\nchoice 18\nrename security_lift_exit:Level 18\nstate 3 security_lift_exit\nend\n\nchoice 25\nrename security_lift_exit:Level 25\nstate 4 security_lift_exit\nend\n\nchoice roof\nrename security_lift_exit:Roof\nstate 5 security_lift_exit\nend\n"
+                         "value":"terminal>:Where to go?\n\nchoose Cancel:cancel;B3:b3;B2:b2;B1:b1;18:18;25:25;Roof:roof\n\nchoice cancel\nend\n\nchoice b3\n#choice b3,b3_unlocked\nrename security_lift_exit:Level B3\nstate 0 security_lift_exit\nend\n\nchoice b3\nterminal>:Floor access denied\\Contact the control room\\at level 18\n\nchoice b2\nrename security_lift_exit:Level B2\nstate 1 security_lift_exit\nend\n\nchoice b1\nrename security_lift_exit:Level B1\nstate 2 security_lift_exit\nend\n\nchoice 18\nrename security_lift_exit:Level 18\nstate 3 security_lift_exit\nend\n\nchoice 25\nrename security_lift_exit:Level 25\nstate 4 security_lift_exit\nend\n\nchoice roof\nrename security_lift_exit:Roof\nstate 5 security_lift_exit\nend\n"
                         }, 
                         {
                          "name":"title",

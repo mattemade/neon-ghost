@@ -2,18 +2,14 @@ package io.itch.mattemade.neonghost
 
 import com.littlekt.Context
 import com.littlekt.ContextListener
-import com.littlekt.file.createFloatBuffer
 import com.littlekt.graph.node.resource.HAlign
 import com.littlekt.graphics.Camera
 import com.littlekt.graphics.Color
 import com.littlekt.graphics.Fonts
-import com.littlekt.graphics.GL
 import com.littlekt.graphics.MutableColor
-import com.littlekt.graphics.Textures
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.gl.BlendFactor
 import com.littlekt.graphics.gl.ClearBufferMask
-import com.littlekt.graphics.gl.GlVertexArray
 import com.littlekt.graphics.gl.State
 import com.littlekt.graphics.shader.ShaderProgram
 import com.littlekt.graphics.toFloatBits
@@ -32,13 +28,11 @@ import io.itch.mattemade.neonghost.shader.CabinetFragmentShader
 import io.itch.mattemade.neonghost.shader.CabinetVertexShader
 import io.itch.mattemade.neonghost.shader.ParticleFragmentShader
 import io.itch.mattemade.neonghost.shader.ParticleVertexShader
-import io.itch.mattemade.neonghost.shader.Particler
 import io.itch.mattemade.neonghost.shader.TestFragmentShader
 import io.itch.mattemade.neonghost.shader.TestVertexShader
 import io.itch.mattemade.neonghost.shader.createCabinetShader
 import io.itch.mattemade.neonghost.shader.createParticleShader
 import io.itch.mattemade.neonghost.shader.createTestShader
-import io.itch.mattemade.neonghost.shader.representation.BoundableBuffer
 import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
@@ -98,13 +92,13 @@ class Game(
 
     private var savedState: SavedState? = savedStateOverride
     private var previousRoomName: String? = null
-    private fun openDoor(door: String, toRoom: String, playerHealth: Int, isMagic: Boolean) {
+    private fun openDoor(door: String, toRoom: String, playerHealth: Int, isMagic: Boolean, deaths: Int) {
         previousRoomName?.let { previousRoomName ->
-            saveGame(door, previousRoomName, playerHealth, isMagic)
+            saveGame(door, previousRoomName, playerHealth, isMagic, deaths)
         }
         previousRoomName = toRoom
         assets.level.levels[toRoom]?.let { level ->
-            startGameFromLevel(level, door, playerHealth, isMagic)
+            startGameFromLevel(level, door, playerHealth, isMagic, deaths)
         } ?: error("no such level found $toRoom")
     }
 
@@ -112,7 +106,8 @@ class Game(
         level: LevelSpec,
         wentThrough: String?,
         playerHealth: Int,
-        isMagic: Boolean
+        isMagic: Boolean,
+        deaths: Int,
     ) {
         inGame = InGame(
             context,
@@ -125,6 +120,7 @@ class Game(
             eventState,
             playerKnowledge,
             interactionOverride,
+            deaths = deaths,
             onGameOver = ::loadGame,
             goThroughDoor = ::openDoor,
             wentThroughDoor = wentThrough,
@@ -133,7 +129,8 @@ class Game(
                     wentThrough!!,
                     previousRoomName!!,
                     savedState!!.playerHealth,
-                    savedState!!.isMagic
+                    savedState!!.isMagic,
+                    savedState!!.deaths
                 )
             },
             loadState = {
@@ -144,7 +141,7 @@ class Game(
         )
     }
 
-    private fun saveGame(door: String, room: String, playerHealth: Int, isMagic: Boolean) {
+    private fun saveGame(door: String, room: String, playerHealth: Int, isMagic: Boolean, deaths: Int = 0) {
         savedState = SavedState(
             door = door,
             room = room,
@@ -152,9 +149,10 @@ class Game(
             playerKnowledge = mutableSetOf<String>().apply { addAll(playerKnowledge) },
             interactionOverride = mutableMapOf<String, String>().apply { putAll(interactionOverride) },
             ghostActive = ghostOverlay.isActive,
-            playerHealth = playerHealth,
+            playerHealth = Player.maxPlayerHealth,//playerHealth,
             isMagic = isMagic,
-            activeMusic = choreographer.currentlyPlayingTrack?.name
+            activeMusic = choreographer.currentlyPlayingTrack?.name,
+            deaths = deaths,
         )
     }
 
@@ -172,7 +170,7 @@ class Game(
                 choreographer.play(assets.music.concurrentTracks[activeMusic]!!)
             }
             previousRoomName = it.room
-            openDoor(it.door, it.room, it.playerHealth, it.isMagic)
+            openDoor(it.door, it.room, it.playerHealth, it.isMagic, it.deaths + 1)
         } ?: resetGame()
     }
 
@@ -183,7 +181,7 @@ class Game(
         ghostOverlay.isActive = false
         ghostOverlay.isMoving = false
         previousRoomName = "boxing_club"
-        openDoor("player", "boxing_club", Player.maxPlayerHealth, false)
+        openDoor("player", "boxing_club", Player.maxPlayerHealth, false, 0)
 
         /*        choreographer.play(assets.music.concurrentTracks["magical girl 3d"]!!)
                 eventState["officer_catch"] = 1
@@ -416,6 +414,7 @@ class Game(
         val playerHealth: Int,
         val isMagic: Boolean,
         val activeMusic: String?,
+        val deaths: Int = 0
     )
 
     companion object {

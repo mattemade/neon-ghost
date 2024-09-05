@@ -48,12 +48,12 @@ class Textures(context: Context, private val packer: RuntimeTextureAtlasPacker) 
     val white by "texture/misc/white.png".pack()
     val fontWhite by "texture/dialogue/font_white.png".pack()
     val portraits by preparePlain {
-        listOf("rei", "terminal", "punk", "magic", "guard").associateWith {
+        listOf("rei", "terminal", "punk", "magic", "guard", "officer", "ghost").associateWith {
             packer.pack("texture/portrait/$it.png").await()
         }
     }
     val objects by preparePlain {
-        listOf("terminal").associateWith {
+        listOf("terminal", "machine", "plant").associateWith {
             packer.pack("texture/object/$it.png").await()
         }
     }
@@ -167,6 +167,74 @@ class Sound(context: Context) : AssetPack(context) {
                 "sound/Powerup/Slow-mo.wav",
             )
         )
+    }
+
+
+
+    private fun String.wavName(): String = this.substringAfterLast("/").substringBefore(".wav")
+    val concurrentClips = ConcurrentMutableMap<String, AudioClipEx>()
+
+    private val preparations = listOf(
+        "got",
+        "289",
+        "291",
+        "295",
+        "297",
+        "299",
+        "300",
+        "301",
+        "303",
+        "306",
+        "307",
+        "310",
+        "311",
+        "314",
+        "317",
+        "319",
+        "320",
+        "323",
+        "339",
+        "342",
+        "343",
+        "347",
+        "348",
+        "358",
+        "364",
+        "366",
+        "367",
+        "369",
+        "370",
+        "371",
+        "379",
+        "381",
+        "383",
+        "385",
+        "386",
+        "387",
+        "390",
+        "433",
+        "438",
+        "441",
+        "445",
+        "455",
+        "456",
+        "457",
+        "459",
+        "460",
+        "463",
+        "468",
+        "470",
+        "471",
+        "473",
+        "507",
+        "509",
+    ).map{ "sound/Misc/$it.wav" }.forEach {
+        val name = it.wavName()
+        prepare {
+            val clip = context.resourcesVfs[it].readAudioClipEx()
+            concurrentClips[name] = clip
+            clip
+        }
     }
 }
 
@@ -327,6 +395,14 @@ class Animations(
             context,
             runtimeTextureAtlasPacker,
             "officer",
+            callback
+        )
+    }
+    val dummyAnimations by pack {
+        CharacterAnimations(
+            context,
+            runtimeTextureAtlasPacker,
+            "dummy",
             callback
         )
     }

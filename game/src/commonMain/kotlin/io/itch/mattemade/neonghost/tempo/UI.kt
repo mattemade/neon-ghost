@@ -61,14 +61,21 @@ class UI(
         fontVerticalSpacing = 0,
         fontHorizontalPadding = 1,
     )
+    private var shouldPlaySpeechSound = false
+    private var speechSoundStarted = false
     private val delayedTextDrawer = DelayedTextDrawer(
         textDrawer
     ) { c, last ->
         if (last) {
+            shouldPlaySpeechSound = false
             256f
-        } else when (c) {
-            ' ' -> 96f
-            else -> 64f
+        } else {
+            shouldPlaySpeechSound = true
+            when (c) {
+                ' ' -> 48f
+                ',' -> 128f
+                else -> 32f
+            }
         }
     }
     private val center = Vec2f(16f, 16f)
@@ -91,6 +98,7 @@ class UI(
     private var activePortrait: String? = null
     private var isPortraitLeft: Boolean = false
     private var activeLines: List<String>? = null
+    private var shouldSkipSound = true
 
     private var availableInteractionName: List<String>? = null
     var availableInteraction: Trigger? = null
@@ -263,6 +271,18 @@ class UI(
         }
 
         batch.end()
+
+        playSpeechSoundIfNeeded()
+    }
+
+    private fun playSpeechSoundIfNeeded() {
+        if (!shouldSkipSound && shouldPlaySpeechSound && !speechSoundStarted) {
+            speechSoundStarted = true
+            choreographer.uiSound(assets.sound.speech1, volume = 4f) {
+                speechSoundStarted = false
+                playSpeechSoundIfNeeded()
+            }
+        }
     }
 
     private fun renderProgressbar(
@@ -307,7 +327,7 @@ class UI(
         }
     }
 
-    fun showDialogLine(portrait: String, isLeft: Boolean, text: String) {
+    fun showDialogLine(portrait: String, isLeft: Boolean, text: String, skipSpeech: Boolean = false) {
         if (portrait == "rei" && isMagic()) {
             activePortrait = "magic"
         } else {
@@ -315,6 +335,7 @@ class UI(
         }
         isPortraitLeft = isLeft
         activeLines = text.uppercase().split("\\")
+        shouldSkipSound = skipSpeech
 
     }
 
@@ -353,6 +374,7 @@ class UI(
                     choreographer.uiSound(assets.sound.click.sound, volume = 0.5f)
                     advanceDialogue()
                 } else {
+                    shouldPlaySpeechSound = false
                     delayedTextDrawer.advance()
                 }
                 return

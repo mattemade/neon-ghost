@@ -29,6 +29,7 @@ import io.itch.mattemade.neonghost.LevelSpec
 import io.itch.mattemade.neonghost.character.DepthBasedRenderable
 import io.itch.mattemade.neonghost.character.VisibleObject
 import io.itch.mattemade.neonghost.character.enemy.Enemy
+import io.itch.mattemade.neonghost.character.enemy.EnemyAi
 import io.itch.mattemade.neonghost.character.rei.NeonGhost
 import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.event.EventExecutor
@@ -64,12 +65,13 @@ class InGame(
     private val playerKnowledge: MutableSet<String>,
     private val interactionOverride: MutableMap<String, String>,
     private val onGameOver: () -> Unit,
-    private val goThroughDoor: (door: String, toRoom: String, playerHealth: Int, isMagic: Boolean) -> Unit,
+    private val goThroughDoor: (door: String, toRoom: String, playerHealth: Int, isMagic: Boolean, deaths: Int) -> Unit,
     private val wentThroughDoor: String? = null,
     private val saveState: () -> Unit,
     private val loadState: () -> Unit,
     private val playerHealth: Int,
-    private val isMagic: Boolean
+    private val isMagic: Boolean,
+    private val deaths: Int,
 ) : Releasing by Self() {
 
     private val level = levelSpec.level
@@ -103,6 +105,7 @@ class InGame(
     private val foregroundLayer = tiledLayers.first { it.name == "foreground" }
     private var notAdjustedTime = 0f
     private var notAdjustedDt: Duration = Duration.ZERO
+    private val tempColor = MutableColor()
 
     private val ui by lazy {
         UI(
@@ -141,9 +144,11 @@ class InGame(
             playerKnowledge::remove,
             onTeleport = ::openDoor,
             onMusic = ::musicCommand,
+            onSound = ::soundCommand,
             onScreen = ::screenCommand,
             onSave = saveState,
             wait = ::wait,
+            onClearQueue = ::clearQueue
         )
     }
 
@@ -155,7 +160,7 @@ class InGame(
             ui.setFadeWorld(1f - it)
         }, {
             ui.setFadeWorld(0f)
-            goThroughDoor(door, toRoom, player.health, player.isMagicGirl)
+            goThroughDoor(door, toRoom, player.health, player.isMagicGirl, deaths)
         }))
     }
 
@@ -178,23 +183,38 @@ class InGame(
         timedActions += TimedAction(time, {}, eventExecutor::advance)
     }
 
+    private fun clearQueue() {
+        timedActions.clear()
+    }
+
     private fun musicCommand(command: String) {
-        println("music command: $command")
         when (command) {
             else -> assets.music.concurrentTracks[command]?.let {
                 choreographer.play(it)
             }
         }
     }
+    private fun soundCommand(command: String, volume: Float): Int {
+        return when (command) {
+            else -> assets.sound.concurrentClips[command]?.let {
+                choreographer.uiSound(it, volume = volume)
+            }
+        } ?: -1
+    }
 
-    private fun screenCommand(command: String) {
+    private fun screenCommand(command: String, delay: Float?) {
         when (command) {
-            "fadeOut" -> scheduleFadeOut()
-            "fadeIn" -> scheduleFadeIn()
-            "slowFadeIn" -> scheduleFadeIn(maxValue = 0.8f, length = 1f) { eventExecutor.advance() }
+            "fadeOut" -> scheduleFadeOut(length = delay ?: 0.5f) { eventExecutor.advance() }
+            "fadeIn" -> scheduleFadeIn(length = delay ?: 0.5f) { eventExecutor.advance()}
+            "splashOut" -> scheduleFadeOut(colorComponent = 1f, length = delay ?: 0.1f) { eventExecutor.advance()}
+            "splashIn" -> {
+                scheduleFadeIn(colorComponent = 1f, length = delay ?: 2f)
+                eventExecutor.advance()
+            }
+            "slowFadeIn" -> scheduleFadeIn(maxValue = 0.8f, length = delay ?: 1f) { eventExecutor.advance() }
             "slowFadeOut" -> scheduleFadeOut(
                 maxValue = 0.8f,
-                length = 1f
+                length = delay ?: 1f
             ) { eventExecutor.advance() }
         }
     }
@@ -246,10 +266,18 @@ class InGame(
             castAoe = ::castAoe,
             castProjectile = ::castProjectile,
             spawnParticles = ::spawnParticles,
-            canPunch = ::canPunch
+            canPunch = ::canPunch,
+            updateEnemyAi = ::updateEnemyAi,
+            resetEnemyAi = ::resetEnemyAi,
         )
     }
     private fun canPunch(): Boolean = enemies.isNotEmpty() || ui.availableInteraction == null
+    private fun updateEnemyAi() {
+        enemyAi.update()
+    }
+    private fun resetEnemyAi() {
+        enemyAi.update()
+    }
 
     private var neonGhost: NeonGhost? = null
     private var addNeonGhostToList = false
@@ -348,6 +376,9 @@ class InGame(
     private val enemies = mutableListOf<Enemy>()
     private val staticEnemies = mutableListOf<Enemy>()
     private val deadEnemies = mutableListOf<Enemy>()
+    private val enemyAi by lazy {
+        EnemyAi(player, enemies)
+    }
 
     private val cameraMan by lazy {
         val tempVec2 = Vec2(
@@ -411,6 +442,11 @@ class InGame(
 
             "slower" -> {
                 choreographer.setPlaybackRate(choreographer.playbackRate.toFloat() - 0.25f)
+                eventExecutor.advance()
+            }
+
+            "heal" -> {
+                player.health = Player.maxPlayerHealth
                 eventExecutor.advance()
             }
 
@@ -533,10 +569,10 @@ class InGame(
         overrideX: Float? = null,
         overrideY: Float? = null,
     ): Enemy {
-        if (!choreographer.isActive) {
+        /*if (!choreographer.isActive) {
             // starting fight, but there is no music - should be fixed ASAP
             choreographer.play(assets.music.concurrentTracks["magical girl 3d"]!!)
-        }
+        }*/
 
         val offsetX =
             if (enemySpec.fromLeft) -Game.visibleWorldWidth / 2f - 0.5f else Game.visibleWorldWidth / 2f + 0.5f
@@ -563,6 +599,14 @@ class InGame(
         if (overrideX != null || overrideY != null) {
             staticEnemies.add(enemy)
         } else {
+            if (staticEnemies.isNotEmpty()) {
+                staticEnemies.forEach {
+                    enemies.add(it)
+                    ui.showHealth(it)
+                    it.isAggressive = true
+                }
+                staticEnemies.clear()
+            }
             enemies.add(enemy)
             ui.showHealth(enemy)
             enemy.isAggressive = true
@@ -585,7 +629,6 @@ class InGame(
 
     private fun gameOver() {
         scheduleGameOver()
-
     }
 
     private var time = 0f
@@ -648,17 +691,19 @@ class InGame(
     private fun scheduleFadeIn(
         maxValue: Float = 1f,
         length: Float = 0.5f,
+        colorComponent: Float = 0f,
         post: (() -> Unit)? = null
     ) {
+        tempColor.set(colorComponent, colorComponent, colorComponent, 0f)
         if (eventState.isEmpty()) {
-            ui.setFadeEverythingColor(Color.BLACK)
+            ui.setFadeEverythingColor(tempColor)
             ui.setFadeEverything(maxValue)
             timedActions += TimedAction(length, { ui.setFadeEverything(maxValue * it) }, {
                 ui.setFadeEverything(0f)
                 post?.invoke()
             })
         } else {
-            ui.setFadeWorldColor(Color.BLACK)
+            ui.setFadeWorldColor(tempColor)
             ui.setFadeWorld(maxValue)
             timedActions += TimedAction(length, { ui.setFadeWorld(maxValue * it) }) {
                 ui.setFadeWorld(0f)
@@ -670,9 +715,11 @@ class InGame(
     private fun scheduleFadeOut(
         maxValue: Float = 1f,
         length: Float = 0.5f,
+        colorComponent: Float = 0f,
         post: (() -> Unit)? = null
     ) {
-        ui.setFadeWorldColor(Color.BLACK)
+        tempColor.set(colorComponent, colorComponent, colorComponent, 0f)
+        ui.setFadeWorldColor(tempColor)
         ui.setFadeWorld(0f)
         timedActions += TimedAction(length, { ui.setFadeWorld(maxValue * (1f - it)) }) {
             ui.setFadeWorld(maxValue)
@@ -928,10 +975,20 @@ class InGame(
         ghostFromPowerPlant?.render(batch)
     }
 
+    private var gameOverTimer = 2f
     fun updateAndRender(dt: Duration, notAdjustedDt: Duration) {
         this.notAdjustedDt = notAdjustedDt
         worldRender.render(dt)
         uiRenderer.render(dt)
+        if (player.health <= 0 && dt.seconds <= 0.01f) {
+            if (gameOverTimer > 0f) {
+                gameOverTimer -= notAdjustedDt.seconds
+                if (gameOverTimer <= 0f) {
+                    choreographer.play(assets.music.concurrentTracks["stop"]!!)
+                    onGameOver()
+                }
+            }
+        }
     }
 
     fun onAnimationEvent(event: String) {

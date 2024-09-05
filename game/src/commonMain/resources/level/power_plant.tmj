@@ -41,11 +41,11 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 175, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 180, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 185, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 187, 188, 189, 190, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 192, 193, 194, 195, 0, 0, 0, 0, 0,
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -62,8 +62,8 @@
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 152, 153, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 162, 163, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -79,11 +79,11 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 172, 173, 174, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 177, 178, 179, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 137, 182, 183, 184, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 142, 143, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 147, 148, 0, 0, 0, 0, 0, 0, 0, 0,
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -114,15 +114,15 @@
                  "y":144
                 }, 
                 {
-                 "height":48,
+                 "height":26,
                  "id":39,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":64,
+                 "width":62.25,
                  "x":353.666666666667,
-                 "y":141.333333333333
+                 "y":163.333333333333
                 }, 
                 {
                  "height":70.6666666666667,
@@ -174,8 +174,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":137.5,
-                 "x":438.5,
+                 "width":122.166666666667,
+                 "x":453.833333333333,
                  "y":144
                 }, 
                 {
@@ -184,6 +184,11 @@
                  "name":"security_lift_exit",
                  "properties":[
                         {
+                         "name":"0",
+                         "type":"string",
+                         "value":"music stop"
+                        }, 
+                        {
                          "name":"type",
                          "type":"string",
                          "value":"trigger"
@@ -191,8 +196,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":133.454545454545,
-                 "x":442.545454545455,
+                 "width":122.121212121212,
+                 "x":453.878787878788,
                  "y":144
                 }, 
                 {
@@ -203,7 +208,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:Hello, I am power plant terminal\nchoose activate ghost:ghost;exit:exit\nchoice exit\nend\nchoice ghost\nstop\nscreen slowFadeOut\nwait 2\nrei<:What is going on?\nstop\ncamera power_plant\nwait 2\nremember ghost\ntrigger launchGhost\nwait 6\ncamera follow\nrei<:Whaaaat?\nstop\nscreen slowFadeIn\nterminal<:RESERVE GENERATOR: ON\n"
+                         "value":"terminal<:Life support system: ON\\Main power plant: ON\\Reserve generator: OFF\n\nchoose Turn off life support:ghost;Leave:exit\nchoice exit\nend\n\nchoice ghost\nterminal<: Life support system: OFF\nstop\nscreen slowFadeOut\nwait 2\nrei>:What is going on?\nstop\ncamera power_plant\nwait 2\nremember ghost\ntrigger launchGhost\nwait 6\nghost<: Aaaahh!\nvoice 289\nghost<: Was it you who came to my call?\\Thank you so much!\\I thought it will never end...\nrei>: Whoaah!\nvoice 291\nghost<:You look like you've seen a ghost!\\Normally I shouldn't say that,\\but I am Magical Girl Mirai,\\nice to meet you!\nrei>: ...\nrei>: I'm just... Surprised\nrei>: Nice to meet you, Mirai,\\I'm Rei\n\nstop\ncamera follow\nscreen slowFadeIn\nterminal<:Life support system: OFF\\Main power plant:OFF\\Reserve generator: ON\n\nvoice 295\nghost<: What is going on here?\\I feel the fear in you,\\but that's not a fear of me...\nrei>:Well... Five minutes ago\\a brainwashing machine was\\supposed to turn me into a plant,\\and now I've met... You\nvoice 297\nghost<:Are you the only one here?\\Let me try to call my friends\\for help...\n#<Mirai sends the signal>\nvoice 299\nghost<:.......\\.......\\They don't respond...\nvoice 300\nghost<:But I can feel them...\\suffering...\\Poor souls...\nvoice 301\nghost<:You are the only\\magical girl around\\who responded to my call\nrei>:I am what?!\\So it is true that\\I have some magical power?\nvoice 303\nghost<:Well, if you can hear and\\see me being a magical beign,\\you can be sure\nrei>:...\nrei>:And how can I...\\use it?\nvoice 306\nghost<:You have to allow\\the magic to go\\through your body\nvoice 307\nghost<:Recall the feeling when\\your dream comes true,\\and try to focus on it\nrei>:...\nrei>:I don't recall\\such a feeling...\nvoice 310\nghost<:Oh, poor soul...\\We've all met a terrible\\fate, haven't we?\nvoice 311\nghost<:Maybe you have a dream that\\you can imagine coming true?\\I've heard that worked before\nrei>:Hmmm...\nrei>:I wish I could see\\the stars... But I can't\\imagine that, I've never\\seen them before\nvoice 314\nghost<:Wow, that should be easy!\\Let's go to the roof right now,\\I can feel the moon shining!\nrei>:Uh, you better see\\that yourself\nrei>:As a ghost, can you\\go through the wall\\to see outside?\nvoice 317\nghost<:I am not a ghost!\\I am a magical girl,\\just without a body\nrei>:Well, that's what I\\would call a ghost...\nvoice 319\nghost<:And it looks like\\my magical powers\\are holding onto you\nvoice 320\nghost<:So I will vanish\\the moment I leave you...\nrei>:...\nrei>:But you can be with me\\if I go there, right?\nvoice 313\nghost<:I think so\nrei>:Let's go, I'll show\\you the roof...\n\n"
                         }, 
                         {
                          "name":"title",
@@ -232,6 +237,38 @@
                  "width":159.333333333333,
                  "x":200.666666666667,
                  "y":0
+                }, 
+                {
+                 "height":87.6666666666667,
+                 "id":44,
+                 "name":"power_plant_interaction",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"camera power_plant\nrei<:Is that the famous\\fusion reactor?\nrei<:I thought it\\should be bigger\ncamera follow"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"rei>:It is turned off now"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Check"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":159.250333333333,
+                 "x":196.374833333333,
+                 "y":142.166666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -243,7 +280,29 @@
          "draworder":"topdown",
          "id":7,
          "name":"spawn",
-         "objects":[],
+         "objects":[
+                {
+                 "height":68.6666666666667,
+                 "id":42,
+                 "name":"plant",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":140.666666666667,
+                 "x":209.666666666667,
+                 "y":145
+                }, 
+                {
+                 "height":27,
+                 "id":43,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":63.25,
+                 "x":353.25,
+                 "y":162.25
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -251,7 +310,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":42,
+ "nextobjectid":45,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

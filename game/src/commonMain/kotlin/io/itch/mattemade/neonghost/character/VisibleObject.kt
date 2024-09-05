@@ -42,10 +42,10 @@ class VisibleObject(
     DepthBasedRenderable {
 
     private val width = slice.width * Game.IPPU
-    private val height = slice.width * Game.IPPU
+    private val height = slice.height * Game.IPPU
     private val texturePosition = Vec2f(
-        position.x - width / 2f,
-        position.y - height
+        (position.x - width / 2f).pixelPerfectPosition,
+        (position.y - height).pixelPerfectPosition
     )
 
     override fun update(dt: Duration, millis: Float, notAdjustedDt: Duration, toBeat: Float, toMeasure: Float, isFighting: Boolean) {

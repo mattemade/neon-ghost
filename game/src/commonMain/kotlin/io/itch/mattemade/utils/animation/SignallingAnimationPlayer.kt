@@ -1,5 +1,6 @@
 package io.itch.mattemade.utils.animation
 
+import com.littlekt.graphics.g2d.AnimationPlayer
 import com.littlekt.graphics.g2d.TextureSlice
 import kotlin.time.Duration
 
@@ -72,6 +73,13 @@ class SignallingAnimationPlayer(
         get() = precalculatedCurrentKeyFrame
 
     fun copy(): SignallingAnimationPlayer =
-        SignallingAnimationPlayer(animationPlayerSequence, animationPlayerFrames, signals, callback)
+        SignallingAnimationPlayer(animationPlayerSequence.map {
+            AnimationPlayerSpec(
+                player = AnimationPlayer(),
+                animation = it.animation,
+                limitRepeats = it.limitRepeats,
+                duration = it.duration,
+            )
+        }, animationPlayerFrames, signals, callback)
 
 }
