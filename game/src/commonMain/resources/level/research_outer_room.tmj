@@ -64,9 +64,9 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":14,
          "id":1,
          "name":"floor",
@@ -86,9 +86,9 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            85, 80, 81, 82, 83, 85, 170, 171, 172, 83, 84, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            97, 92, 93, 94, 95, 97, 173, 174, 175, 95, 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            109, 104, 105, 106, 107, 109, 176, 177, 178, 107, 108, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            96, 91, 92, 93, 94, 96, 181, 182, 183, 94, 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            108, 103, 104, 105, 106, 108, 184, 185, 186, 106, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            120, 115, 116, 117, 118, 120, 187, 188, 189, 118, 119, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -113,8 +113,8 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 141, 142, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 151, 152, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":14,
@@ -164,9 +164,9 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 161, 162, 163, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 164, 165, 166, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 167, 168, 169, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            0, 0, 0, 0, 0, 0, 0, 172, 173, 174, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 175, 176, 177, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 178, 179, 180, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":14,
          "id":10,
          "name":"foreground",
@@ -194,15 +194,15 @@
                  "y":528
                 }, 
                 {
-                 "height":44.25,
+                 "height":19.5,
                  "id":67,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":73,
-                 "x":205,
-                 "y":528
+                 "width":47.75,
+                 "x":217.25,
+                 "y":547.25
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -223,7 +223,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"rename main_lift_exit:Level 25\nteleport main_lift"
+                         "value":"rename main_lift_exit:Level 25\nstate 2 main_lift_exit\nteleport main_lift"
                         }, 
                         {
                          "name":"title",
@@ -270,14 +270,14 @@
                  "y":624
                 }, 
                 {
-                 "height":55.3333333333334,
+                 "height":34.8333333333334,
                  "id":64,
                  "name":"red_door_terminal",
                  "properties":[
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal>:High security doors: locked\n\nchoose Leave:leave;Unlock:unlock\n\nchoice leave\nend\n\nchoice unlock\nstate 1\nstate 1 red_door\nstate 1 red_door_1\nstate 1 red_door_2\nstate 1 red_door_3\nstate 1 red_door_4\nstate 1 red_door_5\nstate 1 corridor_punks_fight\nstate 1 lobby_punks_fight\nterminal>:Red doors: unlocked"
+                         "value":"terminal>:Contact the control room\\at level 18 for access\n"
                         }, 
                         {
                          "name":"1",
@@ -297,9 +297,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":101.333333333333,
-                 "x":192,
-                 "y":528
+                 "width":59.333333333333,
+                 "x":216.75,
+                 "y":547.25
                 }, 
                 {
                  "height":48,
@@ -360,7 +360,18 @@
          "draworder":"topdown",
          "id":7,
          "name":"spawn",
-         "objects":[],
+         "objects":[
+                {
+                 "height":48,
+                 "id":69,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":216.75,
+                 "y":529
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -368,7 +379,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":69,
+ "nextobjectid":70,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -379,43 +390,43 @@
          "source":"Outside-Wall 48_48.tsj"
         }, 
         {
-         "firstgid":36,
+         "firstgid":46,
          "source":"Outside-Light 150_150.tsj"
         }, 
         {
-         "firstgid":39,
+         "firstgid":49,
          "source":"Outside-Window 48_48.tsj"
         }, 
         {
-         "firstgid":67,
+         "firstgid":77,
          "source":"terminal_tile.tsj"
         }, 
         {
-         "firstgid":68,
+         "firstgid":78,
          "source":"abstract.tsj"
         }, 
         {
-         "firstgid":78,
+         "firstgid":89,
          "source":"tilesets\/0_Asset_Floor_4848.tsj"
         }, 
         {
-         "firstgid":80,
+         "firstgid":91,
          "source":"tilesets\/0_Asset_Wall_144144.tsj"
         }, 
         {
-         "firstgid":116,
+         "firstgid":127,
          "source":"tilesets\/0_Asset_Chair_240240.tsj"
         }, 
         {
-         "firstgid":141,
+         "firstgid":152,
          "source":"tilesets\/0_Asset_Control_9696.tsj"
         }, 
         {
-         "firstgid":161,
+         "firstgid":172,
          "source":"tilesets\/door_transparent.tsj"
         }, 
         {
-         "firstgid":170,
+         "firstgid":181,
          "source":"tilesets\/red_door.tsj"
         }],
  "tilewidth":48,

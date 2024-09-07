@@ -70,7 +70,6 @@ class GhostOverlay(
     private var ghostAppear: GhostAppear? = null
 
     fun appear() {
-        println("appearing")
         isActive = true
         ghostAppear = GhostAppear(
             context,
@@ -78,7 +77,6 @@ class GhostOverlay(
             inputMapController,
             shaderProgram,
             complete = {
-                println("appearing complete")
                 isMoving = true
                 fadingAppearance = 1f
                 ghostAppear = null

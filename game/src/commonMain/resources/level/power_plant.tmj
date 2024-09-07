@@ -121,8 +121,8 @@
                  "type":"",
                  "visible":true,
                  "width":62.25,
-                 "x":353.666666666667,
-                 "y":163.333333333333
+                 "x":95.666666666667,
+                 "y":172.333333333333
                 }, 
                 {
                  "height":70.6666666666667,
@@ -148,38 +148,6 @@
          "objects":[
                 {
                  "height":48,
-                 "id":30,
-                 "name":"security_lift_enter",
-                 "properties":[
-                        {
-                         "name":"0",
-                         "type":"string",
-                         "value":"lift>:How did you get there\nstate 1\n"
-                        }, 
-                        {
-                         "name":"1",
-                         "type":"string",
-                         "value":"rename security_lift_exit:Level B3\nstate 0 security_lift_exit\nteleport security_lift"
-                        }, 
-                        {
-                         "name":"title",
-                         "type":"string",
-                         "value":"security lift"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"interaction"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":122.166666666667,
-                 "x":453.833333333333,
-                 "y":144
-                }, 
-                {
-                 "height":48,
                  "id":35,
                  "name":"security_lift_exit",
                  "properties":[
@@ -201,14 +169,19 @@
                  "y":144
                 }, 
                 {
-                 "height":53,
+                 "height":45.3333333333334,
                  "id":38,
                  "name":"power_plant_terminal",
                  "properties":[
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:Life support system: ON\\Main power plant: ON\\Reserve generator: OFF\n\nchoose Turn off life support:ghost;Leave:exit\nchoice exit\nend\n\nchoice ghost\nterminal<: Life support system: OFF\nstop\nscreen slowFadeOut\nwait 2\nrei>:What is going on?\nstop\ncamera power_plant\nwait 2\nremember ghost\ntrigger launchGhost\nwait 6\nghost<: Aaaahh!\nvoice 289\nghost<: Was it you who came to my call?\\Thank you so much!\\I thought it will never end...\nrei>: Whoaah!\nvoice 291\nghost<:You look like you've seen a ghost!\\Normally I shouldn't say that,\\but I am Magical Girl Mirai,\\nice to meet you!\nrei>: ...\nrei>: I'm just... Surprised\nrei>: Nice to meet you, Mirai,\\I'm Rei\n\nstop\ncamera follow\nscreen slowFadeIn\nterminal<:Life support system: OFF\\Main power plant:OFF\\Reserve generator: ON\n\nvoice 295\nghost<: What is going on here?\\I feel the fear in you,\\but that's not a fear of me...\nrei>:Well... Five minutes ago\\a brainwashing machine was\\supposed to turn me into a plant,\\and now I've met... You\nvoice 297\nghost<:Are you the only one here?\\Let me try to call my friends\\for help...\n#<Mirai sends the signal>\nvoice 299\nghost<:.......\\.......\\They don't respond...\nvoice 300\nghost<:But I can feel them...\\suffering...\\Poor souls...\nvoice 301\nghost<:You are the only\\magical girl around\\who responded to my call\nrei>:I am what?!\\So it is true that\\I have some magical power?\nvoice 303\nghost<:Well, if you can hear and\\see me being a magical beign,\\you can be sure\nrei>:...\nrei>:And how can I...\\use it?\nvoice 306\nghost<:You have to allow\\the magic to go\\through your body\nvoice 307\nghost<:Recall the feeling when\\your dream comes true,\\and try to focus on it\nrei>:...\nrei>:I don't recall\\such a feeling...\nvoice 310\nghost<:Oh, poor soul...\\We've all met a terrible\\fate, haven't we?\nvoice 311\nghost<:Maybe you have a dream that\\you can imagine coming true?\\I've heard that worked before\nrei>:Hmmm...\nrei>:I wish I could see\\the stars... But I can't\\imagine that, I've never\\seen them before\nvoice 314\nghost<:Wow, that should be easy!\\Let's go to the roof right now,\\I can feel the moon shining!\nrei>:Uh, you better see\\that yourself\nrei>:As a ghost, can you\\go through the wall\\to see outside?\nvoice 317\nghost<:I am not a ghost!\\I am a magical girl,\\just without a body\nrei>:Well, that's what I\\would call a ghost...\nvoice 319\nghost<:And it looks like\\my magical powers\\are holding onto you\nvoice 320\nghost<:So I will vanish\\the moment I leave you...\nrei>:...\nrei>:But you can be with me\\if I go there, right?\nvoice 313\nghost<:I think so\nrei>:Let's go, I'll show\\you the roof...\n\n"
+                         "value":"terminal<:Life support system: ON\\Main power plant: ON\\Reserve generator: OFF\n\nchoose Turn off life support:ghost;Leave:exit\nchoice exit\nend\n\nchoice ghost\nterminal<: Life support system: OFF\nstop\nscreen slowFadeOut\nwait 2\nrei>:What is going on?\nstop\ncamera power_plant\nwait 2\nremember ghost\ntrigger launchGhost\nwait 2\nvoice 288\nkeepPlaying 3\nwait 4\nghost<: Aaaahh!\nvoice 289\nghost<: Was it you who came to my call?\\Thank you so much!\\I thought it will never end...\nrei>: Whoaah!\nvoice 291\nghost<:You look like you've seen a ghost!\\Normally I shouldn't say that,\\but I am Magical Girl Mirai,\\nice to meet you!\nrei>: ...\nrei>: I'm just... Surprised\nrei>: Nice to meet you, Mirai,\\I'm Rei\n\nstop\ncamera follow\nscreen slowFadeIn\nterminal<:Life support system: OFF\\Main power plant:OFF\\Reserve generator: ON\n\nvoice 295\nghost<: What is going on here?\\I feel the fear in you,\\but that's not a fear of me...\nrei>:Well... Five minutes ago\\a brainwashing machine was\\supposed to turn me into a plant,\\and now I've met... You\nvoice 297\nghost<:Are you the only one here?\\Let me try to call my friends\\for help...\n#<Mirai sends the signal>\nvoice 299\nghost<:.......\\.......\\They don't respond...\nvoice 300\nghost<:But I can feel them...\\suffering...\\Poor souls...\nvoice 301\nghost<:You are the only\\magical girl around\\who responded to my call\nrei>:I am what?!\\So it is true that\\I have some magical power?\nvoice 303\nghost<:Well, if you can hear and\\see me being a magical beign,\\you can be sure\nrei>:...\nrei>:And how can I...\\use it?\nvoice 306\nghost<:You have to allow\\the magic to go\\through your body\nvoice 307\nghost<:Recall the feeling when\\your dream comes true,\\and try to focus on it\nrei>:...\nrei>:I don't recall\\such a feeling...\nvoice 310\nghost<:Oh, poor soul...\\We've all met a terrible\\fate, haven't we?\nvoice 311\nghost<:Maybe you have a dream that\\you can imagine coming true?\\I've heard that worked before\nrei>:Hmmm...\nrei>:I wish I could see\\the stars... But I can't\\imagine that, I've never\\seen them before\nvoice 314\nghost<:Wow, that should be easy!\\Let's go to the roof right now,\\I can feel the moon shining!\nrei>:Uh, you better see\\that yourself\nrei>:As a ghost, can you\\go through the wall\\to see outside?\nvoice 317\nghost<:I am not a ghost!\\I am a magical girl,\\just without a body\nrei>:Well, that's what I\\would call a ghost...\nvoice 319\nghost<:And it looks like\\my magical powers\\are holding onto you\nvoice 320\nghost<:So I will vanish\\the moment I leave you...\nrei>:...\nrei>:But you can be with me\\if I go there, right?\nvoice 323\nghost<:I think so\nrei>:Let's go, I'll show\\you the roof...\n\nstate 1\nstate 1 power_plant_interaction\nstate 0 roof_view\n"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"terminal<:Life support system: OFF\\Main power plant: OFF\\Reserve generator: ON"
                         }, 
                         {
                          "name":"title",
@@ -223,9 +196,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":89.5757575757576,
-                 "x":336,
-                 "y":144
+                 "width":67.9090909090909,
+                 "x":94.5,
+                 "y":171.833333333333
                 }, 
                 {
                  "height":213.333333333333,
@@ -239,14 +212,14 @@
                  "y":0
                 }, 
                 {
-                 "height":87.6666666666667,
+                 "height":120.166666666667,
                  "id":44,
                  "name":"power_plant_interaction",
                  "properties":[
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"camera power_plant\nrei<:Is that the famous\\fusion reactor?\nrei<:I thought it\\should be bigger\ncamera follow"
+                         "value":"camera power_plant\nrei<:Is that the famous\\fusion reactor?\nrei<:I thought it\\should be bigger\nvoice 7\nsomeone<:Kill... me...\nrei<:Why is that voice\\right in my head?!\ncamera follow"
                         }, 
                         {
                          "name":"1",
@@ -266,9 +239,46 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":159.250333333333,
-                 "x":196.374833333333,
-                 "y":142.166666666667
+                 "width":211.750333333333,
+                 "x":197.874833333333,
+                 "y":141.166666666667
+                }, 
+                {
+                 "height":48,
+                 "id":45,
+                 "name":"security_lift_enter",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"\nchoice card\nlift>:Card verification complete, access allowed\nstate 1\nrename security_lift_exit:Level B3\nstate 0 security_lift_exit\nteleport security_lift\nend\n\nchoice tools\nrei<:It needs a security card to open\nrei<:But I can hack it with my tools\nrei<:...\nlift>:Card verification complete, access allowed\nrei<:Success!\nremember lift_hacked\nstate 1\nrename security_lift_exit:Level B3\nstate 0 security_lift_exit\nteleport security_lift\nend\n\nchoice\nrei<:It needs a\\security card to open\n\nchoice no_tools\nrei<:I can hack it,\\but they took away all my tools\nchoice\n\nrei<:I have to look around\n"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"rename security_lift_exit:Level B3\nstate 0 security_lift_exit\nteleport security_lift"
+                        }, 
+                        {
+                         "name":"2",
+                         "type":"string",
+                         "value":"rei>:It is turned off"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"security lift"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":119.455,
+                 "x":454.939166666667,
+                 "y":144.666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -300,8 +310,8 @@
                  "type":"",
                  "visible":true,
                  "width":63.25,
-                 "x":353.25,
-                 "y":162.25
+                 "x":94.25,
+                 "y":170.75
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -310,7 +320,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":45,
+ "nextobjectid":46,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

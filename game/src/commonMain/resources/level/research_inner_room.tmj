@@ -57,16 +57,16 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0, 0,
-            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0, 0,
-            79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0, 0,
-            0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0, 0,
-            0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0, 0,
-            0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0, 0,
-            0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 79, 79, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 79, 79, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 79, 79, 79, 79, 79, 79, 0, 0, 0],
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0, 0,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0, 0,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0, 0,
+            0, 0, 0, 0, 0, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0, 0,
+            0, 0, 0, 0, 0, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0, 0,
+            0, 0, 0, 0, 0, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0, 0,
+            0, 0, 0, 0, 0, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 90, 90, 90, 90, 90, 90, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 90, 90, 90, 90, 90, 90, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 90, 90, 90, 90, 90, 90, 0, 0, 0],
          "height":14,
          "id":1,
          "name":"floor",
@@ -82,9 +82,9 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 80, 81, 82, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 92, 93, 94, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 104, 105, 106, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 91, 92, 93, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 103, 104, 105, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 115, 116, 117, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -131,11 +131,11 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            141, 142, 0, 141, 142, 0, 141, 142, 0, 141, 142, 0, 141, 142, 0, 0, 0, 0, 0, 0, 0,
-            151, 152, 0, 151, 152, 0, 151, 152, 0, 151, 152, 0, 151, 152, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 151, 152, 0, 151, 152, 0, 151, 152, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -159,11 +159,11 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 141, 142, 0, 141, 142, 0, 141, 142, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 179, 180, 181, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 182, 183, 184, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 185, 186, 187, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 190, 191, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 193, 194, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 196, 197, 198, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -182,94 +182,6 @@
          "id":2,
          "name":"walls",
          "objects":[
-                {
-                 "height":54,
-                 "id":72,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":96,
-                 "x":576,
-                 "y":330
-                }, 
-                {
-                 "height":61,
-                 "id":73,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":96,
-                 "x":576,
-                 "y":179
-                }, 
-                {
-                 "height":68.6666666666667,
-                 "id":74,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":96,
-                 "x":432,
-                 "y":171.333333333333
-                }, 
-                {
-                 "height":69.6666666666667,
-                 "id":75,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":96,
-                 "x":288,
-                 "y":170.333333333333
-                }, 
-                {
-                 "height":59,
-                 "id":76,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":96,
-                 "x":144,
-                 "y":181
-                }, 
-                {
-                 "height":55.3333333333333,
-                 "id":77,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":96,
-                 "x":0,
-                 "y":184.666666666667
-                }, 
-                {
-                 "height":55.6666666666667,
-                 "id":78,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":96,
-                 "x":288,
-                 "y":328.333333333333
-                }, 
-                {
-                 "height":53.6666666666666,
-                 "id":79,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":96,
-                 "x":432,
-                 "y":330.333333333333
-                }, 
                 {
                  "height":480,
                  "id":80,
@@ -302,6 +214,105 @@
                  "width":257.333333333333,
                  "x":-17.3333333333333,
                  "y":336
+                }, 
+                {
+                 "height":144,
+                 "id":84,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":144,
+                 "x":720,
+                 "y":192
+                }, 
+                {
+                 "height":17.25,
+                 "id":96,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48.75,
+                 "x":335.5,
+                 "y":213.5
+                }, 
+                {
+                 "height":17.25,
+                 "id":97,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":47.75,
+                 "x":480.5,
+                 "y":260.75
+                }, 
+                {
+                 "height":13.75,
+                 "id":98,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":47.25,
+                 "x":335.75,
+                 "y":307.75
+                }, 
+                {
+                 "height":15,
+                 "id":99,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48.25,
+                 "x":576.25,
+                 "y":357.25
+                }, 
+                {
+                 "height":16.5,
+                 "id":100,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":47.5,
+                 "x":623.5,
+                 "y":259.25
+                }, 
+                {
+                 "height":16.6666666666666,
+                 "id":101,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":47.3333333333333,
+                 "x":624,
+                 "y":548.666666666667
+                }, 
+                {
+                 "height":15,
+                 "id":102,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":50.6666666666667,
+                 "x":766.333333333333,
+                 "y":551.666666666667
+                }, 
+                {
+                 "height":16.25,
+                 "id":103,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48.25,
+                 "x":143.5,
+                 "y":262
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -323,43 +334,6 @@
                          "name":"type",
                          "type":"string",
                          "value":"trigger"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":144,
-                 "x":720,
-                 "y":336
-                }, 
-                {
-                 "height":48,
-                 "id":59,
-                 "name":"security_lift_enter",
-                 "properties":[
-                        {
-                         "name":"0",
-                         "type":"string",
-                         "value":"choice card\nlift>:Card verification complete, access allowed\nstate 1\nrename security_lift_exit:Level B1\nteleport security_lift\nend\nchoice tools\nrei<:It needs a security card to open\nrei<:But I can hack it with my tools\nrei<:...\nrei<:Success!\nstate 1\nrename security_lift_exit:Level B1\nteleport security_lift\nchoice\nrei<:It won't open without a security card\nrei<:I can hack it,\\but they took away all my tools\nrei<:I have to look around\nchoice radio\nstate 1 something_on_the_floor_2\nend\nchoice\nstate 1 something_on_the_floor_1\nstate 1 something_on_the_floor_2"
-                        }, 
-                        {
-                         "name":"1",
-                         "type":"string",
-                         "value":"rename security_lift_exit:Level 25\nstate 4 security_lift_exit\nteleport security_lift"
-                        }, 
-                        {
-                         "name":"3",
-                         "type":"string",
-                         "value":"lift>:Access denied\nrei<:I have to find another way around"
-                        }, 
-                        {
-                         "name":"title",
-                         "type":"string",
-                         "value":"security lift"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"interaction"
                         }],
                  "rotation":0,
                  "type":"",
@@ -401,15 +375,63 @@
                  "y":480
                 }, 
                 {
-                 "height":144,
-                 "id":69,
-                 "name":"",
+                 "height":48,
+                 "id":83,
+                 "name":"security_lift_enter",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"\nchoice card\nlift>:Card verification complete, access allowed\nstate 1\nrename security_lift_exit:Level 25\nstate 4 security_lift_exit\nteleport security_lift\nend\n\nchoice tools\nrei<:It needs a security card to open\nrei<:But I can hack it with my tools\nrei<:...\nlift>:Card verification complete, access allowed\nrei<:Success!\nremember lift_hacked\nstate 1\nrename security_lift_exit:Level 25\nstate 4 security_lift_exit\nteleport security_lift\nend\n\nchoice\nrei<:It needs a\\security card to open\n\nchoice no_tools\nrei<:I can hack it,\\but they took away all my tools\nchoice\n\nrei<:I have to look around\n"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"rename security_lift_exit:Level 25\nstate 4 security_lift_exit\nteleport security_lift"
+                        }, 
+                        {
+                         "name":"2",
+                         "type":"string",
+                         "value":"rei>:It is turned off"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"security lift"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":144,
-                 "x":672,
-                 "y":192
+                 "x":720,
+                 "y":336
+                }, 
+                {
+                 "height":192,
+                 "id":95,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"camera trigger:0.2\nguard<:What are you doint here?\\This is restricted area!\n\nfight guard<0.5\ncamera follow\nstate 1"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":288,
+                 "x":362.5,
+                 "y":177
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -421,7 +443,161 @@
          "draworder":"topdown",
          "id":7,
          "name":"spawn",
-         "objects":[],
+         "objects":[
+                {
+                 "height":48,
+                 "id":85,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":144,
+                 "y":240
+                }, 
+                {
+                 "height":48,
+                 "id":87,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":336,
+                 "y":192
+                }, 
+                {
+                 "height":48,
+                 "id":89,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":480,
+                 "y":240
+                }, 
+                {
+                 "height":48,
+                 "id":90,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":624,
+                 "y":240
+                }, 
+                {
+                 "height":48,
+                 "id":91,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":336,
+                 "y":288
+                }, 
+                {
+                 "height":48,
+                 "id":92,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":576,
+                 "y":336
+                }, 
+                {
+                 "height":48,
+                 "id":93,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":768,
+                 "y":528
+                }, 
+                {
+                 "height":48,
+                 "id":94,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":624,
+                 "y":528
+                }, 
+                {
+                 "height":38.9090909090909,
+                 "id":104,
+                 "name":"kkbjjdn",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57.6363636363637,
+                 "x":355.454545454545,
+                 "y":224.545454545455
+                }, 
+                {
+                 "height":38.9091,
+                 "id":105,
+                 "name":"kkbjjdn2",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57.6364,
+                 "x":495.848466666667,
+                 "y":267.212116666667
+                }, 
+                {
+                 "height":38.9091,
+                 "id":107,
+                 "name":"kkbjjdn3",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57.6364,
+                 "x":644.848466666667,
+                 "y":261.878783333333
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -429,7 +605,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":83,
+ "nextobjectid":108,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -440,47 +616,47 @@
          "source":"Outside-Wall 48_48.tsj"
         }, 
         {
-         "firstgid":36,
+         "firstgid":46,
          "source":"Outside-Light 150_150.tsj"
         }, 
         {
-         "firstgid":39,
+         "firstgid":49,
          "source":"Outside-Window 48_48.tsj"
         }, 
         {
-         "firstgid":67,
+         "firstgid":77,
          "source":"terminal_tile.tsj"
         }, 
         {
-         "firstgid":68,
+         "firstgid":78,
          "source":"abstract.tsj"
         }, 
         {
-         "firstgid":78,
+         "firstgid":89,
          "source":"tilesets\/0_Asset_Floor_4848.tsj"
         }, 
         {
-         "firstgid":80,
+         "firstgid":91,
          "source":"tilesets\/0_Asset_Wall_144144.tsj"
         }, 
         {
-         "firstgid":116,
+         "firstgid":127,
          "source":"tilesets\/0_Asset_Chair_240240.tsj"
         }, 
         {
-         "firstgid":141,
+         "firstgid":152,
          "source":"tilesets\/0_Asset_Control_9696.tsj"
         }, 
         {
-         "firstgid":161,
+         "firstgid":172,
          "source":"tilesets\/door_transparent.tsj"
         }, 
         {
-         "firstgid":170,
+         "firstgid":181,
          "source":"tilesets\/red_door.tsj"
         }, 
         {
-         "firstgid":179,
+         "firstgid":190,
          "source":"tilesets\/red_door_transparent.tsj"
         }],
  "tilewidth":48,

@@ -230,12 +230,12 @@ class UI(
 
             activeOptions?.let { options ->
                 val count = options.size
-                val widthPerOption = (Game.virtualWidth - portraitPadding * 2f) / count
+                val widthPerOption = (Game.virtualWidth - paddingLeft - paddingRight) / count
                 val y = (dialogHeight + dialogPadding * 2f).screenSpacePixelPerfect
                 options.forEachIndexed { index, pair ->
                     val text = pair.first
                     val x =
-                        (portraitPadding + widthPerOption / 2f + index * widthPerOption).screenSpacePixelPerfect
+                        (paddingLeft + widthPerOption / 2f + index * widthPerOption).screenSpacePixelPerfect
                     textDrawer.drawText(
                         batch,
                         text,

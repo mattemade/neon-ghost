@@ -15,6 +15,7 @@ import com.littlekt.graphics.shader.ShaderProgram
 import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapProcessor
 import com.littlekt.input.InputProcessor
+import com.littlekt.input.Key
 import com.littlekt.input.Pointer
 import com.littlekt.math.MutableVec2f
 import com.littlekt.util.milliseconds
@@ -43,7 +44,7 @@ import kotlin.time.Duration
 
 class Game(
     context: Context,
-    private val onLowPerformance: () -> Unit,
+    private val onLowPerformance: (Boolean) -> Unit,
     private val drawCabinet: Boolean = false,
     savedStateOverride: SavedState? = null
 ) : ContextListener(context),
@@ -62,7 +63,15 @@ class Game(
     val assets = Assets(context, ::onAnimationEvent).releasing()
     val inputController = context.bindInputs()
     var inGame: InGame? = null
-    val ghostOverlay by lazy { GhostOverlay(context, assets, choreographer, inputController, particleShader) }
+    val ghostOverlay by lazy {
+        GhostOverlay(
+            context,
+            assets,
+            choreographer,
+            inputController,
+            particleShader
+        )
+    }
     val directRender = DirectRender(context, virtualWidth, virtualHeight, ::update, ::render)
     val cabinetRender =
         DirectRender(context, virtualWidth, virtualHeight, ::updateCabinet, ::renderCabinet)
@@ -92,11 +101,19 @@ class Game(
 
     private var savedState: SavedState? = savedStateOverride
     private var previousRoomName: String? = null
-    private fun openDoor(door: String, toRoom: String, playerHealth: Int, isMagic: Boolean, deaths: Int) {
+    private var previousDoorName: String? = null
+    private fun openDoor(
+        door: String,
+        toRoom: String,
+        playerHealth: Int,
+        isMagic: Boolean,
+        deaths: Int
+    ) {
         previousRoomName?.let { previousRoomName ->
             saveGame(door, previousRoomName, playerHealth, isMagic, deaths)
         }
         previousRoomName = toRoom
+        previousDoorName = door
         assets.level.levels[toRoom]?.let { level ->
             startGameFromLevel(level, door, playerHealth, isMagic, deaths)
         } ?: error("no such level found $toRoom")
@@ -141,7 +158,13 @@ class Game(
         )
     }
 
-    private fun saveGame(door: String, room: String, playerHealth: Int, isMagic: Boolean, deaths: Int = 0) {
+    private fun saveGame(
+        door: String,
+        room: String,
+        playerHealth: Int,
+        isMagic: Boolean,
+        deaths: Int = 0
+    ) {
         savedState = SavedState(
             door = door,
             room = room,
@@ -213,13 +236,27 @@ class Game(
         ).also { it.prepare(this) }
 
         input.addInputProcessor(object : InputProcessor {
+            override fun keyDown(key: Key): Boolean {
+                if (key == Key.BACKSPACE) {
+                    var arguments = "spawn=${previousDoorName}&room=${previousRoomName}"
+                    playerKnowledge.forEach {
+                        arguments += "&remember=$it"
+                    }
+                    eventState.forEach { (key, value) ->
+                        arguments += "&$key=$value"
+                    }
+                    println(arguments)
+                }
+                return false
+            }
+
             override fun touchUp(screenX: Float, screenY: Float, pointer: Pointer): Boolean {
                 if (focused) {
 
                 } else {
                     focused = true
                 }
-                return true
+                return false
             }
         })
         inputController.addInputMapProcessor(object : InputMapProcessor<GameInput> {
@@ -234,6 +271,13 @@ class Game(
         })
 
         onResize { width, height ->
+            fpsCheckTimeout = 5000f
+            framesRenderedInPeriod = 0
+            if (width > directRender.postViewport.virtualWidth || height > directRender.postViewport.virtualHeight) {
+                //useCabinet = true
+                onLowPerformance(true)// just to reset the zoom factor - it will auto-adjust in 5 seconds after
+            }
+
             val widthScale = width / virtualWidth
             val heightScale = height / virtualHeight
             scale = minOf(widthScale, heightScale)
@@ -295,7 +339,24 @@ class Game(
                 fpsCheckTimeout -= dt.milliseconds
                 if (fpsCheckTimeout < 0f) {
                     if (framesRenderedInPeriod < 190) { // average is less than 38 fps
-                        onLowPerformance()
+                        if (useCabinet) {
+                            val canZoomOutEvenMore =
+                                directRender.postViewport.virtualWidth > virtualWidth * 5f &&
+                                        directRender.postViewport.virtualHeight > virtualHeight * 5f
+                            if (canZoomOutEvenMore) {
+                                onLowPerformance(false)
+                            } else {
+                                useCabinet = false
+                                onLowPerformance(true)
+                            }
+                        } else {
+                            val canZoomOutEvenMore =
+                                directRender.postViewport.virtualWidth > virtualWidth * 2f &&
+                                        directRender.postViewport.virtualHeight > virtualHeight * 2f
+                            if (canZoomOutEvenMore) {
+                                onLowPerformance(false)
+                            }
+                        }
                     }
                     fpsCheckTimeout = 5000f
                     framesRenderedInPeriod = 0
@@ -389,7 +450,10 @@ class Game(
                 cabinetShader.fragmentShader.uOverlayTexture.apply(cabinetShader, 1)
                 cabinetShader.fragmentShader.uTime.apply(cabinetShader, absoluteTime)
                 cabinetShader.fragmentShader.uScale.apply(cabinetShader, floatScale)
-                cabinetShader.fragmentShader.uResolution.apply(cabinetShader, temp.set(cabinetWidth, cabinetHeight))
+                cabinetShader.fragmentShader.uResolution.apply(
+                    cabinetShader,
+                    temp.set(cabinetWidth, cabinetHeight)
+                )
                 batch.draw(
                     gameTexture,
                     x = cabinetOffsetX,

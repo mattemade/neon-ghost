@@ -118,7 +118,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"music stop\n#officer<:got you!\nforget tools\nstate 1\nteleport interrogation_room"
+                         "value":"music stop\n#officer<:got you!\nstate 1\nteleport interrogation_room"
                         }, 
                         {
                          "name":"type",

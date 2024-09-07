@@ -8,8 +8,8 @@ uniform float u_time;
 varying lowp vec4 v_color;
 varying vec2 v_texCoords;
 
-const float gamePadding = 0.1;
-const float overlayPadding = 0.05;
+const float gamePadding = 0.025;
+const float overlayPadding = 0.0125;
 
 const float negativeGamePadding = 1.0 - gamePadding;
 const float negativeOverlayPadding = 1.0 - overlayPadding;
@@ -347,14 +347,14 @@ vec4 colorFromBounds(sampler2D tex, vec2 uv, vec4 bounds, float reflectionColorF
     float factor = 1.0;
     if (withReflections.x < 0.0 || withReflections.y < 0.0 || withReflections.x > 1.0 || withReflections.y > 1.0) {
         factor = reflectionColorFactor;
-        /**if (uv.x < extraBounds.x || uv.x > extraBounds.z || uv.y < extraBounds.y || uv.y > extraBounds.w) {
+    /**if (uv.x < extraBounds.x || uv.x > extraBounds.z || uv.y < extraBounds.y || uv.y > extraBounds.w) {
             factor /= 1.1;
         }*/
         withReflections.x = reflected(withReflections.x);
         withReflections.y = reflected(withReflections.y);
         //withReflections = Warp(withReflections);
-        return blur(withReflections, tex, 0.08) * factor;
-        //return blur13(tex, withReflections, virtualResolution, blurDirection) * factor;
+        //return blur(withReflections, tex, 0.08) * factor;
+        return blur13(tex, withReflections, virtualResolution, blurDirection) * factor;
     }
 
 

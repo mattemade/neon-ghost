@@ -1,0 +1,14 @@
+{ "columns":5,
+ "image":"building_map.png",
+ "imageheight":240,
+ "imagewidth":240,
+ "margin":0,
+ "name":"building_map",
+ "spacing":0,
+ "tilecount":25,
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilewidth":48,
+ "type":"tileset",
+ "version":"1.10"
+}

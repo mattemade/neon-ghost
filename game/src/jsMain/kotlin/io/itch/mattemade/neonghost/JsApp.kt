@@ -24,20 +24,21 @@ fun main() {
             add("training")
             //add("no_tools")
             add("tools")
+//            add("ghost")
+//            add("card")
         }
         var eventState = mutableMapOf<String, Int>().apply {
             put("enter_home", 1)
-            put("officer_catch", 3)
+            put("officer_catch", 1)
         }
-        var door: String = "security_lift_exit"
-        var room: String = "power_plant"
+        var door: String = "officer_catch"
+        var room: String = "interrogation_room"
         var activeMusic: String = "stop"
         var argument = true
         var cabinet = false
         var savedState: Game.SavedState? = null
         window.location.href.substringAfter('?').split("&").asSequence().forEach {
-            //argument = true
-            println("item: $it")
+            argument = true
             val split = it.split("=")
             val key = split[0]
             val value = split.getOrNull(1)?.let { decodeURIComponent(it) }
@@ -75,6 +76,7 @@ fun main() {
 
 val canvas = document.getElementById(CANVAS_ID) as HTMLCanvasElement
 private var zoom = 1f
+private var zoomFactor = 1f
 private fun scheduleCanvasResize(context: Context) {
     var removeContextCallback: RemoveContextCallback? = null
     removeContextCallback = context.onRender {
@@ -99,12 +101,13 @@ private fun scheduleCanvasResize(context: Context) {
     }
 }
 
-private fun onLowPerformance() {
-    if (zoom < 1f) {
-        zoom = 1f
+private fun onLowPerformance(resetZoom: Boolean) {
+    if (resetZoom) {
+        zoomFactor = 1f
     } else {
-        zoom += 1f
+        zoomFactor += 1f
     }
-    println("onLowPerformance, zooming to $zoom")
-    canvas.style.asDynamic().zoom = "$zoom"
+    val setZoom = zoom * zoomFactor
+    println("onLowPerformance, zooming to $setZoom")
+    canvas.style.asDynamic().zoom = "$setZoom"
 }

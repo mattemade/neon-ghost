@@ -215,7 +215,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"rei<: That dream again...\nrei<: How I wish to see\\the stars for real\nrei<: But the smoke and clouds are\\so thick in this city,\\you can't tell day from night\nphone>:(phone ringing)\nphone>:Good morning, Rei\nphone>:I've sent you the details\\of the mission\nphone>:Be extra careful,\\we are onto something big\\this time\nrei<:I'm on my way\nphone>:(call hangs up)\ntrigger heal\nstate 1 rei_home_table\nstate 1 enter_home\nstate 2"
+                         "value":"wait 2\nrei<: That dream again...\nrei<: How I wish to see\\the stars for real\nrei<: But the smoke and clouds are\\so thick in this city,\\you can't tell day from night\nphone>:(phone ringing)\nphone>:Good morning, Rei\nphone>:I've sent you the details\\of the mission\nphone>:Be extra careful,\\we are onto something big\\this time\nrei<:I'm on my way\nphone>:(call hangs up)\ntrigger heal\nstate 1 rei_home_table\nstate 1 enter_home\nstate 2"
                         }, 
                         {
                          "name":"title",

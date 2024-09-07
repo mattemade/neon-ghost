@@ -14,13 +14,14 @@ fun main() {
             add("training")
             //add("no_tools")
             add("tools")
+            add("ghost")
         }
         var eventState = mutableMapOf<String, Int>().apply {
             put("enter_home", 1)
             put("officer_catch", 3)
         }
         var door: String = "security_lift_exit"
-        var room: String = "power_plant"
+        var room: String = "roof"
         var activeMusic: String = "stop"
         var argument = true
         var savedState: Game.SavedState? = null

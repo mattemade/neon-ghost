@@ -91,7 +91,6 @@ class EnemyAi(
             val oppositeFarToOppositeClosePoint =
                 if (oppositeClosePoint == leftClose) rightFar else leftFar
             oppositeFarToOppositeClosePoint.occupyIfFree()
-            println("${leftFar.occupiedBy} ${leftClose.occupiedBy} ${rightClose} ${rightFar.occupiedBy}")
 
             if (closestClosePoint.sortedEnemies.isNotEmpty()) {
                 surroundingPoints.forEach {

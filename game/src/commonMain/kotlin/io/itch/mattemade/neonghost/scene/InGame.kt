@@ -314,6 +314,12 @@ class InGame(
     }
 
     private fun castAoe(position: Vec2, power: Int) {
+        if (eventState["tutorial_trigger"] == 1) {
+            eventState["tutorial_trigger"] = 2
+            triggers.get("tutorial_trigger")?.let{
+                eventExecutor.execute(it, playerKnowledge)
+            }
+        }
         enemies.forEach {
             if (belongsToEllipse(
                     it.x,
@@ -328,15 +334,24 @@ class InGame(
                 it.hit(position, power * 2 + 1, fromSpell = true)
             }
         }
-        println("casting aoe at $position with $power")
     }
 
+    // for the Neon Ghost
     private fun castProjectile(position: Vec2, facingLeft: Boolean) {
         castProjectile(position, Player.castsToStopTime, facingLeft)
     }
 
+    private var closeTutorialOnNextUpdate = false
     private fun castProjectile(position: Vec2, power: Int, facingLeft: Boolean) {
         println("casting projectile at $position with $power, isLeft = $facingLeft")
+        if (eventState["tutorial_trigger"] == 3) {
+            eventState["tutorial_trigger"] = 4
+
+            // since projectile casts by Action button, if we run the trigger now,
+            // it will receive Action button too, advancing the dialogue
+            closeTutorialOnNextUpdate = true
+
+        }
     }
 
     private val particlersToAdd = mutableListOf<Particler>()
@@ -493,6 +508,9 @@ class InGame(
             }
 
             "dream" -> {
+                timedActions += TimedAction(9.5f, {}) {
+                    choreographer.uiSound(assets.sound.concurrentClips["5_d"]!!, volume = 4f)
+                }
                 dream = Dream(
                     player,
                     context,
@@ -764,7 +782,6 @@ class InGame(
             if (actionRemainder > 0f) {
                 break
             } else {
-                println("removing timed action")
                 timedActions.removeFirst()
                 remainder = -actionRemainder
             }
@@ -871,6 +888,13 @@ class InGame(
         }
 
         camera.position.set(cameraMan.position.x, cameraMan.position.y, 0f)
+
+        if (closeTutorialOnNextUpdate && !inputController.pressed(GameInput.ATTACK)) {
+            closeTutorialOnNextUpdate = false
+            triggers.get("tutorial_trigger")?.let {
+                eventExecutor.execute(it, playerKnowledge)
+            }
+        }
     }
 
     private var shapeRenderer: ShapeRenderer? = null

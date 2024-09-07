@@ -404,7 +404,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"guard>:here she is!\\take her!\nrei<:let's test my new powers\n\nfight guard<1,guard<0,guard>0.5\n\nguard<:don't let her escape!\n\nfight guard>1,guard>0,guard<0.5\n\nguard<:lock the lift!\n\nstate 2\nstate 3 security_lift_enter\nstate 1 lift_control"
+                         "value":"guard>:here she is!\\take her!\nrei<:let's test my new powers\n\nfight guard<0.9,guard<0.1,guard>0.5\n\nguard<:don't let her escape!\n\nfight guard>0.9,guard>0.1,guard<0.5\n\nguard<:Turn off the lift!\n\nstate 2\nstate 2 security_lift_enter\nstate 1 control_room_lift_terminal"
                         }, 
                         {
                          "name":"type",
@@ -470,7 +470,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"rei<:Oh, someone left a jetpack\\It is half empty though\n\nchoice ghost\nchoose Leave:leave; Fly to\\the sky:sky; Fly to the\\street:street\nchoice\n\nnot ghost\nchoose Leave:leave; Fly to the\\street:street\nchoice\nnot\n\nchoice leave\nend\n\nchoice street\njetpack<:ENDING 5 FREEDOM DIVE\nend\n\nchoice sky\nstop\ntrigger transform\nremember magic\nstate 1\nstate 1 roof_fight\nend\n"
+                         "value":"\nrei<:It is not fully loaded,\\but should be enough\\to land to the street\n\nchoice ghost\nchoose Leave:leave; Fly to\\the sky:sky; Fly to the\\street:street\nchoice\n\nnot ghost\nchoose Leave:leave; Fly to the\\street:street\nchoice\nnot\n\nchoice leave\nend\n\nchoice street\njetpack<:ENDING 5 FREEDOM DIVE\nend\n\nchoice sky\nstop\n#trigger jetpackFlight\nscreen fadeOut\nwait 3\nrei<:Oh no, the tank is empty!\nrei<:Mirai, please,\\get ready to catch me!\nvoice 358\nghost>:We are so close!\\Leeet's goooo!\nstop\n#trigger magicFlight\nscreen fadeIn\ntrigger transform\nremember magic\nrei<:Wow, what happened to my clothes?!\nvoice 363\nghost>: Ha ha ha, yes,\\it always happens\nvoice 364\nghost>: Now, try to focus on that\\feeling a bit longer,\\and release the power around\nhelp<:KEYBOARD: J OR X\\GAMEPAD: A OR Y\\HOLD TO FOCUS\\RELEASE TO RELEASE\ncamera lock\nstate 1 tutorial_trigger\nstate 1"
                         }, 
                         {
                          "name":"title",
@@ -488,43 +488,6 @@
                  "width":48,
                  "x":288,
                  "y":240
-                }, 
-                {
-                 "height":57.3333333333333,
-                 "id":59,
-                 "name":"security_lift_enter",
-                 "properties":[
-                        {
-                         "name":"0",
-                         "type":"string",
-                         "value":"choice card\nlift>:Card verification complete, access allowed\nstate 1\nrename security_lift_exit:Level B1\nteleport security_lift\nend\nchoice tools\nrei<:It needs a security card to open\nrei<:But I can hack it with my tools\nrei<:...\nrei<:Success!\nstate 1\nrename security_lift_exit:Level B1\nteleport security_lift\nchoice\nrei<:It won't open without a security card\nrei<:I can hack it,\\but they took away all my tools\nrei<:I have to look around\nchoice radio\nstate 1 something_on_the_floor_2\nend\nchoice\nstate 1 something_on_the_floor_1\nstate 1 something_on_the_floor_2"
-                        }, 
-                        {
-                         "name":"1",
-                         "type":"string",
-                         "value":"rename security_lift_exit:Roof\nteleport security_lift"
-                        }, 
-                        {
-                         "name":"3",
-                         "type":"string",
-                         "value":"lift>:Access denied\nrei<:I have to find another way around"
-                        }, 
-                        {
-                         "name":"title",
-                         "type":"string",
-                         "value":"security lift"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"interaction"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":144,
-                 "x":672,
-                 "y":278.666666666667
                 }, 
                 {
                  "height":229.333333333333,
@@ -559,9 +522,9 @@
                  "name":"roof_view",
                  "properties":[
                         {
-                         "name":"0",
+                         "name":"2",
                          "type":"string",
-                         "value":"camera trigger\nrei<:Oh, you can see the whole city from here\nrei<:So I am in the main research facility of CorpX\nrei<:The sky is so close...\\Yet out of reach\nrei<:I wish I could see the start,\\just like in my dream\ncamera follow\nstate 1\n"
+                         "value":"not sky\ncamera trigger\nrei<:You can see the\\whole city from here\nrei<:So I am in the central\\research facility of CorpX\ncamera sky_view\nrei<:The sky is so close...\\Yet out of reach\nrei<:I wish I could see the stars,\\just like in my dream\nremember sky\n\nnot\nchoice ghost\ncamera sky_view\nvoice 339\nghost>:Oh... I see...\\You really can't see\\anything through...\nrei<:Yeah, it was like\\that as long\\as I remember\nrei<:Those who can't get\\the electricity from CorpX\\just burn whatever\\fuel they have\nvoice 342\nghost>:I could lift you up with\\my magic... But I am afraid\\it will be the last thing\\I will ever do\nvoice 343\nghost>:Maybe it is a good\\idea, though...\ncamera jetpack\nrei<:Wait, look there,\\there is a jetpack\nrei<:It is not fully loaded,\\but it should be fine\nrei<:Can you catch me if\\I will start falling down?\nvoice 347\nghost>:Yes, I have enough\\powers to land you safely\nvoice 348\nghost>:Are you going to risk\\your life entrusting me?\nrei<:Yes...\nrei<:I feel this is my\\first and last chance\n\nchoice\ncamera follow\nstate 1\n"
                         }, 
                         {
                          "name":"type",
@@ -574,6 +537,119 @@
                  "width":384,
                  "x":192,
                  "y":-96
+                }, 
+                {
+                 "height":48,
+                 "id":66,
+                 "name":"security_lift_enter",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"\nchoice card\nlift>:Card verification complete, access allowed\nstate 1\nrename security_lift_exit:Roof\nstate 5 security_lift_exit\nteleport security_lift\nend\n\nchoice tools\nrei<:It needs a security card to open\nrei<:But I can hack it with my tools\nrei<:...\nlift>:Card verification complete, access allowed\nrei<:Success!\nremember lift_hacked\nstate 1\nrename security_lift_exit:Roof\nstate 5 security_lift_exit\nteleport security_lift\nend\n\nchoice\nrei<:It needs a\\security card to open\n\nchoice no_tools\nrei<:I can hack it,\\but they took away all my tools\nchoice\n\nrei<:I have to look around\n"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"rename security_lift_exit:Roof\nstate 5 security_lift_exit\nteleport security_lift"
+                        }, 
+                        {
+                         "name":"2",
+                         "type":"string",
+                         "value":"rei>:It is turned off"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"security lift"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":144,
+                 "x":672,
+                 "y":288
+                }, 
+                {
+                 "height":158,
+                 "id":67,
+                 "name":"sky_view",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":384,
+                 "x":192,
+                 "y":-144
+                }, 
+                {
+                 "height":240,
+                 "id":68,
+                 "name":"tutorial_trigger",
+                 "properties":[
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"#trigger aoeTutorial\n#wait until aoe attack"
+                        }, 
+                        {
+                         "name":"2",
+                         "type":"string",
+                         "value":"voice 366\nghost>:Yes, like that!\\It is a bit tricky,\\but I'm sure you\\will get used to it!\nvoice 367\nghost>:And, as you seem to be\\a good fighter, you can try\\to punch with the focused magic\nhelp<:PUNCH WHILE FOCUSING\nstate 3"
+                        }, 
+                        {
+                         "name":"3",
+                         "type":"string",
+                         "value":"#trigger castTutorial\n#wait to cast projectile\n"
+                        }, 
+                        {
+                         "name":"4",
+                         "type":"string",
+                         "value":"voice 369\nghost>:Awesome, you are natural!\\That reminds me of\\good old days...\nvoice 370\nghost>:We should seek for\\other magical girls once...\\once we... escape...\nvoice 371\nghost>:But for now we need\\to protect them! You've said\\there is a brainwashing\\machine? We have to destroy it!\n\nstate 5\nstate 1 roof_fight\n\ncamera follow"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":336,
+                 "x":240,
+                 "y":192
+                }, 
+                {
+                 "height":48,
+                 "id":70,
+                 "name":"roof_fight",
+                 "properties":[
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"guard>:here she is!\\take her!\nrei<:let's test my new powers\n\nfight guard>0.9,guard>0.1,guard>0.5\n\nguard?:don't let her escape!\n\nfight guard>0.9,guard>0.1,guard>0.5\n\nguard>:Turn off the lift!\n\nstate 2\nstate 2 security_lift_enter\nstate 1 control_room_lift_terminal"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":144,
+                 "x":240,
+                 "y":384
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -593,7 +669,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":66,
+ "nextobjectid":71,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

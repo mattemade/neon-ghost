@@ -57,8 +57,8 @@
         {
          "data":[0, 0, 0,
             0, 0, 0,
-            152, 153, 0,
-            162, 163, 0,
+            0, 0, 0,
+            0, 0, 0,
             0, 0, 0,
             0, 0, 0],
          "height":6,
@@ -105,15 +105,15 @@
                  "y":144
                 }, 
                 {
-                 "height":42.9090909090909,
+                 "height":17.6363636363637,
                  "id":29,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":81.8181818181818,
-                 "x":0,
-                 "y":144
+                 "width":47.2727272727273,
+                 "x":25.6363636363636,
+                 "y":163.090909090909
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -155,14 +155,14 @@
                  "y":240
                 }, 
                 {
-                 "height":55.5,
+                 "height":33.1363636363637,
                  "id":34,
                  "name":"security_lift_terminal",
                  "properties":[
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal>:Where to go?\n\nchoose Cancel:cancel;B3:b3;B2:b2;B1:b1;18:18;25:25;Roof:roof\n\nchoice cancel\nend\n\nchoice b3\n#choice b3,b3_unlocked\nrename security_lift_exit:Level B3\nstate 0 security_lift_exit\nend\n\nchoice b3\nterminal>:Floor access denied\\Contact the control room\\at level 18\n\nchoice b2\nrename security_lift_exit:Level B2\nstate 1 security_lift_exit\nend\n\nchoice b1\nrename security_lift_exit:Level B1\nstate 2 security_lift_exit\nend\n\nchoice 18\nrename security_lift_exit:Level 18\nstate 3 security_lift_exit\nend\n\nchoice 25\nrename security_lift_exit:Level 25\nstate 4 security_lift_exit\nend\n\nchoice roof\nrename security_lift_exit:Roof\nstate 5 security_lift_exit\nend\n"
+                         "value":"terminal>:Where to go?\n\nchoose Cancel:cancel;B3:b3;B2:b2;B1:b1;18:18;25:25;Roof:roof\n\nchoice cancel\nend\n\nchoice b3,b3_unlock\nrename security_lift_exit:Level B3\nstate 0 security_lift_exit\nend\n\nchoice b3\nterminal>:Floor access denied\\Contact the control room\\at level 18\nend\n\nchoice b2\nrename security_lift_exit:Level B2\nstate 1 security_lift_exit\nend\n\nchoice b1\nrename security_lift_exit:Level B1\nstate 2 security_lift_exit\nend\n\nchoice 18\nrename security_lift_exit:Level 18\nstate 3 security_lift_exit\nend\n\nchoice 25\nrename security_lift_exit:Level 25\nstate 4 security_lift_exit\nend\n\nchoice roof\nrename security_lift_exit:Roof\nstate 5 security_lift_exit\nend\n"
                         }, 
                         {
                          "name":"title",
@@ -177,9 +177,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":98,
-                 "x":0,
-                 "y":144
+                 "width":64.1818181818182,
+                 "x":26,
+                 "y":163.090909090909
                 }, 
                 {
                  "height":48,
@@ -245,7 +245,18 @@
          "draworder":"topdown",
          "id":7,
          "name":"spawn",
-         "objects":[],
+         "objects":[
+                {
+                 "height":48,
+                 "id":36,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":96,
+                 "x":0,
+                 "y":144
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -253,7 +264,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":36,
+ "nextobjectid":37,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

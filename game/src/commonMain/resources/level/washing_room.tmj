@@ -154,7 +154,7 @@
                         {
                          "name":"2",
                          "type":"string",
-                         "value":"camera machine_camera\nmusic mg safe area\nrei<:So, what did your\\detector detect?\nguard>:It seems you hold\\some magical power\nrei<:Wow, and you are not scared?\nguard>:Well, you would use it\\already if you know how\nrei<:...\nrei<:And what is\\that chair for?\ncamera machine_top_camera\nguard>:That is the\\brainwashing machine\nguard>:It will turn you\\either on our side\\or into a plant\ncamera machine_camera\nrei<:...\nguard>:But you will be useful\\anyway, so cheer up!\nrei<:Is that ok for you\\to tell me that much?\nguard>:Don't worry, you\\will soon forget about that\nrei<:(Such a lame handcuffs)\nrei<:(I could take them off\\in no time)\nrei<:(If only these guys\\look away for a moment...)\n#voice me\nrei<:What is that thing again?!\nguard>:Are you turning\\plant already?\nguard>:I just told you\\that's a washing machine\nguard>:Now, take a seat\nmusic stop\nstop\nscreen slowFadeOut:0.2\nwait 1\nguard>:What's wrong with\\the power today?\nrei<:(Here is my chance!)\nstop\nwait 1\nscreen slowFadeIn:0.2\nwait 1\ncamera follow\nmusic magical girl 3d\nstate 3\nsave\nguard>:How did you take that off?!\nfight guard<0.1, guard<1\nstate 4\nmusic mg safe area\nrei>:Good, one problem solved\nrei>:Magical power, huh?..\\I will think about\\that later\n"
+                         "value":"camera machine_camera\nmusic mg suspicious\nrei<:So, what did your\\detector detect?\nguard>:It seems you hold\\some magical power\nrei<:Wow, and you are not scared?\nguard>:Well, you would use it\\already if you know how\nrei<:...\nrei<:And what is\\that chair for?\ncamera machine_top_camera\nguard>:That is the\\brainwashing machine\nguard>:It will turn you\\either on our side\\or into a plant\ncamera machine_camera\nrei<:...\nguard>:But you will be useful\\anyway, so cheer up!\nrei<:Is that ok for you\\to tell me that much?\nguard>:Don't worry, you\\will soon forget about that\nrei<:(Such a lame handcuffs)\nrei<:(I could take them off\\in no time)\nrei<:(If only these guys\\look away for a moment...)\nvoice 6_d\nsomeone<: ... me ...\nrei<:What is that thing again?!\nguard>:Are you turning\\plant already?\nguard>:I just told you\\that's a washing machine\nguard>:Now, take a seat\nmusic stop\nstop\nscreen slowFadeOut:0.2\nwait 1\nguard>:What's wrong with\\the power today?\nrei<:(Here is my chance!)\nstop\nwait 1\nscreen slowFadeIn:0.2\nwait 1\ncamera follow\nmusic magical girl 3d\nstate 3\nsave\nguard>:How did you take that off?!\nfight guard<0.1, guard<1\nstate 4\nmusic mg safe area\nrei>:Good, one problem solved\nrei>:Magical power, huh?..\\I will think about\\that later\n"
                         }, 
                         {
                          "name":"3",
@@ -186,12 +186,17 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"or card1,card2\nlift>:Card verification complete, access allowed\nstate 1\nrename security_lift_exit:Level B2\nstate 1 security_lift_exit\nteleport security_lift\nend\n\nchoice tools\nrei<:It needs a security card to open\nrei<:But I can hack it with my tools\nrei<:...\nlift>:Card verification complete, access allowed\nrei<:Success!\nstate 1\nrename security_lift_exit:Level B2\nstate 1 security_lift_exit\nteleport security_lift\nend\n\nchoice\nrei<:It needs a\\security card to open\n\nchoice no_tools\nrei<:I can hack it,\\but they took away all my tools\nchoice\n\nrei<:I have to look around\n"
+                         "value":"\nchoice card\nlift>:Card verification complete, access allowed\nstate 1\nrename security_lift_exit:Level B2\nstate 1 security_lift_exit\nteleport security_lift\nend\n\nchoice tools\nrei<:It needs a security card to open\nrei<:But I can hack it with my tools\nrei<:...\nlift>:Card verification complete, access allowed\nrei<:Success!\nremember lift_hacked\nstate 1\nrename security_lift_exit:Level B2\nstate 1 security_lift_exit\nteleport security_lift\nend\n\nchoice\nrei<:It needs a\\security card to open\n\nchoice no_tools\nrei<:I can hack it,\\but they took away all my tools\nchoice\n\nrei<:I have to look around\n"
                         }, 
                         {
                          "name":"1",
                          "type":"string",
                          "value":"rename security_lift_exit:Level B2\nstate 1 security_lift_exit\nteleport security_lift"
+                        }, 
+                        {
+                         "name":"2",
+                         "type":"string",
+                         "value":"rei>:It is turned off"
                         }, 
                         {
                          "name":"title",
@@ -279,7 +284,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:Operation instructions:\\1) place the subject\\in the chair\nterminal<:2) ensure the subject is\\properly placed in the chair\nterminal<:3) insert your security card\\(do not do it before\\placing the subject in the chair)\nterminal<:4) press the button\\5) call for Professor immediately\nterminal<:6) don't mess it up again!\nrei>:Oh, there is a security\\card inserted, handy!\n\nchoose Take card:take; Leave:leave\n\nchoice leave\nend\n\nchoice take\nsound got\ncard<:Security card obtained\nremember card1\nstate 1"
+                         "value":"terminal<:Operation instructions:\\1) place the subject\\in the chair\nterminal<:2) ensure the subject is\\properly placed in the chair\nterminal<:3) insert your security card\\(do not do it before\\placing the subject in the chair)\nterminal<:4) press the button\\5) call for Professor immediately\nterminal<:6) don't mess it up again!\nrei>:Oh, there is a security\\card inserted, handy!\n\nchoose Take card:take; Leave:leave\n\nchoice leave\nend\n\nchoice take\nsound got\ncard<:Security card obtained\nremember card\nstate 1"
                         }, 
                         {
                          "name":"1",

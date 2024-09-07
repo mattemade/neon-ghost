@@ -402,6 +402,10 @@ class Player(
                         if (castingTime / castTime < castsToStopTime) {
                             val castPower = castingTime / castTime
                             castProjectile(body.position, castPower.toInt(), isFacingLeft)
+                            if (castingSound != -1) {
+                                assets.sound.powerUpLoop.sound.stop(castingSound)
+                                castingSound = -1
+                            }
                             // and then if will automatically fallback into punching!
                         }
                         updateReducingTime()

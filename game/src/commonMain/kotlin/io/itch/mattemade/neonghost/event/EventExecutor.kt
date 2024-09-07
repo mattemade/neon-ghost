@@ -49,6 +49,7 @@ class EventExecutor(
         get() = activeEvent != null && !isFighting
     private var skipSpeechOnNextText = false
 
+    private var keepPlaying: Int = 0
     private var currentPlayingSound: AudioClipEx? = null
     private var currentPlayingSoundId: Int = -1
 
@@ -63,7 +64,9 @@ class EventExecutor(
     }
 
     fun advance(forceEnd: Boolean = false) {
-        if (currentPlayingSound != null) {
+        if (keepPlaying > 0) {
+            keepPlaying--
+        } else if (currentPlayingSound != null) {
             currentPlayingSound?.stop(currentPlayingSoundId)
             currentPlayingSoundId = -1
             currentPlayingSound = null
@@ -122,6 +125,7 @@ class EventExecutor(
             "voice" -> action.checkingChoice().executeSound(4f)
             "screen" -> action.checkingChoice().executeScreen()
             "wait" -> action.checkingChoice().executeWait()
+            "keepPlaying" -> action.checkingChoice().executeKeepPlaying()
             "clearQueue" -> executeClearQueue()
             "save" -> executeSave()
             "stop" -> executeStopDialog()
@@ -136,7 +140,9 @@ class EventExecutor(
     private fun requirementsFulfilled(): Boolean =
         (currentRequirements.isEmpty() || currentChoice.containsAll(currentRequirements)
                 || anyOfRequirementsIsEnough && currentChoice.any(currentRequirements::contains))
-                && (negativeRequirements.isEmpty() || !currentChoice.containsAll(negativeRequirements))
+                && (negativeRequirements.isEmpty() || !currentChoice.containsAll(
+            negativeRequirements
+        ))
 
     private fun String?.executeForPlayer() {
         when (this) {
@@ -393,6 +399,17 @@ class EventExecutor(
         toFloatOrNull()?.let(wait) ?: run {
             advance()
         }
+    }
+
+    private fun String?.executeKeepPlaying() {
+        if (this == null) {
+            advance()
+            return
+        }
+        toIntOrNull()?.let {
+            keepPlaying = it
+        }
+        advance()
     }
 
     private fun executeClearQueue() {

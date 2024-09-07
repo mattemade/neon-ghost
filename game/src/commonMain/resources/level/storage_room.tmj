@@ -1,0 +1,316 @@
+{ "compressionlevel":-1,
+ "height":6,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90],
+         "height":6,
+         "id":1,
+         "name":"floor",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":21,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[100, 100, 101, 102, 94, 95, 96, 97, 98, 99, 100, 100, 101, 102, 94, 95, 96, 97, 98, 99, 94,
+            112, 112, 113, 114, 106, 107, 108, 109, 110, 111, 112, 112, 113, 114, 106, 107, 108, 109, 110, 111, 106,
+            124, 124, 125, 126, 118, 119, 120, 121, 122, 123, 124, 124, 125, 126, 118, 119, 120, 121, 122, 123, 118,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":6,
+         "id":3,
+         "name":"wall",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":21,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 81, 81, 0, 0, 0, 0, 0, 0, 0, 81, 81, 81, 81, 81, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 81, 0, 0, 0, 81, 81, 81, 81, 81, 81, 81, 0, 0, 0, 0],
+         "height":6,
+         "id":4,
+         "name":"decoration",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":21,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 136, 137, 138, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 139, 140, 141, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 142, 143, 144, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":6,
+         "id":10,
+         "name":"foreground",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":21,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"walls",
+         "objects":[
+                {
+                 "height":144,
+                 "id":29,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1008,
+                 "x":0,
+                 "y":144
+                }, 
+                {
+                 "height":16,
+                 "id":40,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48.75,
+                 "x":911,
+                 "y":165.75
+                }, 
+                {
+                 "height":48,
+                 "id":43,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":96,
+                 "x":96,
+                 "y":144
+                }, 
+                {
+                 "height":96,
+                 "id":44,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":288,
+                 "y":192
+                }, 
+                {
+                 "height":48,
+                 "id":47,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":240,
+                 "x":528,
+                 "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":48,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":336,
+                 "x":480,
+                 "y":240
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"trigger",
+         "objects":[
+                {
+                 "height":48,
+                 "id":38,
+                 "name":"red_door",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"door<:LOCKED\n\nchoice tools\nrei<:Hmm, I don't think I can hack it\nend\n\nchoice\nrei<:Let's look around,\\there should be a way to unlock it"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"teleport lobby_room"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Exit"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":144,
+                 "x":96,
+                 "y":240
+                }, 
+                {
+                 "height":33.5,
+                 "id":41,
+                 "name":"storage_terminal",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"terminal<:Confiscated items\n\nchoice no_tools\nrei>:Oh, here are\\my hacking tools!\nsound got\ntools>:Tools obtained\nremember tools\nforget no_tools\nstate 1\nend\n\nchoice\nterminal<:Empty\nrei>:I wish I took my\\tools with me...\nstate 1"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"terminal<:Empty"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Search"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":65,
+                 "x":912.666666666667,
+                 "y":165.666666666667
+                }, 
+                {
+                 "height":48,
+                 "id":42,
+                 "name":"storage_fight",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"guard<:Here she is!\n\nfight guard<0.1, guard>0.1, guard<0.9, guard>0.9\n\nguard<:Not that easy!\n\nfight guard<0.1, guard>0.1, guard<0.9, guard>0.9\n\nstate 1"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":624,
+                 "y":192
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"spawn",
+         "objects":[
+                {
+                 "height":48,
+                 "id":39,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":912,
+                 "y":144
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":11,
+ "nextobjectid":49,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"Outside-Wall 48_48.tsj"
+        }, 
+        {
+         "firstgid":46,
+         "source":"Outside-Light 150_150.tsj"
+        }, 
+        {
+         "firstgid":49,
+         "source":"Outside-Window 48_48.tsj"
+        }, 
+        {
+         "firstgid":77,
+         "source":"terminal_tile.tsj"
+        }, 
+        {
+         "firstgid":78,
+         "source":"abstract.tsj"
+        }, 
+        {
+         "firstgid":89,
+         "source":"tilesets\/0_Asset_Floor_4848.tsj"
+        }, 
+        {
+         "firstgid":91,
+         "source":"tilesets\/0_Asset_Wall_144144.tsj"
+        }, 
+        {
+         "firstgid":127,
+         "source":"tilesets\/red_door.tsj"
+        }, 
+        {
+         "firstgid":136,
+         "source":"tilesets\/red_door_transparent.tsj"
+        }],
+ "tilewidth":48,
+ "type":"map",
+ "version":"1.10",
+ "width":21
+}

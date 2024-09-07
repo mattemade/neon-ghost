@@ -39,8 +39,8 @@ class Transformation(
     val centerY = player.y * 2f
     val frameXOffset = (slice.width * 0.1f / Game.PPU).pixelPerfectPosition
     val frameYOffset = (3f / Game.PPU).pixelPerfectPosition
-    val xOffset = centerX - width / 2f * Game.IPPU - frameXOffset*3f
-    val yOffset = centerY - height * 2f * Game.IPPU + frameYOffset*1.5f
+    val xOffset = centerX - width / 2f * Game.IPPU - frameXOffset*3f - Game.IPPU
+    val yOffset = centerY - height * 2f * Game.IPPU + frameYOffset*1.5f + 2f * Game.IPPU
 
     private val tempColor = MutableColor()
     private val doubles = 1

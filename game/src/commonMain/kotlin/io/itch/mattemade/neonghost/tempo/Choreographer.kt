@@ -63,7 +63,6 @@ class Choreographer(private val context: Context) {
     }
 
     fun setPlaybackRate(rate: Float) {
-        println("rate: $rate")
         playbackRate = rate.toDouble()
         currentlyPlaying?.setPlaybackRate(currentlyPlayingId, rate)
         everActiveSoundClips.forEach {

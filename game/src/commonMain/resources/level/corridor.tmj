@@ -22,9 +22,9 @@
          "y":0
         }, 
         {
-         "data":[197, 198, 199, 100, 197, 198, 199, 102, 94, 95, 95, 95, 96, 91, 92, 93, 94,
-            200, 201, 202, 112, 200, 201, 202, 114, 106, 107, 107, 107, 108, 103, 104, 105, 106,
-            203, 204, 205, 124, 203, 204, 205, 126, 118, 119, 119, 119, 120, 115, 116, 117, 118,
+         "data":[100, 100, 100, 100, 100, 100, 100, 102, 94, 95, 95, 95, 96, 91, 92, 93, 94,
+            112, 112, 112, 112, 112, 112, 112, 114, 106, 107, 107, 107, 108, 103, 104, 105, 106,
+            124, 124, 124, 124, 124, 124, 124, 126, 118, 119, 119, 119, 120, 115, 116, 117, 118,
             0, 0, 0, 0, 0, 0, 0, 0, 143, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 148, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -79,13 +79,13 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         "data":[95, 95, 95, 95, 96, 100, 101, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            107, 107, 107, 107, 108, 112, 113, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            119, 119, 119, 119, 120, 124, 125, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            206, 207, 208, 0, 206, 207, 208, 147, 148, 0, 0, 0, 0, 0, 0, 0, 0,
-            209, 210, 211, 0, 209, 210, 211, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            212, 213, 214, 0, 212, 213, 214, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            206, 207, 208, 0, 0, 0, 0, 0, 148, 0, 0, 0, 0, 0, 0, 0, 0,
+            209, 210, 211, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            212, 213, 214, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":8,
          "id":10,
@@ -126,38 +126,6 @@
          "objects":[
                 {
                  "height":48,
-                 "id":30,
-                 "name":"security_lift_enter",
-                 "properties":[
-                        {
-                         "name":"0",
-                         "type":"string",
-                         "value":"lift>:How did you get there\nstate 1\n"
-                        }, 
-                        {
-                         "name":"1",
-                         "type":"string",
-                         "value":"rename security_lift_exit:Level B1\nstate 2 security_lift_exit\nteleport security_lift"
-                        }, 
-                        {
-                         "name":"title",
-                         "type":"string",
-                         "value":"security lift"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"interaction"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":135.333333333333,
-                 "x":632.666666666667,
-                 "y":144
-                }, 
-                {
-                 "height":48,
                  "id":35,
                  "name":"security_lift_exit",
                  "properties":[
@@ -169,8 +137,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":134.666666666667,
-                 "x":633.333333333333,
+                 "width":129.333333333334,
+                 "x":638.666666666666,
                  "y":144
                 }, 
                 {
@@ -344,6 +312,43 @@
                  "width":144,
                  "x":200.666666666667,
                  "y":376.666666666667
+                }, 
+                {
+                 "height":48,
+                 "id":47,
+                 "name":"security_lift_enter",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"\nchoice card\nlift>:Card verification complete, access allowed\nstate 1\nrename security_lift_exit:Level B1\nstate 2 security_lift_exit\nteleport security_lift\nend\n\nchoice tools\nrei<:It needs a security card to open\nrei<:But I can hack it with my tools\nrei<:...\nlift>:Card verification complete, access allowed\nrei<:Success!\nremember lift_hacked\nstate 1\nrename security_lift_exit:Level B1\nstate 2 security_lift_exit\nteleport security_lift\nend\n\nchoice\nrei<:It needs a\\security card to open\n\nchoice no_tools\nrei<:I can hack it,\\but they took away all my tools\nchoice\n\nrei<:I have to look around\n"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"rename security_lift_exit:Level B1\nstate 2 security_lift_exit\nteleport security_lift"
+                        }, 
+                        {
+                         "name":"2",
+                         "type":"string",
+                         "value":"rei>:It is turned off"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"security lift"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":128.666666666667,
+                 "x":639.333333333333,
+                 "y":144
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -363,7 +368,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":47,
+ "nextobjectid":48,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

@@ -1,0 +1,14 @@
+{ "columns":5,
+ "image":"area_map_2.png",
+ "imageheight":240,
+ "imagewidth":240,
+ "margin":0,
+ "name":"area_map_2",
+ "spacing":0,
+ "tilecount":25,
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilewidth":48,
+ "type":"tileset",
+ "version":"1.10"
+}
