@@ -125,7 +125,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"punk>:Hey, girl!\npunk>:Do you want to have some fun?\n\nchoose Yes:yes; No:no\nchoice yes\npunk>:He he he\nchoice no\npunk>:But I want!\nchoice\nmusic magical girl 3d\n\nfight punk>0.5\n\nrei<: Remember your place!\npunk>: Oh, be sure, I'll remember\nmusic stop\nstate 1\n"
+                         "value":"punk>:Hey, girl!\npunk>:Do you want to have some fun?\n\nchoose Yes:yes; No:no\nchoice yes\npunk>:He he he\nchoice no\npunk>:But I want!\nchoice\n\nfight punk>0.5\n\nrei<: Remember your place!\npunk>: Oh, be sure, I'll remember\nstate 1\n"
                         }, 
                         {
                          "name":"type",
@@ -172,7 +172,7 @@
                  "name":"exit_boxing",
                  "properties":[
                         {
-                         "name":"1",
+                         "name":"0",
                          "type":"string",
                          "value":"teleport boxing_club"
                         }, 
@@ -219,6 +219,30 @@
                  "width":96,
                  "x":720,
                  "y":96
+                }, 
+                {
+                 "height":0,
+                 "id":24,
+                 "name":"",
+                 "polygon":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-240,
+                         "y":0
+                        }, 
+                        {
+                         "x":-240,
+                         "y":240
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":192,
+                 "y":48
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -238,7 +262,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":24,
+ "nextobjectid":25,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

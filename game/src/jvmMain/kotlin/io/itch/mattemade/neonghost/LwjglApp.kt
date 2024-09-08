@@ -23,7 +23,7 @@ fun main() {
         var door: String = "security_lift_exit"
         var room: String = "roof"
         var activeMusic: String = "stop"
-        var argument = true
+        var argument = false
         var savedState: Game.SavedState? = null
 
         if (argument) {

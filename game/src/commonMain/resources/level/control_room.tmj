@@ -224,7 +224,7 @@
                  "visible":true,
                  "width":48,
                  "x":384.5,
-                 "y":258.75
+                 "y":306.75
                 }, 
                 {
                  "height":21.5,
@@ -234,8 +234,8 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":479.5,
-                 "y":400.75
+                 "x":384,
+                 "y":160.75
                 }, 
                 {
                  "height":21.5,
@@ -328,7 +328,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:Insert security card\\to unlock red doors\n\nchoice card\nchoose Insert:insert;Leave:leave\n\n\nchoice insert\nforget card\ncard<:Security card removed\nstate 1 red_door\nstate 1 red_door_1\nstate 1 red_door_2\nstate 1 red_door_3\nstate 1 red_door_4\nstate 1 red_door_5\nstate 1 corridor_punks_fight\nstate 1 lobby_punks_fight\nterminal>:Red doors unlocked\nstate 1\nstate 0 security_lift_enter\nchoice insert,lift_hacked\nstate 1 security_lift_enter\nchoice insert\nend\n\nchoice card,leave\nend\n\nchoice\nrei<:I don't have a security card\nend"
+                         "value":"terminal<:Insert security card\\to unlock red doors\n\nchoice card\nchoose Insert:insert;Leave:leave\n\n\nchoice insert\nforget card\ncard<:Security card removed\nstate 1 red_door\nstate 1 red_door_1\nstate 1 red_door_2\nstate 1 red_door_3\nstate 1 red_door_4\nstate 1 red_door_5\nstate 1 corridor_punks_fight\nstate 1 lobby_punks_fight\nterminal>:Red doors unlocked\nstate 1\n\nnot alarm\nstate 0 security_lift_enter\nchoice insert,lift_hacked\nstate 1 security_lift_enter\nnot\n\nchoice insert\nend\n\nchoice card,leave\nend\n\nchoice\nrei<:I don't have a security card\nend"
                         }, 
                         {
                          "name":"1",
@@ -350,7 +350,7 @@
                  "visible":true,
                  "width":65,
                  "x":384,
-                 "y":260.5
+                 "y":308.5
                 }, 
                 {
                  "height":40,
@@ -360,7 +360,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:Insert security card\\To access Level B3\n\nchoice card\nchoose Insert:insert;Leave:leave\n\nchoice insert\nstate 0 security_lift_enter\nchoice insert,lift_hacked\nstate 1 security_lift_enter\nchoice insert\nforget card\ncard<:Security card removed\nremember b3_unlock\nterminal<:Level B3 access granted\nstate 1\nend\n\nchoice card,leave\nend\n\nchoice\nrei>:I don't have a security card\nend"
+                         "value":"terminal<:Insert security card\\To access Level B3\n\nchoice card\nchoose Insert:insert;Leave:leave\n\nchoice insert\nnot alarm\nstate 0 security_lift_enter\nchoice insert,lift_hacked\nstate 1 security_lift_enter\nnot\nchoice insert\nforget card\ncard<:Security card removed\nremember b3_unlock\nterminal<:Level B3 access granted\nstate 1\nend\n\nchoice card,leave\nend\n\nchoice\nrei>:I don't have a security card\nend"
                         }, 
                         {
                          "name":"1",
@@ -392,7 +392,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:What map to show?\n\nchoose Leave:leave; Building:building; Power grid:grid\n\nchoice leave\nend\n\nchoice building\nstop\nwait 0.1\ncamera building_camera:0\nwait 1\nterminal<:Here is the building map\nrei>:Interesting\nrei>:Why do they have these\\underground floors?\nwait 0.1\ncamera follow:0\nend\n\n\nchoice grid,ghost\nstop\nwait 0.1\ncamera grid_camera_2:0\nwait 1\nterminal>:Here is the power grid map\nvoice 245\nghost<: Hmm, how strange\nvoice 246\nghost<: The green dots on\\this map match my feeling\\of other magical girls\nrei>: Looks like this outline\\on the yellow dot\\is where we are\nrei>: And theese green dots around\\are active power plants\nrei>: Like the one\\where I found you...\nvoice 250\nghost<: I see...\\Poor souls...\nvoice 251\nghost<: May I ask you...\\to help them the same way\\you helped me?\nchoose I promise:promise;No:no\nchoice grid,ghost,no\nvoice 252\nghost<:Sorry...\\I knew I was asking\\for the impossible...\nchoice grid,ghost,promise\nvoice 253\nghost<:Thank you, you are too kind!\\It's no wonder you are\\a magical girl too!\nremember promise\nchoice grid,ghost\nstate 1\nwait 0.1\ncamera follow:0\nend\n\nchoice grid\nstop\nwait 0.1\ncamera grid_camera_1:0\nwait 1\nterminal<:Here is the power grid map\nrei>:So they have a power\\plant in this building\nwait 0.1\ncamera follow:0\nend\n"
+                         "value":"terminal<:What map to show?\n\nchoose Leave:leave; Building:building; Power grid:grid\n\nchoice leave\nend\n\nchoice building\nstop\nwait 0.1\ncamera building_camera:0\nwait 1\nterminal<:Here is the building map\nrei>:Interesting\nrei>:Why do they have these\\underground floors?\nwait 0.1\ncamera follow:0\nend\n\n\nchoice grid,ghost\nstop\nwait 0.1\ncamera grid_camera_2:0\nwait 1\nterminal>:Here is the power grid map\nvoice 245\nghost<: Hmm, how strange\nvoice 246\nghost<: The green dots on\\this map match my feeling\\of the other magical girls\nrei>: Looks like this yellow dot\\is where we are\nrei>: And theese green dots around\\are active power plants\nrei>: Like the one\\where I found you...\nvoice 250\nghost<: I see...\\Poor souls...\nvoice 251\nghost<: May I ask you...\\to help them the same way\\you helped me?\nchoose I promise:promise;No:no\nchoice grid,ghost,no\nvoice 252\nghost<:Sorry...\\I knew I was asking\\for the impossible...\nchoice grid,ghost,promise\nvoice 253\nghost<:Thank you, you are too kind!\\It's no wonder you are\\a magical girl too!\nremember promise\nchoice grid,ghost\nstate 1\nwait 0.1\ncamera follow:0\nend\n\nchoice grid\nstop\nwait 0.1\ncamera grid_camera_1:0\nwait 1\nterminal<:Here is the power grid map\nrei>:So they have a power\\plant in this building\nwait 0.1\ncamera follow:0\nend\n"
                         }, 
                         {
                          "name":"1",
@@ -413,8 +413,8 @@
                  "type":"",
                  "visible":true,
                  "width":65,
-                 "x":481.5,
-                 "y":400
+                 "x":386,
+                 "y":160
                 }, 
                 {
                  "height":240,
@@ -480,7 +480,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"terminal>:Security lift: OFF\nchoose Leave:leave; Turn on:on\n\nchoice leave\nend\n\nchoice on\nstate 0\nchoice on,lift_hacked\nstate 1 security_lift_enter\nchoice on\nstate 0 security_lift_enter\nterminal>:Security lift: ON\nend\n"
+                         "value":"choice alarm\nterminal<:Security lift: OFF\\Access is encrypted,\\enter the password\n\nnot password\nrei>:I don't know the password\\and can't hack it\nrei>:Let's look around\nend\nnot\n\nchoice alarm,password\nchoose Enter:enter; Leave:exit\n\nchoice enter\nforget alarm\nterminal<:Password accepted\\Access granted\n# fall-back to normal lift menu\n\nchoice exit\nend\nchoice\n\n\n\n\nterminal>:Security lift: OFF\nchoose Leave:leave; Turn on:on\n\nchoice leave\nend\n\nchoice on\nstate 0\nstate 0 security_lift_terminal\nchoice on,lift_hacked\nstate 1 security_lift_enter\nchoice on\nstate 0 security_lift_enter\nterminal>:Security lift: ON\nend\n"
                         }, 
                         {
                          "name":"title",
@@ -520,6 +520,11 @@
                          "value":"rei>:It is turned off"
                         }, 
                         {
+                         "name":"3",
+                         "type":"string",
+                         "value":"rename security_lift_exit:Level 18\nstate 3 security_lift_exit\nteleport security_lift"
+                        }, 
+                        {
                          "name":"title",
                          "type":"string",
                          "value":"security lift"
@@ -534,6 +539,28 @@
                  "visible":true,
                  "width":129,
                  "x":687,
+                 "y":144
+                }, 
+                {
+                 "height":432,
+                 "id":106,
+                 "name":"control_room_fight_1",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"guard>:Get her!\n\nfight guard<0.5,guard>0.5\nstate 1"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":528,
                  "y":144
                 }],
          "opacity":1,
@@ -556,7 +583,7 @@
                  "visible":true,
                  "width":48,
                  "x":384,
-                 "y":240
+                 "y":288
                 }, 
                 {
                  "height":48,
@@ -577,8 +604,8 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":480,
-                 "y":384
+                 "x":384.5,
+                 "y":144
                 }, 
                 {
                  "height":48,
@@ -590,6 +617,94 @@
                  "width":48,
                  "x":576,
                  "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":100,
+                 "name":"mbns2",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":624,
+                 "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":101,
+                 "name":"mbns1",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":825.5,
+                 "y":142
+                }, 
+                {
+                 "height":48,
+                 "id":102,
+                 "name":"mbns3",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":0,
+                 "y":384
+                }, 
+                {
+                 "height":48,
+                 "id":103,
+                 "name":"mbns4",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":192,
+                 "y":384
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -598,7 +713,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":100,
+ "nextobjectid":107,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

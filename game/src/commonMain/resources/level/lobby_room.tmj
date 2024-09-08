@@ -382,7 +382,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"door>:the game ends here with different\\endings depending on what\\did you find along the way\n"
+                         "value":"choice ending\nteleport ending_room\nend\nchoice\n\n\nchoice card\nexit<:Card verification complete, access allowed\nexit<:Do you want to leave the building?\\There is no way back\nchoose No:no;Yes:yes\nchoice card,yes\nteleport ending_room\nchoice card,no\nend\n\nchoice tools\nrei<:It needs a security card to open\nrei<:But I can hack it with my tools\nrei<:...\nlift>:Card verification complete, access allowed\nrei<:Success!\nexit<:Do you want to leave the building?\\There is no way back\nchoose No:no;Yes:yes\nchoice tools,yes\nteleport ending_room\nchoice tools,no\nend\n\nchoice\nrei<:It needs a\\security card to open\n\nchoice no_tools\nrei<:I can hack it,\\but they took away all my tools\nchoice\n\nrei<:I have to look around\n\n"
                         }, 
                         {
                          "name":"title",
@@ -398,8 +398,8 @@
                  "type":"",
                  "visible":true,
                  "width":144,
-                 "x":502.5,
-                 "y":526
+                 "x":480,
+                 "y":528
                 }, 
                 {
                  "height":48,
@@ -432,6 +432,43 @@
                  "width":144,
                  "x":336,
                  "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":82,
+                 "name":"security_lift_enter",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"\nchoice card\nlift>:Card verification complete, access allowed\nstate 1\nrename security_lift_exit:Level B3\nstate 0 security_lift_exit\nteleport security_lift\nend\n\nchoice tools\nrei<:It needs a security card to open\nrei<:But I can hack it with my tools\nrei<:...\nlift>:Card verification complete, access allowed\nrei<:Success!\nremember lift_hacked\nstate 1\nrename security_lift_exit:Level B3\nstate 0 security_lift_exit\nteleport security_lift\nend\n\nchoice\nrei<:It needs a\\security card to open\n\nchoice no_tools\nrei<:I can hack it,\\but they took away all my tools\nchoice\n\nrei<:I have to look around\n"
+                        }, 
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"rename security_lift_exit:Level B3\nstate 0 security_lift_exit\nteleport security_lift"
+                        }, 
+                        {
+                         "name":"2",
+                         "type":"string",
+                         "value":"rei>:It is turned off"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"security lift"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":119.455,
+                 "x":619.605833333333,
+                 "y":611.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -462,7 +499,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":82,
+ "nextobjectid":83,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

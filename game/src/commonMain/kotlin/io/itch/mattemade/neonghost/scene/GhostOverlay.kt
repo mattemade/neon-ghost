@@ -24,6 +24,7 @@ import io.itch.mattemade.utils.releasing.Self
 import io.itch.mattemade.utils.render.PixelRender
 import io.itch.mattemade.utils.render.createPixelFrameBuffer
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.time.Duration
@@ -52,6 +53,9 @@ class GhostOverlay(
     val texture = sharedFrameBuffer.textures[0]
     private val ghostAnimations = assets.animation.ghostGrayAnimations
     private var currentAnimation = ghostAnimations.fly
+    var blinking = false
+    private var isFinalSequence = false
+    private var goodbye = false
 
     private fun interpolate(value: Float): Float = 3 * value * value - 2 * value * value * value
 
@@ -60,6 +64,7 @@ class GhostOverlay(
     private var isFacingLeft = false
     private var fadingAppearance = 0f
     private var tempFadingColor = MutableColor(1f, 1f, 1f, 0f)
+    private var tempBlinkingTintColor = MutableColor(1f, 1f, 1f, 1f)
     var isActive = false
     var isMoving = false
 
@@ -68,6 +73,7 @@ class GhostOverlay(
     val ghostPosition = MutableVec2f(halfScreenWidth, halfScreenWidth)
 
     private var ghostAppear: GhostAppear? = null
+    private var ghostGoodbye: GhostGoodbye? = null
 
     fun appear() {
         isActive = true
@@ -91,6 +97,13 @@ class GhostOverlay(
                 ghostAppear = null
             }
             return
+        }
+        if (goodbye) {
+            ghostGoodbye?.let {
+                if (it.update(dt.seconds)) {
+                    ghostGoodbye = null
+                }
+            }
         }
         if (fadingAppearance > 0f) {
             fadingAppearance -= dt.seconds / 3f
@@ -123,6 +136,15 @@ class GhostOverlay(
             return
         }
         if (isActive) {
+            if (isFinalSequence) {
+                ghostGoodbye?.let {
+                    it.render(batch)
+                    return
+                }
+            }
+            if (blinking) {
+                tempBlinkingTintColor.a = 0.8f + 0.2f * abs(time % 2f - 1f)
+            }
             currentAnimation.currentKeyFrame?.let { frame ->
                 val width = frame.width * Game.IPPU
                 val height = frame.height * Game.IPPU
@@ -133,6 +155,7 @@ class GhostOverlay(
                     width = width,
                     height = height,
                     flipX = isFacingLeft,
+                    colorBits = tempBlinkingTintColor.toFloatBits()
                 )
             }
         }
@@ -191,6 +214,27 @@ class GhostOverlay(
         if (frame == null) {
             renderJustOneMoreTime = true
         }
+    }
+
+    fun finalSequence() {
+        isFinalSequence = true
+        isMoving = false
+        ghostGoodbye = GhostGoodbye(context, assets, shaderProgram) {
+            isActive = false
+            isMoving = false
+        }
+    }
+
+    fun goodbye() {
+        goodbye = true
+    }
+
+    fun reset() {
+        isFinalSequence = false
+        blinking = false
+        isActive = false
+        isMoving = false
+        goodbye = false
     }
 
     companion object {

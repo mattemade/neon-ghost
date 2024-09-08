@@ -1,10 +1,10 @@
 package io.itch.mattemade.neonghost.event
 
-import com.littlekt.Audio
 import com.littlekt.audio.AudioClipEx
 import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
 import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.CharacterAnimations
+import io.itch.mattemade.neonghost.ExtraAssets
 import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.LevelSpec
 import io.itch.mattemade.neonghost.character.rei.Player
@@ -12,9 +12,9 @@ import io.itch.mattemade.neonghost.tempo.UI
 import io.itch.mattemade.neonghost.world.CameraMan
 import io.itch.mattemade.neonghost.world.Trigger
 import kotlin.random.Random
-
 class EventExecutor(
     private val assets: Assets,
+    private val extraAssets: ExtraAssets,
     private val player: Player,
     private val ui: UI,
     private val cameraMan: CameraMan,
@@ -30,7 +30,7 @@ class EventExecutor(
     private val onMusic: (String) -> Unit,
     private val onSound: (String, Float) -> Int,
     private val onScreen: (String, Float?) -> Unit,
-    private val onSave: () -> Unit,
+    private val onSave: (trigger: String?) -> Unit,
     private val wait: (Float) -> Unit,
     private val onClearQueue: () -> Unit,
 ) {
@@ -60,6 +60,7 @@ class EventExecutor(
         activeEvent = trigger.properties[state.toString()]?.string?.lines()
         activeEventPosition = 0
         currentChoice.addAll(knowledge)
+        negativeRequirements.clear()
         executeItem()
     }
 
@@ -137,12 +138,14 @@ class EventExecutor(
     private fun String?.checkingChoice(): String? =
         takeIf { requirementsFulfilled() }
 
-    private fun requirementsFulfilled(): Boolean =
-        (currentRequirements.isEmpty() || currentChoice.containsAll(currentRequirements)
-                || anyOfRequirementsIsEnough && currentChoice.any(currentRequirements::contains))
-                && (negativeRequirements.isEmpty() || !currentChoice.containsAll(
-            negativeRequirements
-        ))
+    private fun requirementsFulfilled(): Boolean {
+        val allCurrentFulfilled = currentRequirements.isEmpty() || currentChoice.containsAll(currentRequirements)
+        val anyCurrentIsEnough = anyOfRequirementsIsEnough && currentChoice.any(currentRequirements::contains)
+        val allNegativeFulfilled = negativeRequirements.isEmpty() || !currentChoice.any(negativeRequirements::contains)
+        return (allCurrentFulfilled || anyCurrentIsEnough)
+                && allNegativeFulfilled
+    }
+
 
     private fun String?.executeForPlayer() {
         when (this) {
@@ -221,8 +224,8 @@ class EventExecutor(
             "officer" ->
                 EnemySpec(
                     assets.animation.officerAnimations,
-                    5f,
-                    20,
+                    4f,
+                    16,
                     fromLeft,
                     verticalPosition,
                     name,
@@ -359,8 +362,10 @@ class EventExecutor(
         }
         skipSpeechOnNextText = true
         advance()
-        currentPlayingSound = assets.sound.concurrentClips[this]
-        currentPlayingSoundId = onSound(this, volume)
+        if (extraAssets.isLoaded) {
+            currentPlayingSound = extraAssets.sound.concurrentClips[this]
+            currentPlayingSoundId = onSound(this, volume)
+        }
     }
 
     private fun String?.executeScreen() {
@@ -377,7 +382,7 @@ class EventExecutor(
 
     private fun executeSave() {
         if (requirementsFulfilled()) {
-            onSave()
+            onSave(activeTrigger?.name)
         }
         advance()
     }
@@ -486,3 +491,4 @@ class EventExecutor(
         val name: String? = null
     )
 }
+

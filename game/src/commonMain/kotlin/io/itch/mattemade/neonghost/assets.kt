@@ -147,108 +147,6 @@ class Sound(context: Context) : AssetPack(context) {
             )
         )
     }
-    val powerUpLoop by pack {
-        SoundPack(
-            context, listOf(
-                "sound/Powerup/Powerup - loop.wav",
-            )
-        )
-    }
-    /*val powerUpSingleShot by pack {
-        SoundPack(
-            context, listOf(
-                "sound/Powerup/Powerup - single shot.wav",
-            )
-        )
-    }*/
-    val slowMo by pack {
-        SoundPack(
-            context, listOf(
-                "sound/Powerup/Slow-mo.wav",
-            )
-        )
-    }
-
-
-
-    private fun String.wavName(): String = this.substringAfterLast("/").substringBefore(".wav")
-    val concurrentClips = ConcurrentMutableMap<String, AudioClipEx>()
-
-    private val preparations = listOf(
-        "got",
-        "5",
-        "5_d",
-        "6",
-        "6_d",
-        "7",
-        "245",
-        "246",
-        "250",
-        "251",
-        "252",
-        "253",
-        "288",
-        "289",
-        "291",
-        "295",
-        "297",
-        "299",
-        "300",
-        "301",
-        "303",
-        "306",
-        "307",
-        "310",
-        "311",
-        "314",
-        "317",
-        "319",
-        "320",
-        "323",
-        "339",
-        "342",
-        "343",
-        "347",
-        "348",
-        "358",
-        "363",
-        "364",
-        "366",
-        "367",
-        "369",
-        "370",
-        "371",
-        "379",
-        "381",
-        "383",
-        "385",
-        "386",
-        "387",
-        "390",
-        "433",
-        "438",
-        "441",
-        "445",
-        "455",
-        "456",
-        "457",
-        "459",
-        "460",
-        "463",
-        "468",
-        "470",
-        "471",
-        "473",
-        "507",
-        "509",
-    ).map{ "sound/Misc/$it.wav" }.forEach {
-        val name = it.wavName()
-        prepare {
-            val clip = context.resourcesVfs[it].readAudioClipEx()
-            concurrentClips[name] = clip
-            clip
-        }
-    }
 }
 
 class SoundPack(context: Context, val fileNames: List<String>, val randomize: Boolean = true) :
@@ -282,12 +180,6 @@ class Music(context: Context) : AssetPack(context) {
     val concurrentTracks = ConcurrentMutableMap<String, StreamBpm>()
 
     private val preparations = listOf(
-        "music/magical girl 3d.mp3" to 150f,
-        //"music/magical girl 1c.mp3" to 129.97198f,
-        //"music/magical girl 1c 100.mp3" to 100f,
-        "music/magical girl 1c 115.mp3" to 115f,
-        "music/mg safe area.mp3" to 50.9845f,
-        "music/mg suspicious.mp3" to 121.45169f,
         "music/stop.mp3" to 120f,
         "music/bassy_beat.mp3" to 120f,
     ).forEach {
@@ -304,7 +196,7 @@ class Music(context: Context) : AssetPack(context) {
 data class StreamBpm(val name: String, val stream: AudioClipEx, val bpm: Float, val basicVolume: Float, val offset: Float) :
     Releasable by stream
 
-private fun AudioClipEx.asTrack(name: String, bpm: Float, basicVolume: Float, offset: Float) =
+fun AudioClipEx.asTrack(name: String, bpm: Float, basicVolume: Float, offset: Float) =
     StreamBpm(name, this, bpm, basicVolume, offset)
 
 class Levels(context: Context, private val atlas: TextureAtlas? = null) : AssetPack(context) {
@@ -336,15 +228,19 @@ class Levels(context: Context, private val atlas: TextureAtlas? = null) : AssetP
             "level/corridor.tmj" to true,
             "level/dream.tmj" to true,
             "level/storage_room.tmj" to true,
+            "level/washing_room_2.tmj" to true,
+            "level/washing_room_3.tmj" to true,
+            "level/ending_room.tmj" to true,
         ).associate {
             val level = context.resourcesVfs[it.first].readTiledMap(atlas, tilesetBorder = 0)
                 .releasing()
-            it.first.levelName() to LevelSpec(level, it.second)
+            val levelName = it.first.levelName()
+            levelName to LevelSpec(levelName, level, it.second)
         }
     }
 }
 
-class LevelSpec(val level: TiledMap, val freeCameraY: Boolean)
+class LevelSpec(val name: String, val level: TiledMap, val freeCameraY: Boolean)
 
 class TileSets(context: Context, private val packer: RuntimeTextureAtlasPacker) :
     AssetPack(context) {

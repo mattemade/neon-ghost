@@ -19,6 +19,7 @@ import com.littlekt.util.seconds
 import com.soywiz.korma.geom.Angle
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.neonghost.Assets
+import io.itch.mattemade.neonghost.ExtraAssets
 import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.character.DepthBasedRenderable
 import io.itch.mattemade.neonghost.character.enemy.Enemy
@@ -47,6 +48,7 @@ class Player(
     private val world: World,
     private val choreographer: Choreographer,
     private val assets: Assets,
+    private val extraAssets: ExtraAssets,
     private val controller: InputMapController<GameInput>,
     private val particleSimulator: ParticleSimulator,
     private val vfs: Vfs,
@@ -74,6 +76,7 @@ class Player(
     private val canPunch: () -> Boolean,
     private val updateEnemyAi: () -> Unit,
     private val resetEnemyAi: () -> Unit,
+    private val magicTutorial: () -> Boolean,
 ) : Releasing by Self(),
     DepthBasedRenderable {
 
@@ -177,7 +180,7 @@ class Player(
     var isFacingLeft = false
     private var wasPunching = false
     private var nextLeftPunch = true
-    private var punchCooldown = 0f
+    var punchCooldown = 0f
     private var spellCooldown = 0f
     private var focusCooldown = 0f
 
@@ -190,6 +193,19 @@ class Player(
     private val deathCooldown = 1000f
     private val hitSlomoUntil = 250f
     private val minHitSlomoRate = 0.1f
+    private var forcedAnimation = false
+
+    fun showPrepare() {
+        forcedAnimation = true
+        currentAnimation = animations.prepare
+        currentAnimation.update(Duration.ZERO)
+    }
+
+    fun showPunch() {
+        forcedAnimation = true
+        currentAnimation = animations.leftPunch
+        currentAnimation.update(Duration.ZERO)
+    }
 
     private var activatePunch = false
     fun activatePunch() {
@@ -205,8 +221,8 @@ class Player(
 
     fun changePlaybackRate(value: Float) {
         changePlaybackRateExternal(value)
-        if (castingSound != -1) {
-            assets.sound.powerUpLoop.sound.setPlaybackRate(castingSound, value)
+        if (castingSound != -1 && extraAssets.isLoaded) {
+            extraAssets.sound.powerUpLoop.sound.setPlaybackRate(castingSound, value)
         }
     }
 
@@ -253,6 +269,9 @@ class Player(
     }
 
     fun stopBody(resetAnimationToIdle: Boolean = false) {
+        if (forcedAnimation) {
+            return
+        }
         if (resetAnimationToIdle) {
             currentAnimation = animations.idle
         }
@@ -269,6 +288,30 @@ class Player(
         toMeasure: Float,
         isFighting: Boolean
     ) {
+        if (forcedAnimation) {
+            if (currentAnimation === animations.prepare) {
+                focusCooldown = min(maxFocusCooldown, focusCooldown + dt.seconds)
+                if (focusCooldown == maxFocusCooldown) {
+                    castingTime += dt.seconds * 0.5f
+                    if (castingSound == -1 && extraAssets.isLoaded) {
+                        castingSound = choreographer.sound(
+                            extraAssets.sound.powerUpLoop.sound,
+                            x,
+                            y,
+                            looping = true,
+                            volume = 0.5f
+                        )
+                    }
+                }
+            } else if (currentAnimation === animations.leftPunch) {
+                if (castingSound != -1 && extraAssets.isLoaded) {
+                    extraAssets.sound.powerUpLoop.sound.stop(castingSound)
+                    castingSound = -1
+                }
+            }
+            currentAnimation.update(dt)
+            return
+        }
         if (reducingTime > 0f) {
             reducingTime -= notAdjustedDt.seconds
             if (reducingTime <= 0f) {
@@ -285,8 +328,12 @@ class Player(
             currentAnimation.update(dt)
             return
         }
-        val xMovement = controller.axis(GameInput.HORIZONTAL)
-        val yMovement = controller.axis(GameInput.VERTICAL)
+        tempVec2f2.set(controller.axis(GameInput.HORIZONTAL), controller.axis(GameInput.VERTICAL))
+        if (tempVec2f2.length() > 1f) {
+            tempVec2f2.setLength(1f)
+        }
+        val xMovement = tempVec2f2.x
+        val yMovement = tempVec2f2.y
         val moving =
             (xMovement != 0f || yMovement != 0f) && castingTime < castTime * castsToStopTime
         val matchBeat = toBeat < 0.2f || toBeat > 0.9f || toMeasure < 0.075f || toMeasure > 0.9625f
@@ -402,8 +449,8 @@ class Player(
                         if (castingTime / castTime < castsToStopTime) {
                             val castPower = castingTime / castTime
                             castProjectile(body.position, castPower.toInt(), isFacingLeft)
-                            if (castingSound != -1) {
-                                assets.sound.powerUpLoop.sound.stop(castingSound)
+                            if (castingSound != -1 && extraAssets.isLoaded) {
+                                extraAssets.sound.powerUpLoop.sound.stop(castingSound)
                                 castingSound = -1
                             }
                             // and then if will automatically fallback into punching!
@@ -413,19 +460,19 @@ class Player(
                         focusCooldown = 0f
                     } else { // just holding the Magic button
                         if (moving) {
-                            if (castingSound != -1) {
-                                assets.sound.powerUpLoop.sound.stop(castingSound)
+                            if (castingSound != -1 && extraAssets.isLoaded) {
+                                extraAssets.sound.powerUpLoop.sound.stop(castingSound)
                                 castingSound = -1
                             }
                             // moving while holding magic - it will drain focus
                             castingTime = max(0f, castingTime - notAdjustedSeconds / 2f)
                             recalculatePlaybackRate()
                         } else {
-                            if (castingSound != -1) {
-                                assets.sound.powerUpLoop.sound.setPosition(castingSound, x, y)
-                            } else {
+                            if (castingSound != -1 && extraAssets.isLoaded) {
+                                extraAssets.sound.powerUpLoop.sound.setPosition(castingSound, x, y)
+                            } else if (extraAssets.isLoaded) {
                                 castingSound = choreographer.sound(
-                                    assets.sound.powerUpLoop.sound,
+                                    extraAssets.sound.powerUpLoop.sound,
                                     x,
                                     y,
                                     looping = true
@@ -435,12 +482,21 @@ class Player(
                             currentAnimation = animations.prepare
                             if (castingTime < castTime * castsToStopTime) {
                                 castingTime += notAdjustedSeconds
+                                if (magicTutorial() && castingTime > castBeforeSlowingTime * castTime) {
+                                    castingTime = castBeforeSlowingTime * castTime
+                                }
                                 if (castingTime / castTime >= castsToStopTime) {
-                                    if (castingSound != -1) {
-                                        assets.sound.powerUpLoop.sound.stop(castingSound)
+                                    if (castingSound != -1 && extraAssets.isLoaded) {
+                                        extraAssets.sound.powerUpLoop.sound.stop(castingSound)
                                         castingSound = -1
                                     }
-                                    choreographer.soundIgnoringPlaybackRate(assets.sound.slowMo.sound, x, y)
+                                    if (extraAssets.isLoaded) {
+                                        choreographer.soundIgnoringPlaybackRate(
+                                            extraAssets.sound.slowMo.sound,
+                                            x,
+                                            y
+                                        )
+                                    }
                                     spawnNeonGhost(isFacingLeft)
                                     changePlaybackRate(0.000000000001f)
                                 } else {
@@ -451,8 +507,8 @@ class Player(
                     }
                 }
             } else if (castingTime > 0f) { // releasing after casting
-                if (castingSound != -1) {
-                    assets.sound.powerUpLoop.sound.stop(castingSound)
+                if (castingSound != -1 && extraAssets.isLoaded) {
+                    extraAssets.sound.powerUpLoop.sound.stop(castingSound)
                     castingSound = -1
                 }
                 if (castingTime / castTime < castsToStopTime) {
@@ -465,8 +521,8 @@ class Player(
                 castingTime = 0f
                 focusCooldown = 0f
             } else {
-                if (castingSound != -1) {
-                    assets.sound.powerUpLoop.sound.stop(castingSound)
+                if (castingSound != -1 && extraAssets.isLoaded) {
+                    extraAssets.sound.powerUpLoop.sound.stop(castingSound)
                     castingSound = -1
                 }
                 focusCooldown = max(0f, focusCooldown - dt.seconds)
@@ -641,11 +697,13 @@ class Player(
             val width = frame.width / Game.PPU
             val minRx = width / 4f
             val minRy = width / 8f
-            val deltaRx = spellRx - minRx
-            val deltaRy = spellRy - minRy
+            val maxRx = if (forcedAnimation) spellRx + spellRx * (castingTime / castTime / 4f) else spellRx
+            val deltaRx = maxRx - minRx
+            val maxRy = if (forcedAnimation) spellRy + spellRy * (castingTime / castTime / 4f) else spellRy
+            val deltaRy = maxRy - minRy
             val focusedMagic = if (castingTime > 0f) castingTime else spellCooldown
             val castingTimes = (focusedMagic / castTime).toInt()
-            if (castingTimes == castsToStopTime) {
+            if (castingTimes == castsToStopTime && !forcedAnimation) {
                 shapeRenderer.filledEllipse(
                     x = body.position.x.pixelPerfectPosition,
                     y = body.position.y.pixelPerfectPosition,
@@ -671,8 +729,8 @@ class Player(
                     shapeRenderer.filledEllipse(
                         x = body.position.x.pixelPerfectPosition,
                         y = body.position.y.pixelPerfectPosition,
-                        rx = spellRx * doubleRatio,
-                        ry = spellRy * doubleRatio,
+                        rx = maxRx * doubleRatio,
+                        ry = maxRy * doubleRatio,
                         innerColor = magicGirlShadowColor,
                         outerColor = magicGirlShadowColor,
                     )
@@ -684,8 +742,8 @@ class Player(
                     shapeRenderer.ellipse(
                         x = body.position.x.pixelPerfectPosition,
                         y = body.position.y.pixelPerfectPosition,
-                        rx = spellRx,
-                        ry = spellRy,
+                        rx = maxRx,
+                        ry = maxRy,
                         thickness = Game.IPPU,
                         color = magicGirlShadowEdgeColor,
                         startAngle = startAngle,

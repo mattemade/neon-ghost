@@ -274,10 +274,10 @@ class Enemy(
         val inverseBeat = 1f - toBeat
 
 
-        if (!isAggressive && !isDummy) {
+        if (canAct() && !isAggressive && !isDummy) {
             val isFacingPlayer = isFacingLeft && player.x < x || !isFacingLeft && player.x > x
             if (isFacingPlayer) {
-                if (tempVec2f2.set(player.x, player.y).subtract(x, y).length() < 1f) {
+                if (tempVec2f2.set(player.x, player.y).subtract(x, y).length() < 2.5f) {
                     isAggressive = true
                     onBecomingAggessive(this)
                 }

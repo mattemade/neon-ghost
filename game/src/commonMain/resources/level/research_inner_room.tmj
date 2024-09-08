@@ -79,9 +79,9 @@
         }, 
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            95, 95, 96, 97, 98, 99, 100, 101, 102, 94, 95, 96, 97, 98, 99, 0, 0, 0, 0, 0, 0,
+            107, 107, 108, 109, 110, 111, 112, 113, 114, 106, 107, 108, 109, 110, 111, 0, 0, 0, 0, 0, 0,
+            119, 119, 120, 121, 122, 123, 124, 125, 126, 118, 119, 120, 121, 122, 123, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 91, 92, 93, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 103, 104, 105, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 115, 116, 117, 0, 0, 0,
@@ -260,17 +260,6 @@
                  "y":307.75
                 }, 
                 {
-                 "height":15,
-                 "id":99,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48.25,
-                 "x":576.25,
-                 "y":357.25
-                }, 
-                {
                  "height":16.5,
                  "id":100,
                  "name":"",
@@ -395,6 +384,11 @@
                          "value":"rei>:It is turned off"
                         }, 
                         {
+                         "name":"3",
+                         "type":"string",
+                         "value":"rei<:It is stuck on level 18"
+                        }, 
+                        {
                          "name":"title",
                          "type":"string",
                          "value":"security lift"
@@ -432,6 +426,195 @@
                  "width":288,
                  "x":362.5,
                  "y":177
+                }, 
+                {
+                 "height":27.75,
+                 "id":108,
+                 "name":"some_terminal",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"terminal<:game by\\matte"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Terminal"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57.75,
+                 "x":142.75,
+                 "y":262
+                }, 
+                {
+                 "height":27.75,
+                 "id":109,
+                 "name":"some_terminal",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"terminal<:sprites and tiles by\\maschiat"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Terminal"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57.75,
+                 "x":335.806818181818,
+                 "y":213.761363636364
+                }, 
+                {
+                 "height":27.75,
+                 "id":110,
+                 "name":"some_terminal",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"terminal<:voice of Mirai by\\OD.MP3"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Terminal"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57.75,
+                 "x":336.625,
+                 "y":307.875
+                }, 
+                {
+                 "height":27.75,
+                 "id":111,
+                 "name":"some_terminal",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"terminal<:sound by\\M for Mediocre"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Terminal"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57.75,
+                 "x":480.375,
+                 "y":261.375
+                }, 
+                {
+                 "height":27.75,
+                 "id":112,
+                 "name":"some_terminal",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"terminal<:music by\\nicole starlight"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Terminal"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57.75,
+                 "x":624.791666666667,
+                 "y":259.125
+                }, 
+                {
+                 "height":27.75,
+                 "id":113,
+                 "name":"password_terminal",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"terminal<:Security lift password generator\n\nchoice alarm\nterminal<:Last generated password:\\password123\nrei>:Oh... Easy to remember\nremember password\nend\n\nchoice\nterminal<:No password in use\nrei>:Hmm, I better remember\\this terminal"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Terminal"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57.75,
+                 "x":624.897727272727,
+                 "y":548.852272727273
+                }, 
+                {
+                 "height":27.75,
+                 "id":114,
+                 "name":"data_terminal",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"terminal<:Secret data\n\nchoose Leave:leave; Read:read\n\nchoice leave\nend\n\nchoice read\nrei>:This is all encrypted\nchoice read,tools\nrei>:But I can hack it!\nrei>:...\nrei>:Success!\n\nterminal<:TOP SECRET\\FOR AUTHORISED USE ONLY\nterminal<:Magic extractor\\Can extract magic from\\its holder and put\\it in a liquid form\nterminal<:Magic-fueled power generator\\Turns the liquified magic\\into high-voltage electricity\nterminal<:Life support system\\Can prolong one's life by decades\nterminal<:Washing machine\\Erases one's personality\\for better results in\\enforced retraining\nterminal<:Magic detector\\Could be used to find more\\potential power sources\nrei>:...\nrei>:So that's how they've\\built that power grid\nrei>:That smells like danger\\I shouldn't stay here for long\nremember data\nend\n\nchoice read,no_tools\nrei>:I need to find where\\they took my hacking tools\nend\n\nchoice read\nrei>:Why did I leave my\\hacking tools at home?\n"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Terminal"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57.75,
+                 "x":767.458333333333,
+                 "y":551.791666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -498,17 +681,6 @@
                  "width":48,
                  "x":336,
                  "y":288
-                }, 
-                {
-                 "height":48,
-                 "id":92,
-                 "name":"terminal",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":576,
-                 "y":336
                 }, 
                 {
                  "height":48,
@@ -605,7 +777,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":108,
+ "nextobjectid":115,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

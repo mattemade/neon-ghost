@@ -3,6 +3,7 @@ package io.itch.mattemade.neonghost
 import com.littlekt.Context
 import com.littlekt.RemoveContextCallback
 import com.littlekt.createLittleKtApp
+import com.littlekt.log.Logger
 import io.itch.mattemade.neonghost.character.rei.Player
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -16,42 +17,47 @@ fun main() {
     createLittleKtApp {
         width = 960
         height = 540
-        title = "LittleKt Game Template"
+        title = "neon ghost"
         canvasId = CANVAS_ID
     }.start {
+        Logger.setLevels(Logger.Level.NONE)
         var playerHealth = Player.maxPlayerHealth
         var knowledge = mutableSetOf<String>().apply {
-            add("training")
+            //add("training")
             //add("no_tools")
-            add("tools")
+            //add("tools")
 //            add("ghost")
 //            add("card")
         }
         var eventState = mutableMapOf<String, Int>().apply {
-            put("enter_home", 1)
-            put("officer_catch", 1)
+            //put("enter_home", 1)
+            //put("officer_catch", 1)
         }
-        var door: String = "officer_catch"
-        var room: String = "interrogation_room"
+        var door: String = "player"
+        var room: String = "boxing_club"
         var activeMusic: String = "stop"
-        var argument = true
-        var cabinet = false
+        var argument = false
+        var cabinet = true
         var savedState: Game.SavedState? = null
-        window.location.href.substringAfter('?').split("&").asSequence().forEach {
-            argument = true
-            val split = it.split("=")
-            val key = split[0]
-            val value = split.getOrNull(1)?.let { decodeURIComponent(it) }
-            when (key) {
-                "hp" -> playerHealth = value?.toInt() ?: Player.maxPlayerHealth
-                "remember" -> knowledge.add(value ?: "")
-                "spawn" -> door = value ?: door
-                "room" -> room = value ?: room
-                "music" -> activeMusic = value ?: activeMusic
-                "cabinet" -> cabinet = true
-                else -> eventState[key] = value?.toIntOrNull() ?: 0
+        window.location.href.takeIf { it.contains('?') }
+            ?.substringAfter('?')
+            ?.split("&")
+            ?.asSequence()
+            ?.forEach {
+                argument = true
+                val split = it.split("=")
+                val key = split[0]
+                val value = split.getOrNull(1)?.let { decodeURIComponent(it) }
+                when (key) {
+                    "hp" -> playerHealth = value?.toInt() ?: Player.maxPlayerHealth
+                    "remember" -> knowledge.add(value ?: "")
+                    "spawn" -> door = value ?: door
+                    "room" -> room = value ?: room
+                    "music" -> activeMusic = value ?: activeMusic
+                    "cabinet" -> cabinet = true
+                    else -> eventState[key] = value?.toIntOrNull() ?: 0
+                }
             }
-        }
         if (argument) {
             savedState = Game.SavedState(
                 door = door,
@@ -93,7 +99,8 @@ private fun scheduleCanvasResize(context: Context) {
             width = "100%"
             height = "100%"
             // scale the canvas take all the available device pixel of hi-DPI display
-            this.asDynamic().zoom = "$zoom" // TODO: makes better pixels but impacts performance in firefox
+            this.asDynamic().zoom =
+                "$zoom" // TODO: makes better pixels but impacts performance in firefox
         }
         //canvas.getContext("webgl2").asDynamic().translate(0.5f, 0.5f)
         removeContextCallback?.invoke()

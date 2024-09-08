@@ -103,8 +103,8 @@
             0, 0, 0, 0, 0, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0,
             0, 0, 0, 0, 0, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 0, 0,
             0, 0, 0, 0, 0, 90, 90, 181, 182, 183, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 90, 90, 196, 197, 181, 182, 0, 183, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 211, 212, 196, 197, 181, 182, 0, 182, 183, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 90, 90, 196, 197, 181, 182, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 211, 212, 196, 197, 0, 0, 0, 182, 183, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 211, 211, 212, 196, 197, 90, 90, 90, 90, 90, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 211, 212, 90, 90, 90, 90, 90, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -153,25 +153,25 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "data":[88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88,
+            88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 88, 88, 88,
+            88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 88, 88, 88,
+            88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 88, 88, 88,
+            88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 88,
+            88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 88,
+            88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 88,
+            88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 88,
+            88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 88,
+            88, 88, 88, 88, 88, 0, 0, 176, 176, 176, 176, 176, 176, 176, 0, 0, 0, 0, 0, 88, 88,
+            88, 88, 88, 88, 88, 0, 0, 191, 190, 190, 190, 190, 190, 191, 0, 0, 0, 0, 0, 88, 88,
+            88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 0, 205, 205, 205, 0, 0, 0, 0, 0, 88, 88,
+            88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 88,
+            88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 88,
+            88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 88,
+            88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 88,
+            88, 88, 88, 88, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 88,
+            88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88,
+            88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88],
          "height":19,
          "id":4,
          "name":"decoration",
@@ -192,11 +192,11 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 181, 182, 183, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 196, 197, 181, 182, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 211, 212, 196, 197, 181, 182, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 211, 212, 196, 197, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 211, 212, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -470,7 +470,12 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"\nrei<:It is not fully loaded,\\but should be enough\\to land to the street\n\nchoice ghost\nchoose Leave:leave; Fly to\\the sky:sky; Fly to the\\street:street\nchoice\n\nnot ghost\nchoose Leave:leave; Fly to the\\street:street\nchoice\nnot\n\nchoice leave\nend\n\nchoice street\njetpack<:ENDING 5 FREEDOM DIVE\nend\n\nchoice sky\nstop\n#trigger jetpackFlight\nscreen fadeOut\nwait 3\nrei<:Oh no, the tank is empty!\nrei<:Mirai, please,\\get ready to catch me!\nvoice 358\nghost>:We are so close!\\Leeet's goooo!\nstop\n#trigger magicFlight\nscreen fadeIn\ntrigger transform\nremember magic\nrei<:Wow, what happened to my clothes?!\nvoice 363\nghost>: Ha ha ha, yes,\\it always happens\nvoice 364\nghost>: Now, try to focus on that\\feeling a bit longer,\\and release the power around\nhelp<:KEYBOARD: J OR X\\GAMEPAD: A OR Y\\HOLD TO FOCUS\\RELEASE TO RELEASE\ncamera lock\nstate 1 tutorial_trigger\nstate 1"
+                         "value":"\nrei<:It is not fully loaded,\\but should be enough\\to land to the street\n\nchoice ghost\nchoose Leave:leave; Fly to\\the sky:sky; Fly to the\\street:street\nchoice\n\nnot ghost\nchoose Leave:leave; Fly to the\\street:street\nchoice\nnot\n\nchoice leave\nend\n\nchoice street\njetpack<:Are you sure?\\There is no way back\nchoose No:no;Yes:yes\nchoice street,no\nend\nchoice street,yes\nremember jetpack\nteleport ending_room\n\nchoice sky\nstop\n#trigger jetpackFlight\nscreen fadeOut\nwait 3\nrei<:Oh no, the tank is empty!\nrei<:Mirai, please,\\get ready to catch me!\nvoice 358\nghost>:We are so close!\\Leeet's goooo!\nstop\n#trigger magicFlight\nscreen fadeIn\ntrigger transform\nremember magic\nrei<:Wow, what happened\\to my clothes?!\nvoice 363\nghost>: Ha ha ha, yes,\\it always happens\nvoice 364\nghost>: Now, try to focus on that\\feeling a bit longer,\\and release the power around\nhelp<:KEYBOARD: J OR X\\GAMEPAD: A OR Y\\HOLD TO FOCUS\\RELEASE TO RELEASE\ncamera lock\nstate 1 tutorial_trigger\nstate 1"
+                        }, 
+                        {
+                         "name":"2",
+                         "type":"string",
+                         "value":"rei>:No fuel left"
                         }, 
                         {
                          "name":"title",
@@ -522,9 +527,9 @@
                  "name":"roof_view",
                  "properties":[
                         {
-                         "name":"2",
+                         "name":"0",
                          "type":"string",
-                         "value":"not sky\ncamera trigger\nrei<:You can see the\\whole city from here\nrei<:So I am in the central\\research facility of CorpX\ncamera sky_view\nrei<:The sky is so close...\\Yet out of reach\nrei<:I wish I could see the stars,\\just like in my dream\nremember sky\n\nnot\nchoice ghost\ncamera sky_view\nvoice 339\nghost>:Oh... I see...\\You really can't see\\anything through...\nrei<:Yeah, it was like\\that as long\\as I remember\nrei<:Those who can't get\\the electricity from CorpX\\just burn whatever\\fuel they have\nvoice 342\nghost>:I could lift you up with\\my magic... But I am afraid\\it will be the last thing\\I will ever do\nvoice 343\nghost>:Maybe it is a good\\idea, though...\ncamera jetpack\nrei<:Wait, look there,\\there is a jetpack\nrei<:It is not fully loaded,\\but it should be fine\nrei<:Can you catch me if\\I will start falling down?\nvoice 347\nghost>:Yes, I have enough\\powers to land you safely\nvoice 348\nghost>:Are you going to risk\\your life entrusting me?\nrei<:Yes...\nrei<:I feel this is my\\first and last chance\n\nchoice\ncamera follow\nstate 1\n"
+                         "value":"not sky\ncamera trigger\nrei<:You can see the\\whole city from here\nrei<:So I am in the central\\research facility of CorpX\ncamera sky_view\nrei<:The sky is so close...\\Yet out of reach\nrei<:I wish I could see the stars,\\just like in my dream\nremember sky\n\nnot\nchoice ghost\ncamera sky_view\nvoice 339\nghost>:Oh... I see...\\You really can't see\\anything through...\nrei<:Yeah, it was like\\that as long\\as I remember\nrei<:Those who can't get\\the electricity from CorpX\\just burn whatever\\fuel they have\nvoice 342\nghost>:I could lift you up with\\my magic... But I am afraid\\it will be the last thing\\I will ever do\nvoice 343\nghost>:Maybe it is a good\\idea, though...\ncamera jetpack\nrei<:Wait, look, there\\is a jetpack\nrei<:It is not fully loaded,\\but it should be fine\nrei<:Can you catch me if\\I will start falling down?\nvoice 347\nghost>:Yes, I have enough\\powers to land you safely\nvoice 348\nghost>:Are you going to risk\\your life entrusting me?\nrei<:Yes...\nrei<:I feel this is my\\first and last chance\n\nchoice\ncamera follow\nstate 1\n"
                         }, 
                         {
                          "name":"type",
@@ -557,6 +562,11 @@
                          "name":"2",
                          "type":"string",
                          "value":"rei>:It is turned off"
+                        }, 
+                        {
+                         "name":"3",
+                         "type":"string",
+                         "value":"rei<:It is stuck on level 18"
                         }, 
                         {
                          "name":"title",
@@ -615,7 +625,7 @@
                         {
                          "name":"4",
                          "type":"string",
-                         "value":"voice 369\nghost>:Awesome, you are natural!\\That reminds me of\\good old days...\nvoice 370\nghost>:We should seek for\\other magical girls once...\\once we... escape...\nvoice 371\nghost>:But for now we need\\to protect them! You've said\\there is a brainwashing\\machine? We have to destroy it!\n\nstate 5\nstate 1 roof_fight\n\ncamera follow"
+                         "value":"voice 369\nghost>:Awesome, you are natural!\\That reminds me of\\good old days...\nvoice 370\nghost>:We should seek for\\other magical girls once...\\once we... escape...\nvoice 371\nghost>:But for now we need\\to protect them! You've said\\there is a brainwashing\\machine? We have to destroy it!\n\nstate 5\nstate 1 roof_fight\nstate 2 jetpack\nstate 1 boss_fight\n\ncamera follow\n\nsound got\nhelp<:Transfomed into a Magical Girl\nsave"
                         }, 
                         {
                          "name":"type",
@@ -637,7 +647,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"guard>:here she is!\\take her!\nrei<:let's test my new powers\n\nfight guard>0.9,guard>0.1,guard>0.5\n\nguard?:don't let her escape!\n\nfight guard>0.9,guard>0.1,guard>0.5\n\nguard>:Turn off the lift!\n\nstate 2\nstate 2 security_lift_enter\nstate 1 control_room_lift_terminal"
+                         "value":"guard>:here she is!\\take her!\nrei<:let's test my new powers\n\nfight guard>0.9,guard>0.1,guard>0.5\n\nguard>:don't let her escape!\n\nfight guard>0.9,guard>0.1,guard>0.5\n\nguard>:Turn off the lift!\n\nstate 2\nstate 2 security_lift_enter\nstate 1 control_room_lift_terminal"
                         }, 
                         {
                          "name":"type",

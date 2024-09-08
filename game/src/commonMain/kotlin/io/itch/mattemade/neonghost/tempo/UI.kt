@@ -12,6 +12,7 @@ import com.littlekt.math.MutableVec2f
 import com.littlekt.math.PI_F
 import com.littlekt.math.Rect
 import com.littlekt.math.Vec2f
+import com.littlekt.math.clamp
 import com.littlekt.math.geom.radians
 import com.littlekt.util.Scaler
 import com.littlekt.util.milliseconds
@@ -381,7 +382,7 @@ class UI(
             }
         }
         availableInteraction?.let {
-            if (controller.pressed(GameInput.ANY_ACTION) && canAct()) {
+            if (controller.pressed(GameInput.ANY_ACTION) && canInteract()) {
                 player.stopBody(resetAnimationToIdle = true)
                 activateInteraction(it)
                 return
@@ -408,7 +409,7 @@ class UI(
     }
 
     fun setFadeWorld(alpha: Float) {
-        fadeWorldColor.a = alpha
+        fadeWorldColor.a = alpha.clamp(0f, 1f)
     }
 
     private var fadeEverythingColor = MutableColor(0f, 0f, 0f, 0f)
@@ -417,6 +418,6 @@ class UI(
     }
 
     fun setFadeEverything(alpha: Float) {
-        fadeEverythingColor.a = alpha
+        fadeEverythingColor.a = alpha.clamp(0f, 1f)
     }
 }

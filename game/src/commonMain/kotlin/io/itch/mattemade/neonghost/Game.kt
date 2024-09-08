@@ -61,6 +61,7 @@ class Game(
             }
         }
     val assets = Assets(context, ::onAnimationEvent).releasing()
+    val extraAssets = ExtraAssets(context).releasing()
     val inputController = context.bindInputs()
     var inGame: InGame? = null
     val ghostOverlay by lazy {
@@ -91,6 +92,7 @@ class Game(
     var floatScale = 1f
     private var audioReady: Boolean = false
     private var assetsReady: Boolean = false
+    private var extraAssetsReady: Boolean = false
     private var fpsCheckTimeout = 5000f
     private var framesRenderedInPeriod = 0
     private var absoluteTime = Random.nextFloat() * 100f
@@ -129,6 +131,7 @@ class Game(
         inGame = InGame(
             context,
             assets,
+            extraAssets,
             particleShader,
             level,
             inputController,
@@ -143,15 +146,15 @@ class Game(
             wentThroughDoor = wentThrough,
             saveState = {
                 saveGame(
-                    wentThrough!!,
+                    it ?: wentThrough!!,
                     previousRoomName!!,
                     savedState!!.playerHealth,
                     savedState!!.isMagic,
                     savedState!!.deaths
                 )
             },
-            loadState = {
-                //TODO
+            restartGame = {
+                resetGame()
             },
             playerHealth = playerHealth,
             isMagic = isMagic
@@ -190,7 +193,9 @@ class Game(
             ghostOverlay.isActive = it.ghostActive
             ghostOverlay.isMoving = it.ghostActive
             it.activeMusic?.let { activeMusic ->
-                choreographer.play(assets.music.concurrentTracks[activeMusic]!!)
+                val track = assets.music.concurrentTracks[activeMusic]
+                    ?: if (extraAssets.isLoaded) extraAssets.music.concurrentTracks[activeMusic] else null
+                track?.let { choreographer.play(it) }
             }
             previousRoomName = it.room
             openDoor(it.door, it.room, it.playerHealth, it.isMagic, it.deaths + 1)
@@ -198,11 +203,11 @@ class Game(
     }
 
     private fun resetGame() {
+        choreographer.reset()
+        ghostOverlay.reset()
         eventState.clear()
         playerKnowledge.clear()
         interactionOverride.clear()
-        ghostOverlay.isActive = false
-        ghostOverlay.isMoving = false
         previousRoomName = "boxing_club"
         openDoor("player", "boxing_club", Player.maxPlayerHealth, false, 0)
 
@@ -246,6 +251,8 @@ class Game(
                         arguments += "&$key=$value"
                     }
                     println(arguments)
+                } else if (key == Key.DELETE) {
+                    loadGame()
                 }
                 return false
             }
@@ -312,6 +319,8 @@ class Game(
             }
             if (!assetsReady) {
                 assetsReady = audioReady && assets.isLoaded
+            } else if (!extraAssetsReady) {
+                extraAssetsReady = extraAssets.isLoaded
             }
             if (focused && assetsReady) {
                 if (inGame == null) {

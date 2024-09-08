@@ -1,0 +1,258 @@
+{ "compressionlevel":-1,
+ "height":8,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89],
+         "height":8,
+         "id":1,
+         "name":"floor",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":13,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[96, 97, 98, 99, 94, 95, 95, 95, 96, 91, 92, 93, 94,
+            108, 109, 110, 111, 106, 107, 107, 107, 108, 103, 104, 105, 106,
+            120, 121, 122, 123, 118, 119, 119, 119, 120, 115, 116, 117, 118,
+            0, 0, 0, 0, 143, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 148, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":3,
+         "name":"wall",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":13,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":4,
+         "name":"decoration",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":13,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":11,
+         "name":"decoration2",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":13,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "id":10,
+         "name":"foreground",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":13,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"walls",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"trigger",
+         "objects":[
+                {
+                 "height":48,
+                 "id":45,
+                 "name":"washing_machine_interaction",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":192,
+                 "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":47,
+                 "name":"boss_fight",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":192,
+                 "y":144
+                }, 
+                {
+                 "height":96,
+                 "id":48,
+                 "name":"ending",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"music stop\ntrigger fullStop\nvoice 468\nghost<:Focus you magic\\as hard as you can,\\here we go!\nstop\ntrigger activatePrepare\nwait 4\nvoice 470\nghost<:Just a little more...\nstop\nwait 2\nvoice 471\nghost<:Punch! Now!\nstop\ntrigger activatePunch\nwait 2\ntrigger goodbye\nwait 3\nvoice 473\nghost<:Thank you...\\And goodbye...\nstop\ntrigger waitForDisappear\nremember ending\nteleport washing_room_3"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":144,
+                 "x":144,
+                 "y":144
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"spawn",
+         "objects":[
+                {
+                 "height":48,
+                 "id":41,
+                 "name":"machine",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":144,
+                 "x":240,
+                 "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":42,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":371.5,
+                 "y":144.5
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":12,
+ "nextobjectid":49,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"Outside-Wall 48_48.tsj"
+        }, 
+        {
+         "firstgid":46,
+         "source":"Outside-Light 150_150.tsj"
+        }, 
+        {
+         "firstgid":49,
+         "source":"Outside-Window 48_48.tsj"
+        }, 
+        {
+         "firstgid":77,
+         "source":"terminal_tile.tsj"
+        }, 
+        {
+         "firstgid":78,
+         "source":"abstract.tsj"
+        }, 
+        {
+         "firstgid":89,
+         "source":"tilesets\/0_Asset_Floor_4848.tsj"
+        }, 
+        {
+         "firstgid":91,
+         "source":"tilesets\/0_Asset_Wall_144144.tsj"
+        }, 
+        {
+         "firstgid":127,
+         "source":"tilesets\/0_Asset_Chair_240240.tsj"
+        }, 
+        {
+         "firstgid":152,
+         "source":"tilesets\/0_Asset_Control_9696.tsj"
+        }],
+ "tilewidth":48,
+ "type":"map",
+ "version":"1.10",
+ "width":13
+}

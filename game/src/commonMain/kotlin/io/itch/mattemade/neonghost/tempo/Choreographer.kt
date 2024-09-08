@@ -3,6 +3,7 @@ package io.itch.mattemade.neonghost.tempo
 import com.littlekt.Context
 import com.littlekt.audio.AudioClipEx
 import com.littlekt.util.seconds
+import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.StreamBpm
 import kotlin.time.Duration
 
@@ -38,12 +39,35 @@ class Choreographer(private val context: Context) {
     val isActive: Boolean
         get() = currentlyPlaying != null
 
+    private var isFullyStopped = false
+
+    fun reset() {
+        isFullyStopped = false
+    }
+
+    fun fullStop() {
+        isFullyStopped = true
+    }
+
+    var previousMusic: String? = null
+    var currentMusic: String? = null
     fun play(music: StreamBpm) {
+        if (isFullyStopped) {
+            return
+        }
+        println("requesting to play ${music.name} after $currentlyPlaying after $previousMusic")
+        previousMusic = currentMusic
+        currentMusic = music.name
         if (music === currentlyPlayingTrack) {
             return
         }
         currentlyPlaying?.stop(currentlyPlayingId)
-        currentlyPlayingId = music.stream.play(volume = music.basicVolume * masterVolume, referenceDistance = 10000f, rolloffFactor = 0f, loop = true)
+        currentlyPlayingId = music.stream.play(
+            volume = music.basicVolume * masterVolume,
+            referenceDistance = 10000f,
+            rolloffFactor = 0f,
+            loop = true
+        )
         music.stream.setPlaybackRate(currentlyPlayingId, playbackRate.toFloat())
         bpm = music.bpm
         currentlyPlaying = music.stream
@@ -75,23 +99,41 @@ class Choreographer(private val context: Context) {
         time += playbackRateBasedDt.seconds
         toBeat = (time % secondsPerBeat) / secondsPerBeat
         toMeasure = (time % secondsPerMeasure) / secondsPerMeasure
-        bpmBasedDt = playbackRateBasedDt//if (bpm > 0f) playbackRateBasedDt.times(bpm / 150.0) else playbackRateBasedDt
+        bpmBasedDt =
+            playbackRateBasedDt//if (bpm > 0f) playbackRateBasedDt.times(bpm / 150.0) else playbackRateBasedDt
     }
+
     fun uiSound(sound: AudioClipEx, volume: Float, onEnd: ((Int) -> Unit)? = null): Int {
         everActiveSoundClips.add(sound)
-        val id = sound.play(positionX = xPosition, positionY = yPosition, volume = volume * masterVolume, onEnded = onEnd)
+        val id = sound.play(
+            positionX = xPosition,
+            positionY = yPosition,
+            volume = volume * masterVolume,
+            onEnded = onEnd
+        )
         sound.setPlaybackRate(id, playbackRate.toFloat())
         return id
     }
 
-    fun sound(sound: AudioClipEx, x: Float, y: Float, looping: Boolean = false): Int {
-        everActiveSoundClips.add(sound)
-        val id = sound.play(positionX = x, positionY = y, volume = masterVolume, loop = looping)
-        sound.setPlaybackRate(id, playbackRate.toFloat())
-        return id
+    fun sound(sound: AudioClipEx, x: Float, y: Float, looping: Boolean = false, volume: Float = 1f): Int {
+        if (x >= xPosition - Game.visibleWorldWidth / 1.5f && x <= xPosition + Game.visibleWorldWidth / 1.5f &&
+            y >= yPosition - Game.visibleWorldHeight / 1.5f && y <= yPosition + Game.visibleWorldHeight / 1.5f
+        ) {
+            everActiveSoundClips.add(sound)
+            val id = sound.play(positionX = x, positionY = y, volume = masterVolume * volume, loop = looping)
+            sound.setPlaybackRate(id, playbackRate.toFloat())
+            return id
+        } else {
+            return -1
+        }
     }
 
-    fun soundIgnoringPlaybackRate(sound: AudioClipEx, x: Float, y: Float, looping: Boolean = false): Int {
+    fun soundIgnoringPlaybackRate(
+        sound: AudioClipEx,
+        x: Float,
+        y: Float,
+        looping: Boolean = false
+    ): Int {
         val id = sound.play(positionX = x, positionY = y, volume = masterVolume, loop = looping)
         return id
     }

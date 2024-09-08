@@ -1,90 +1,99 @@
 { "compressionlevel":-1,
- "height":6,
+ "height":8,
  "infinite":false,
  "layers":[
         {
-         "data":[0, 0, 0,
-            89, 89, 89,
-            90, 89, 90,
-            89, 90, 89,
-            90, 89, 90,
-            89, 90, 89],
-         "height":6,
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
+            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89],
+         "height":8,
          "id":1,
          "name":"floor",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":3,
+         "width":13,
          "x":0,
          "y":0
         }, 
         {
-         "data":[100, 101, 102,
-            112, 113, 114,
-            124, 125, 126,
-            0, 0, 0,
-            0, 0, 0,
-            0, 0, 0],
-         "height":6,
+         "data":[96, 97, 98, 99, 94, 95, 95, 95, 96, 91, 92, 93, 94,
+            108, 109, 110, 111, 106, 107, 107, 107, 108, 103, 104, 105, 106,
+            120, 121, 122, 123, 118, 119, 119, 119, 120, 115, 116, 117, 118,
+            0, 0, 0, 0, 143, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 148, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
          "id":3,
          "name":"wall",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":3,
+         "width":13,
          "x":0,
          "y":0
         }, 
         {
-         "data":[0, 0, 0,
-            0, 0, 0,
-            0, 0, 0,
-            0, 0, 0,
-            0, 0, 0,
-            0, 0, 0],
-         "height":6,
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
          "id":4,
          "name":"decoration",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":3,
+         "width":13,
          "x":0,
          "y":0
-        },
-    
+        }, 
         {
-         "data":[0, 0, 0,
-            0, 0, 0,
-            0, 0, 0,
-            0, 0, 0,
-            0, 0, 0,
-            0, 0, 0],
-         "height":6,
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
          "id":11,
          "name":"decoration2",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":3,
+         "width":13,
          "x":0,
          "y":0
         }, 
         {
-         "data":[0, 0, 0,
-            0, 0, 0,
-            0, 0, 0,
-            172, 173, 174,
-            175, 176, 177,
-            178, 179, 180],
-         "height":6,
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
          "id":10,
          "name":"foreground",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":3,
+         "width":13,
          "x":0,
          "y":0
         }, 
@@ -94,34 +103,33 @@
          "name":"walls",
          "objects":[
                 {
-                 "height":144,
+                 "height":240,
                  "id":28,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":144,
+                 "width":624,
                  "x":0,
                  "y":144
                 }, 
                 {
-                 "height":17.6363636363637,
-                 "id":29,
+                 "height":28.3636363636364,
+                 "id":43,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":47.2727272727273,
-                 "x":25.6363636363636,
-                 "y":163.090909090909
+                 "width":50.5454545454546,
+                 "x":368.613636363636,
+                 "y":155.681818181818
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
-        },
-    
+        }, 
         {
          "draworder":"topdown",
          "id":5,
@@ -130,12 +138,12 @@
                 {
                  "height":48,
                  "id":30,
-                 "name":"security_lift_enter",
+                 "name":"security_lift_enter_2",
                  "properties":[
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"music mg safe area"
+                         "value":"rename security_lift_exit:Level B2\nstate 6 security_lift_exit\nteleport security_lift"
                         }, 
                         {
                          "name":"title",
@@ -145,36 +153,30 @@
                         {
                          "name":"type",
                          "type":"string",
-                         "value":"trigger"
+                         "value":"interaction"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":144,
-                 "x":0,
-                 "y":240
+                 "width":119.454545454545,
+                 "x":456.545454545455,
+                 "y":144
                 }, 
                 {
-                 "height":33.1363636363637,
+                 "height":48,
                  "id":34,
-                 "name":"security_lift_terminal",
+                 "name":"main_lift_enter",
                  "properties":[
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal>:Where to go?\n\nchoose Cancel:cancel;B3:b3;B2:b2;B1:b1;18:18;25:25;Roof:roof\n\nchoice cancel\nend\n\nchoice 18\nrename security_lift_exit:Level 18\nstate 3 security_lift_exit\nchoice 18,alarm\nstate 3 security_lift_enter\nstate 1\nchoice 18\nend\n\nchoice alarm\nrei>:Strange, we stopped\\on a different floor\nstate 1\nrename security_lift_exit:Level 18\nstate 3 security_lift_exit\nstate 3 security_lift_enter\nend\n\nchoice b3,b3_unlock\nrename security_lift_exit:Level B3\nstate 0 security_lift_exit\nend\n\nchoice b3\nterminal>:Floor access denied\\Contact the control room\\at level 18\nend\n\nchoice b2,ending\nrename security_lift_exit:Level B2\nstate 6 security_lift_exit\nend\n\nchoice b2\nrename security_lift_exit:Level B2\nstate 1 security_lift_exit\nend\n\nchoice b1\nrename security_lift_exit:Level B1\nstate 2 security_lift_exit\nend\n\nchoice 25\nrename security_lift_exit:Level 25\nstate 4 security_lift_exit\nend\n\nchoice roof\nrename security_lift_exit:Roof\nstate 5 security_lift_exit\nend\n"
-                        }, 
-                        {
-                         "name":"1",
-                         "type":"string",
-                         "value":"terminal<:Access denied,\\contact control room\\at level 18\nrei>:That's exactly\\where we are"
+                         "value":"rename main_lift_exit:Level B1\nteleport main_lift"
                         }, 
                         {
                          "name":"title",
                          "type":"string",
-                         "value":"Security lift\\terminal"
-                        },
-                    
+                         "value":"Main lift"
+                        }, 
                         {
                          "name":"type",
                          "type":"string",
@@ -183,9 +185,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":64.1818181818182,
-                 "x":26,
-                 "y":163.090909090909
+                 "width":144,
+                 "x":-194,
+                 "y":146
                 }, 
                 {
                  "height":48,
@@ -193,75 +195,22 @@
                  "name":"security_lift_exit",
                  "properties":[
                         {
-                         "name":"0",
-                         "type":"string",
-                         "value":"teleport power_plant"
-                        }, 
-                        {
-                         "name":"1",
-                         "type":"string",
-                         "value":"teleport washing_room"
-                        }, 
-                        {
-                         "name":"2",
-                         "type":"string",
-                         "value":"teleport corridor"
-                        },
-                    
-                        {
-                         "name":"3",
-                         "type":"string",
-                         "value":"teleport control_room"
-                        }, 
-                        {
-                         "name":"4",
-                         "type":"string",
-                         "value":"teleport research_inner_room"
-                        }, 
-                        {
-                         "name":"5",
-                         "type":"string",
-                         "value":"teleport roof"
-                        },
-                    
-                        {
-                         "name":"6",
-                         "type":"string",
-                         "value":"teleport washing_room_3"
-                        }, 
-                        {
-                         "name":"title",
-                         "type":"string",
-                         "value":"go out"
-                        }, 
-                        {
                          "name":"type",
                          "type":"string",
-                         "value":"interaction"
+                         "value":"trigger"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":144,
-                 "x":0,
-                 "y":240
-                },
-            
+                 "width":48,
+                 "x":480,
+                 "y":144
+                }, 
                 {
                  "height":48,
                  "id":37,
-                 "name":"security_lift_enter_2",
+                 "name":"main_lift_exit",
                  "properties":[
-                        {
-                         "name":"0",
-                         "type":"string",
-                         "value":"music mg safe area"
-                        }, 
-                        {
-                         "name":"title",
-                         "type":"string",
-                         "value":"security lift"
-                        }, 
                         {
                          "name":"type",
                          "type":"string",
@@ -271,8 +220,57 @@
                  "type":"",
                  "visible":true,
                  "width":144,
-                 "x":0,
-                 "y":240
+                 "x":-183,
+                 "y":78
+                }, 
+                {
+                 "height":49.5,
+                 "id":38,
+                 "name":"washing_terminal_3",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"terminal<:Unkown error"
+                        }, 
+                        {
+                         "name":"title",
+                         "type":"string",
+                         "value":"Terminal"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"interaction"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":55.9166666666666,
+                 "x":370,
+                 "y":143
+                }, 
+                {
+                 "height":48,
+                 "id":48,
+                 "name":"ending",
+                 "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"wait 2\nrei<:Mirai...\nrei<:Goodbye...\nstate 1\nremember lastFlash"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":192,
+                 "y":144
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -287,14 +285,14 @@
          "objects":[
                 {
                  "height":48,
-                 "id":36,
+                 "id":42,
                  "name":"terminal",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":96,
-                 "x":0,
-                 "y":144
+                 "width":48,
+                 "x":371.5,
+                 "y":144.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -303,7 +301,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":38,
+ "nextobjectid":49,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -320,8 +318,7 @@
         {
          "firstgid":49,
          "source":"Outside-Window 48_48.tsj"
-        },
-    
+        }, 
         {
          "firstgid":77,
          "source":"terminal_tile.tsj"
@@ -333,8 +330,7 @@
         {
          "firstgid":89,
          "source":"tilesets\/0_Asset_Floor_4848.tsj"
-        },
-    
+        }, 
         {
          "firstgid":91,
          "source":"tilesets\/0_Asset_Wall_144144.tsj"
@@ -346,14 +342,9 @@
         {
          "firstgid":152,
          "source":"tilesets\/0_Asset_Control_9696.tsj"
-        },
-    
-        {
-         "firstgid":172,
-         "source":"tilesets\/door_transparent.tsj"
         }],
  "tilewidth":48,
  "type":"map",
  "version":"1.10",
- "width":3
+ "width":13
 }

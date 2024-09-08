@@ -114,7 +114,7 @@
                  "y":144
                 }, 
                 {
-                 "height":67.3333333333333,
+                 "height":68.7083333333333,
                  "id":29,
                  "name":"",
                  "rotation":0,
@@ -338,7 +338,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"rei>:here we go"
+                         "value":"voice 461\nghost<:Are you ready?\n\nchoose Yes:yes;No:no\n\nchoice no\nvoice 463\nghost<:Take your time to\\get ready, but don't\\take too long!\nend\n\nchoice yes\nrei>:I am ready\nteleport washing_room_2\n"
                         }, 
                         {
                          "name":"title",
@@ -353,7 +353,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":139.9167,
+                 "width":148.780336363636,
                  "x":227.79165,
                  "y":139.25
                 }, 
@@ -373,6 +373,28 @@
                  "width":42.5,
                  "x":288,
                  "y":48
+                }, 
+                {
+                 "height":192,
+                 "id":47,
+                 "name":"boss_fight",
+                 "properties":[
+                        {
+                         "name":"1",
+                         "type":"string",
+                         "value":"camera trigger\nofficer<:Here you are! Are you ready?\nrei>:Ready for what?\nofficer<:I'm the one asking\\the questions here!\n\nfight guard<0.1,guard<0.9\n\n#trigger demon\n\nstate 2\nstate 1 washing_machine_interaction\n\nmusic mg safe area\ncamera follow\nwait 2\nvoice 455\nghost<: Well done, Rei!\\Now, let's take\\care of that thing\ncamera machine_top_camera\nvoice 456\nghost<: It is huge...\\I don't think you\\can damage it physically\nvoice 457\nghost<: If I channel my magic\\through you, you should\\have enough power\\to punch through it\nrei>: Do you have\\any magic left?\nvoice 459\nghost<: Don't worry about me,\\I've been done for a long time\nvoice 460\nghost<: And I am willing to\\put down what remains from\\my life in protecting\\all the future Magical Girls!\ncamera follow\nvoice 461\nghost<:Are you ready?\n\nchoose Yes:yes;No:no\n\nchoice no\nvoice 463\nghost<:Take your time to\\get ready, but don't\\take too long!\nend\n\nchoice yes\nrei>:I am ready\nteleport washing_room_2"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"trigger"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":288,
+                 "x":192,
+                 "y":192
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -428,6 +450,28 @@
                  "width":48,
                  "x":371.5,
                  "y":144.5
+                }, 
+                {
+                 "height":48,
+                 "id":48,
+                 "name":"officer_boss",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"officer"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":192,
+                 "y":336
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -436,7 +480,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":47,
+ "nextobjectid":49,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

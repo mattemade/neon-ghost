@@ -224,7 +224,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"guard<:Here she is!\n\nfight guard<0.1, guard>0.1, guard<0.9, guard>0.9\n\nguard<:Not that easy!\n\nfight guard<0.1, guard>0.1, guard<0.9, guard>0.9\n\nstate 1"
+                         "value":"guard<:Here she is!\n\nfight guard<0.1, guard>0.1, guard<0.9, guard>0.9\n\nstate 1"
                         }, 
                         {
                          "name":"type",

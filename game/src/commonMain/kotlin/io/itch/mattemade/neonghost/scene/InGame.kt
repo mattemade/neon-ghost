@@ -21,6 +21,7 @@ import com.littlekt.util.seconds
 import com.soywiz.kds.fastCastTo
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.neonghost.Assets
+import io.itch.mattemade.neonghost.ExtraAssets
 import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.Game.Companion.IPPU
 import io.itch.mattemade.neonghost.Game.Companion.visibleWorldHeight
@@ -56,6 +57,7 @@ import kotlin.time.Duration
 class InGame(
     private val context: Context,
     private val assets: Assets,
+    private val extraAssets: ExtraAssets,
     private val particleShader: ShaderProgram<ParticleVertexShader, ParticleFragmentShader>,
     private val levelSpec: LevelSpec,
     private val inputController: InputMapController<GameInput>,
@@ -67,13 +69,14 @@ class InGame(
     private val onGameOver: () -> Unit,
     private val goThroughDoor: (door: String, toRoom: String, playerHealth: Int, isMagic: Boolean, deaths: Int) -> Unit,
     private val wentThroughDoor: String? = null,
-    private val saveState: () -> Unit,
-    private val loadState: () -> Unit,
+    private val saveState: (fromTrigger: String?) -> Unit,
+    private val restartGame: () -> Unit,
     private val playerHealth: Int,
     private val isMagic: Boolean,
     private val deaths: Int,
 ) : Releasing by Self() {
 
+    private var initialized = false
     private val level = levelSpec.level
     private val sharedFrameBuffer =
         context.createPixelFrameBuffer(Game.virtualWidth, Game.virtualHeight)
@@ -120,7 +123,7 @@ class InGame(
             ::selectOption,
             player::isMagicGirl,
             canAct = {
-                timedActions.isEmpty() && dream == null && transformation == null && ghostFromPowerPlant == null && enemies.isEmpty()
+                timedActions.isEmpty() && dream == null && transformation == null && ghostFromPowerPlant == null
             },
             canInteract = {
                 timedActions.isEmpty() && !isInDialogue && enemies.isEmpty()
@@ -131,6 +134,7 @@ class InGame(
     private val eventExecutor by lazy {
         EventExecutor(
             assets,
+            extraAssets,
             player,
             ui,
             cameraMan,
@@ -153,13 +157,41 @@ class InGame(
     }
 
     private fun openDoor(door: String, toRoom: String) {
+        val finalFinalRoom = toRoom == "washing_room_3"
+        val finalRoom = (toRoom == "washing_room_2" || finalFinalRoom) && !playerKnowledge.contains(
+            "lastFlash"
+        )
+        if (finalRoom) {
+            if (finalFinalRoom) {
+                ui.setFadeEverythingColor(Color.WHITE)
+            } else {
+                ui.setFadeWorldColor(Color.WHITE)
+            }
+        } else {
+            ui.setFadeWorldColor(Color.BLACK)
+        }
+        initialized = false
         ui.availableInteraction = null
-        ui.setFadeWorldColor(Color.BLACK)
-        ui.setFadeWorld(0f)
-        timedActions.add(TimedAction(0.5f, {
-            ui.setFadeWorld(1f - it)
-        }, {
+        if (finalFinalRoom) {
+            ui.setFadeEverything(0f)
+        } else {
             ui.setFadeWorld(0f)
+        }
+        timedActions.add(TimedAction(0.5f, {
+            if (finalFinalRoom) {
+                ui.setFadeEverything(1f - it)
+            } else {
+                ui.setFadeWorld(1f - it)
+            }
+        }, {
+            if (finalFinalRoom) {
+                ui.setFadeEverything(1f)
+            } else {
+                ui.setFadeWorld(1f)
+            }
+            if (finalRoom) {
+                ghostOverlay.finalSequence()
+            }
             goThroughDoor(door, toRoom, player.health, player.isMagicGirl, deaths)
         }))
     }
@@ -187,16 +219,29 @@ class InGame(
         timedActions.clear()
     }
 
+    private var probablyReturnPreviousMusicIfNotAskedForOther: Boolean = false
     private fun musicCommand(command: String) {
-        when (command) {
-            else -> assets.music.concurrentTracks[command]?.let {
-                choreographer.play(it)
+        probablyReturnPreviousMusicIfNotAskedForOther = false
+        if (command == "previous") {
+            choreographer.previousMusic?.let {
+                val track = assets.music.concurrentTracks[it]
+                    ?: if (extraAssets.isLoaded) extraAssets.music.concurrentTracks[it] else null
+                track?.let(choreographer::play)
             }
+
+        } else {
+            val track = assets.music.concurrentTracks[command]
+                ?: if (extraAssets.isLoaded) extraAssets.music.concurrentTracks[command] else null
+            track?.let { choreographer.play(it) }
         }
     }
+
     private fun soundCommand(command: String, volume: Float): Int {
+        if (!extraAssets.isLoaded) {
+            return -1
+        }
         return when (command) {
-            else -> assets.sound.concurrentClips[command]?.let {
+            else -> extraAssets.sound.concurrentClips[command]?.let {
                 choreographer.uiSound(it, volume = volume)
             }
         } ?: -1
@@ -205,13 +250,23 @@ class InGame(
     private fun screenCommand(command: String, delay: Float?) {
         when (command) {
             "fadeOut" -> scheduleFadeOut(length = delay ?: 0.5f) { eventExecutor.advance() }
-            "fadeIn" -> scheduleFadeIn(length = delay ?: 0.5f) { eventExecutor.advance()}
-            "splashOut" -> scheduleFadeOut(colorComponent = 1f, length = delay ?: 0.1f) { eventExecutor.advance()}
+            "fadeIn" -> scheduleFadeIn(length = delay ?: 0.5f) { eventExecutor.advance() }
+            "splashOut" -> scheduleFadeOut(
+                colorComponent = 1f,
+                length = delay ?: 0.1f
+            ) { eventExecutor.advance() }
+
             "splashIn" -> {
-                scheduleFadeIn(colorComponent = 1f, length = delay ?: 2f)
-                eventExecutor.advance()
+                scheduleFadeIn(colorComponent = 1f, length = delay ?: 2f) {
+                    eventExecutor.advance()
+                }
             }
-            "slowFadeIn" -> scheduleFadeIn(maxValue = 0.8f, length = delay ?: 1f) { eventExecutor.advance() }
+
+            "slowFadeIn" -> scheduleFadeIn(
+                maxValue = 0.8f,
+                length = delay ?: 1f
+            ) { eventExecutor.advance() }
+
             "slowFadeOut" -> scheduleFadeOut(
                 maxValue = 0.8f,
                 length = delay ?: 1f
@@ -254,6 +309,7 @@ class InGame(
             world,
             choreographer,
             assets,
+            extraAssets,
             inputController,
             assets.objects.particleSimulator,
             context.vfs,
@@ -269,14 +325,22 @@ class InGame(
             canPunch = ::canPunch,
             updateEnemyAi = ::updateEnemyAi,
             resetEnemyAi = ::resetEnemyAi,
+            magicTutorial = ::isCastingTutorial,
         )
     }
+
     private fun canPunch(): Boolean = enemies.isNotEmpty() || ui.availableInteraction == null
     private fun updateEnemyAi() {
         enemyAi.update()
     }
+
     private fun resetEnemyAi() {
         enemyAi.update()
+    }
+
+    private fun isCastingTutorial(): Boolean {
+        val state = eventState["tutorial_trigger"] ?: 0
+        return state > 0 && state < 5
     }
 
     private var neonGhost: NeonGhost? = null
@@ -316,7 +380,7 @@ class InGame(
     private fun castAoe(position: Vec2, power: Int) {
         if (eventState["tutorial_trigger"] == 1) {
             eventState["tutorial_trigger"] = 2
-            triggers.get("tutorial_trigger")?.let{
+            triggers.get("tutorial_trigger")?.let {
                 eventExecutor.execute(it, playerKnowledge)
             }
         }
@@ -446,6 +510,7 @@ class InGame(
     }
 
     private var dream: Dream? = null
+    private var waitForDisappear = false
     private var ghostFromPowerPlant: GhostFromPowerPlant? = null
     private var transformation: Transformation? = null
     private fun onTriggerEventCallback(event: String) {
@@ -492,6 +557,7 @@ class InGame(
             }
 
             "transform" -> {
+                ghostOverlay.blinking = true
                 transformation = Transformation(
                     player,
                     context,
@@ -509,7 +575,12 @@ class InGame(
 
             "dream" -> {
                 timedActions += TimedAction(9.5f, {}) {
-                    choreographer.uiSound(assets.sound.concurrentClips["5_d"]!!, volume = 4f)
+                    if (extraAssets.isLoaded) {
+                        choreographer.uiSound(
+                            extraAssets.sound.concurrentClips["5_d"]!!,
+                            volume = 4f
+                        )
+                    }
                 }
                 dream = Dream(
                     player,
@@ -519,6 +590,36 @@ class InGame(
                     particleShader
                 ) {
                     dream = null
+                    eventExecutor.advance()
+                }
+            }
+
+            "restart" -> {
+                restartGame()
+            }
+
+            "fullStop" -> {
+                choreographer.fullStop()
+                eventExecutor.advance()
+            }
+
+            "goodbye" -> {
+                ghostOverlay.goodbye()
+                eventExecutor.advance()
+            }
+
+            "waitForDisappear" -> {
+                waitForDisappear = true
+            }
+
+            "activatePrepare" -> {
+                player.showPrepare()
+                eventExecutor.advance()
+            }
+
+            "activatePunch" -> {
+                player.showPunch()
+                scheduleFadeOut(length = 0.3f, colorComponent = 0.5f) {
                     eventExecutor.advance()
                 }
             }
@@ -587,10 +688,10 @@ class InGame(
         overrideX: Float? = null,
         overrideY: Float? = null,
     ): Enemy {
-        /*if (!choreographer.isActive) {
-            // starting fight, but there is no music - should be fixed ASAP
-            choreographer.play(assets.music.concurrentTracks["magical girl 3d"]!!)
-        }*/
+        // starting fight - should play fight music (won't do anything if it is already playing)
+        if (overrideX == null && overrideY == null) {
+            musicCommand("magical girl 3d")
+        }
 
         val offsetX =
             if (enemySpec.fromLeft) -Game.visibleWorldWidth / 2f - 0.5f else Game.visibleWorldWidth / 2f + 0.5f
@@ -609,7 +710,7 @@ class InGame(
             difficulty = enemySpec.difficulty,
             initialHeath = enemySpec.health,
             initialFacingLeft = !enemySpec.fromLeft,
-            canAct = { !isInDialogue },
+            canAct = { initialized && !isInDialogue && timedActions.isEmpty() },
             onDeath = ::onEnemyDeath,
             onBecomingAggessive = ::onEnemyBecomesAggressive
         )
@@ -640,6 +741,8 @@ class InGame(
     }
 
     private fun onEnemyBecomesAggressive(enemy: Enemy) {
+        println("became aggressive!!")
+        musicCommand("magical girl 3d")
         staticEnemies.remove(enemy)
         enemies.add(enemy)
         ui.showHealth(enemy)
@@ -694,7 +797,12 @@ class InGame(
             ui.setFadeEverything(1f)
             timedActions += TimedAction(2f, ui::setFadeEverything) { ui.setFadeEverything(0f) }
         } else {
-            scheduleFadeIn()
+            scheduleFadeIn(
+                colorComponent = if (levelSpec.name.startsWith("washing_room_") && !playerKnowledge.contains(
+                        "lastFlash"
+                    )
+                ) 1f else 0f
+            )
         }
         choreographer.setPlaybackRate(1f)
 
@@ -704,6 +812,7 @@ class InGame(
         if (ghostOverlay.isActive) {
             createGhostBody()
         }
+        initialized = true
     }
 
     private fun scheduleFadeIn(
@@ -771,6 +880,13 @@ class InGame(
                 eventExecutor.advance()
                 return
             }
+        }
+        if (waitForDisappear) {
+            if (!ghostOverlay.isActive) {
+                waitForDisappear = false
+                eventExecutor.advance()
+            }
+            return
         }
 
         val millis = dt.milliseconds
@@ -850,7 +966,11 @@ class InGame(
             deadEnemies.forEach { it.release() }
             deadEnemies.clear()
             if (enemies.size == 0) {
+                probablyReturnPreviousMusicIfNotAskedForOther = true
                 eventExecutor.advance()
+                if (probablyReturnPreviousMusicIfNotAskedForOther) {
+                    musicCommand("previous")
+                }
             }
         }
         if (particlersToAdd.isNotEmpty()) {
@@ -889,7 +1009,7 @@ class InGame(
 
         camera.position.set(cameraMan.position.x, cameraMan.position.y, 0f)
 
-        if (closeTutorialOnNextUpdate && !inputController.pressed(GameInput.ATTACK)) {
+        if (closeTutorialOnNextUpdate && !inputController.pressed(GameInput.ATTACK) && player.punchCooldown <= 100f) {
             closeTutorialOnNextUpdate = false
             triggers.get("tutorial_trigger")?.let {
                 eventExecutor.execute(it, playerKnowledge)
@@ -1008,7 +1128,8 @@ class InGame(
             if (gameOverTimer > 0f) {
                 gameOverTimer -= notAdjustedDt.seconds
                 if (gameOverTimer <= 0f) {
-                    choreographer.play(assets.music.concurrentTracks["stop"]!!)
+                    musicCommand("stop")
+                    //choreographer.play(assets.music.concurrentTracks["stop"]!!)
                     onGameOver()
                 }
             }

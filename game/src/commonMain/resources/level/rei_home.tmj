@@ -124,7 +124,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"choice tools\nteleport strange_room\nend\n\nchoice\nrei<:I should probably\\take my tools\\before I go\nchoose Stay home:no; Leave without tools:yes\nchoice yes\nremember no_tools\nteleport strange_room\n"
+                         "value":"choice tools\nteleport strange_room\nend\n\nchoice\nrei<:I should probably\\take my tools\\before I go\nchoose Stay home:no; Leave without tools:yes\nchoice yes\nrei<:Are you sure?\\They may be quite handy\nchoose Stay home to\\take the tools:no; Leave without\\hacking tools:still_yes\n\nchoice still_yes\nteleport strange_room\n"
                         }, 
                         {
                          "name":"title",
