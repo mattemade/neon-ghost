@@ -6,11 +6,11 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89],
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90],
          "height":8,
          "id":1,
          "name":"floor",
@@ -22,11 +22,11 @@
          "y":0
         }, 
         {
-         "data":[96, 100, 101, 102, 94, 95, 95, 95, 96, 91, 92, 93, 94,
-            108, 112, 113, 114, 106, 107, 107, 107, 108, 103, 104, 105, 106,
-            120, 124, 125, 126, 118, 119, 119, 119, 120, 115, 116, 117, 118,
-            0, 0, 0, 0, 143, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 148, 0, 0, 0, 0, 0, 0, 0, 0,
+         "data":[97, 101, 102, 103, 95, 96, 96, 96, 97, 92, 93, 94, 95,
+            109, 113, 114, 115, 107, 108, 108, 108, 109, 104, 105, 106, 107,
+            121, 125, 126, 127, 119, 120, 120, 120, 121, 116, 117, 118, 119,
+            0, 0, 0, 0, 144, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 149, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -176,7 +176,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:Life support system: ON\\Main power plant: ON\\Reserve generator: OFF\n\nchoose Turn off life support:ghost;Leave:exit\nchoice exit\nend\n\nchoice ghost\nterminal<: Life support system: OFF\nstop\nscreen slowFadeOut\nmusic stop\nwait 2\nrei>:What is going on?\nstop\ncamera power_plant\nwait 2\nremember ghost\ntrigger launchGhost\nwait 2\nvoice 288\nkeepPlaying 3\nwait 4\nghost<: Aaaahh!\nvoice 289\nghost<: Was it you who came to my call?\\Thank you so much!\\I thought it will never end...\nrei>: Whoaah!\nvoice 291\nghost<:You look like you've seen a ghost!\\Normally I shouldn't say that,\\but I am Magical Girl Mirai,\\nice to meet you!\nrei>: ...\nrei>: I'm just... Surprised\nrei>: Nice to meet you, Mirai,\\I'm Rei\n\nstop\ncamera follow\nscreen slowFadeIn\nterminal<:Life support system: OFF\\Main power plant:OFF\\Reserve generator: ON\n\nvoice 295\nghost<: What is going on here?\\I feel the fear in you,\\but that's not a fear of me...\nrei>:Well... Five minutes ago\\a brainwashing machine was\\supposed to turn me into a plant,\\and now I've met... You\nvoice 297\nghost<:Are you the only one here?\\Let me try to call my friends\\for help...\n#<Mirai sends the signal>\nvoice 299\nghost<:.......\\.......\\They don't respond...\nvoice 300\nghost<:But I can feel them...\\suffering...\\Poor souls...\nvoice 301\nghost<:You are the only\\magical girl around\\who responded to my call\nrei>:I am what?!\\So it is true that\\I have some magical power?\nvoice 303\nghost<:Well, if you can hear and\\see me being a magical beign,\\you can be sure\nrei>:...\nrei>:And how can I...\\use it?\nvoice 306\nghost<:You have to allow\\the magic to go\\through your body\nvoice 307\nghost<:Recall the feeling when\\your dream comes true,\\and try to focus on it\nrei>:...\nrei>:I don't recall\\such a feeling...\nvoice 310\nghost<:Oh, poor soul...\\We've all met a terrible\\fate, haven't we?\nvoice 311\nghost<:Maybe you have a dream that\\you can imagine coming true?\\I've heard that worked before\nrei>:Hmmm...\nrei>:I wish I could see\\the stars... But I can't\\imagine that, I've never\\seen them before\nvoice 314\nghost<:Wow, that should be easy!\\Let's go to the roof right now,\\I can feel the moon shining!\nrei>:Uh, you better see\\that yourself\nrei>:As a ghost, can you\\go through the wall\\to see outside?\nvoice 317\nghost<:I am not a ghost!\\I am a magical girl,\\just without a body\nrei>:Well, that's what I\\would call a ghost...\nvoice 319\nghost<:And it looks like\\my magical powers\\are holding onto you\nvoice 320\nghost<:So I will vanish\\the moment I leave you...\nrei>:...\nrei>:But you can be with me\\if I go there, right?\nvoice 323\nghost<:I think so\nmusic mg safe area\nrei>:Let's go, I'll show\\you the roof...\nsound got\nhelp<:Ghost of Magical Girl Mirai\\obtained\n\nstate 1\nstate 1 power_plant_interaction\nstate 0 roof_view\nremember alarm\nstate 1 control_room_lift_terminal\n"
+                         "value":"terminal<:Life support system: ON\\Main power plant: ON\\Reserve generator: OFF\n\nchoose Turn off life support:ghost;Leave:exit\nchoice exit\nend\n\nchoice ghost\nterminal<: Life support system: OFF\nstop\nsound Generator Off\nplaySpeechNext\nscreen slowFadeOut\nmusic stop\nwait 2\nrei>:What is going on?\nstop\ncamera power_plant\nwait 2\nremember ghost\ntrigger launchGhost\nwait 2\nvoice 288\nkeepPlaying 3\nwait 4\nghost<: Aaaahh!\nvoice 289\nghost<: Was it you who came to my call?\\Thank you so much!\\I thought it will never end...\nrei>: Whoaah!\nvoice 291\nghost<:You look like you've seen a ghost!\\Normally I shouldn't say that,\\but I am Magical Girl Mirai,\\nice to meet you!\nrei>: ...\nrei>: I'm just... Surprised\nrei>: Nice to meet you, Mirai,\\I'm Rei\n\nstop\ncamera follow\nscreen slowFadeIn\nterminal<:Life support system: OFF\\Main power plant:OFF\\Reserve generator: ON\n\nvoice 295\nghost<: What is going on here?\\I feel the fear in you,\\but that's not a fear of me...\nrei>:Well... Five minutes ago\\a brainwashing machine was\\supposed to turn me into a plant,\\and now I've met... You\nvoice 297\nghost<:Are you the only one here?\\Let me try to call my friends\\for help...\n#<Mirai sends the signal>\nvoice 299\nghost<:.......\\.......\\They don't respond...\nvoice 300\nghost<:But I can feel them...\\suffering...\\Poor souls...\nvoice 301\nghost<:You are the only\\magical girl around\\who responded to my call\nrei>:I am what?!\\So it is true that\\I have some magical power?\nvoice 303\nghost<:Well, if you can hear and\\see me being a magical beign,\\you can be sure\nrei>:...\nrei>:And how can I...\\use it?\nvoice 306\nghost<:You have to allow\\the magic to go\\through your body\nvoice 307\nghost<:Recall the feeling when\\your dream comes true,\\and try to focus on it\nrei>:...\nrei>:I don't recall\\such a feeling...\nvoice 310\nghost<:Oh, poor soul...\\We've all met a terrible\\fate, haven't we?\nvoice 311\nghost<:Maybe you have a dream that\\you can imagine coming true?\\I've heard that worked before\nrei>:Hmmm...\nrei>:I wish I could see\\the stars... But I can't\\imagine that, I've never\\seen them before\nvoice 314\nghost<:Wow, that should be easy!\\Let's go to the roof right now,\\I can feel the moon shining!\nrei>:Uh, you better see\\that yourself\nrei>:As a ghost, can you\\go through the wall\\to see outside?\nvoice 317\nghost<:I am not a ghost!\\I am a magical girl,\\just without a body\nrei>:Well, that's what I\\would call a ghost...\nvoice 319\nghost<:And it looks like\\my magical powers\\are holding onto you\nvoice 320\nghost<:So I will vanish\\the moment I leave you...\nrei>:...\nrei>:But you can be with me\\if I go there, right?\nvoice 323\nghost<:I think so\nmusic mg safe area\nrei>:Let's go, I'll show\\you the roof...\nsound got\nhelp<:Ghost of Magical Girl Mirai\\obtained\n\nstate 1\nstate 1 power_plant_interaction\nstate 0 roof_view\nremember alarm\nstate 1 control_room_lift_terminal\n"
                         }, 
                         {
                          "name":"1",
@@ -347,23 +347,23 @@
          "source":"abstract.tsj"
         }, 
         {
-         "firstgid":89,
+         "firstgid":90,
          "source":"tilesets\/0_Asset_Floor_4848.tsj"
         }, 
         {
-         "firstgid":91,
+         "firstgid":92,
          "source":"tilesets\/0_Asset_Wall_144144.tsj"
         }, 
         {
-         "firstgid":127,
+         "firstgid":128,
          "source":"tilesets\/0_Asset_Chair_240240.tsj"
         }, 
         {
-         "firstgid":152,
+         "firstgid":153,
          "source":"tilesets\/0_Asset_Control_9696.tsj"
         }, 
         {
-         "firstgid":172,
+         "firstgid":173,
          "source":"tilesets\/0_Asset_Container_240240.tsj"
         }],
  "tilewidth":48,

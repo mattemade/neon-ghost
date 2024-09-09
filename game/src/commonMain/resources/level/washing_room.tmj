@@ -6,11 +6,11 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89],
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90],
          "height":8,
          "id":1,
          "name":"floor",
@@ -22,11 +22,11 @@
          "y":0
         }, 
         {
-         "data":[96, 97, 98, 99, 94, 95, 95, 95, 96, 91, 92, 93, 94,
-            108, 109, 110, 111, 106, 107, 107, 107, 108, 103, 104, 105, 106,
-            120, 121, 122, 123, 118, 119, 119, 119, 120, 115, 116, 117, 118,
-            0, 0, 0, 0, 143, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 148, 0, 0, 0, 0, 0, 0, 0, 0,
+         "data":[97, 98, 99, 100, 95, 96, 96, 96, 97, 92, 93, 94, 95,
+            109, 110, 111, 112, 107, 108, 108, 108, 109, 104, 105, 106, 107,
+            121, 122, 123, 124, 119, 120, 120, 120, 121, 116, 117, 118, 119,
+            0, 0, 0, 0, 144, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 149, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -154,12 +154,12 @@
                         {
                          "name":"2",
                          "type":"string",
-                         "value":"trigger activateHandcuff\ncamera machine_camera\nmusic mg suspicious\nrei<:So, what did your\\detector detect?\nguard>:It seems you hold\\some magical power\nrei<:Wow, and you are not scared?\nguard>:Well, you would use it\\already if you know how\nrei<:...\nrei<:And what is\\that chair for?\ncamera machine_top_camera\nguard>:That is the\\brainwashing machine\nguard>:It will turn you\\either on our side\\or into a plant\ncamera machine_camera\nrei<:...\nguard>:But you will be useful\\anyway, so cheer up!\nrei<:Is that ok for you\\to tell me that much?\nguard>:Don't worry, you\\will soon forget about that\nrei<:(Such a lame handcuffs)\nrei<:(I could take them off\\in no time)\nrei<:(If only these guys\\look away for a moment...)\nvoice 6_d\nsomeone<: ... me ...\nrei<:What is that thing again?!\nguard>:Are you turning\\plant already?\nguard>:I just told you\\that's a washing machine\nguard>:Now, take a seat\nmusic stop\nstop\nscreen slowFadeOut:0.2\nwait 1\nguard>:What's wrong with\\the power today?\nrei<:(Here is my chance!)\ntrigger freeRei\nstop\nwait 1\nscreen slowFadeIn:0.2\nwait 1\ncamera follow\nmusic magical girl 3d\nstate 3\nsave\nguard>:How did you take that off?!\nfight guard<0.1, guard<1\nstate 4\nmusic mg safe area\nrei>:Good, one problem solved\nrei>:Magical power, huh?..\\I will think about\\that later\n"
+                         "value":"trigger activateHandcuff\ncamera machine_camera\nmusic mg suspicious\nrei<:So, what did your\\detector detect?\nguard>:It seems you hold\\some magical power\nrei<:Wow, and you are not scared?\nguard>:Well, you would use it\\already if you know how\nrei<:...\nrei<:And what is\\that chair for?\ncamera machine_top_camera\nguard>:That is the\\brainwashing machine\nguard>:It will turn you\\either on our side\\or into a plant\ncamera machine_camera\nrei<:...\nguard>:But you will be useful\\anyway, so cheer up!\nrei<:Is that ok for you\\to tell me that much?\nguard>:Don't worry, you\\will soon forget about that\nrei<:(Such a lame handcuffs)\nrei<:(I could take them off\\in no time)\nrei<:(If only these guys\\look away for a moment...)\nvoice 6_d\nsomeone<: ... me ...\nrei<:What is that thing again?!\nguard>:Are you turning\\plant already?\nguard>:I just told you\\that's a washing machine\nguard>:Now, take a seat\nmusic stop\nstop\nscreen slowFadeOut:0.2\nwait 1\nguard>:What's wrong with\\the power today?\nrei<:(Here is my chance!)\ntrigger freeRei\nstop\nwait 1\nscreen slowFadeIn:0.2\nwait 1\ncamera follow\nmusic magical girl 3d\nstate 3\nsave\nguard>:How did you take that off?!\nfight guard<0.1, guard<1\nstate 4\nremember indoor\nmusic mg safe area\nrei>:Good, one problem solved\nrei>:Magical power, huh?..\\I will think about\\that later\n"
                         }, 
                         {
                          "name":"3",
                          "type":"string",
-                         "value":"guard>:How did you take that off?!\nfight guard<0.1, guard<1\nstate 4\nmusic mg safe area\nrei>:Good, one problem solved\nrei>:Magical power, huh?..\\I will think about\\that later"
+                         "value":"guard>:How did you take that off?!\nfight guard<0.1, guard<1\nstate 4\nremember indoor\nmusic mg safe area\nrei>:Good, one problem solved\nrei>:Magical power, huh?..\\I will think about\\that later"
                         }, 
                         {
                          "name":"title",
@@ -507,19 +507,19 @@
          "source":"abstract.tsj"
         }, 
         {
-         "firstgid":89,
+         "firstgid":90,
          "source":"tilesets\/0_Asset_Floor_4848.tsj"
         }, 
         {
-         "firstgid":91,
+         "firstgid":92,
          "source":"tilesets\/0_Asset_Wall_144144.tsj"
         }, 
         {
-         "firstgid":127,
+         "firstgid":128,
          "source":"tilesets\/0_Asset_Chair_240240.tsj"
         }, 
         {
-         "firstgid":152,
+         "firstgid":153,
          "source":"tilesets\/0_Asset_Control_9696.tsj"
         }],
  "tilewidth":48,

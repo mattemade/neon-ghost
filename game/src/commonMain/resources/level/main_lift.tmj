@@ -4,11 +4,11 @@
  "layers":[
         {
          "data":[0, 0, 0,
-            78, 78, 78,
-            79, 78, 79,
-            78, 79, 78,
-            79, 78, 79,
-            78, 79, 78],
+            90, 90, 90,
+            91, 90, 91,
+            90, 91, 90,
+            91, 90, 91,
+            90, 91, 90],
          "height":6,
          "id":1,
          "name":"floor",
@@ -20,9 +20,9 @@
          "y":0
         }, 
         {
-         "data":[84, 84, 84,
-            96, 96, 96,
+         "data":[96, 96, 96,
             108, 108, 108,
+            120, 120, 120,
             0, 0, 0,
             0, 0, 0,
             0, 0, 0],
@@ -57,8 +57,8 @@
         {
          "data":[0, 0, 0,
             0, 0, 0,
-            141, 142, 0,
-            151, 152, 0,
+            0, 0, 0,
+            0, 0, 0,
             0, 0, 0,
             0, 0, 0],
          "height":6,
@@ -75,9 +75,9 @@
          "data":[0, 0, 0,
             0, 0, 0,
             0, 0, 0,
-            161, 162, 163,
-            164, 165, 166,
-            167, 168, 169],
+            173, 174, 175,
+            176, 177, 178,
+            179, 180, 181],
          "height":6,
          "id":10,
          "name":"foreground",
@@ -105,15 +105,15 @@
                  "y":144
                 }, 
                 {
-                 "height":42.9090909090909,
+                 "height":15.6363636363636,
                  "id":29,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":81.8181818181818,
-                 "x":0,
-                 "y":144
+                 "width":47.0909090909091,
+                 "x":24.3636363636364,
+                 "y":159.454545454545
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -145,14 +145,14 @@
                  "y":240
                 }, 
                 {
-                 "height":55.5,
+                 "height":44.5909090909091,
                  "id":34,
                  "name":"main_lift_terminal",
                  "properties":[
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal>:Where to go?\nchoose Cancel:cancel;00:00;18:18;25:25\n\nchoice cancel\nend\n\nchoice 00\nrename main_lift_exit:Level 00\nstate 0 main_lift_exit\nend\n\nchoice 18\nrename main_lift_exit:Level 18\nstate 1 main_lift_exit\nend\n\nchoice 25\nrename main_lift_exit:Level 25\nstate 2 main_lift_exit\nend\n"
+                         "value":"terminal>:Where to go?\nchoose Cancel:cancel;00:00;18:18;25:25\n\nchoice cancel\nend\n\nchoice\nsound Elevator\nterminal>:...\n\nchoice 00\nrename main_lift_exit:Level 00\nstate 0 main_lift_exit\nend\n\nchoice 18\nrename main_lift_exit:Level 18\nstate 1 main_lift_exit\nend\n\nchoice 25\nrename main_lift_exit:Level 25\nstate 2 main_lift_exit\nend\n"
                         }, 
                         {
                          "name":"title",
@@ -167,9 +167,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":98,
-                 "x":0,
-                 "y":144
+                 "width":81.2727272727273,
+                 "x":13.4545454545455,
+                 "y":159.454545454545
                 }, 
                 {
                  "height":48,
@@ -219,7 +219,18 @@
          "draworder":"topdown",
          "id":7,
          "name":"spawn",
-         "objects":[],
+         "objects":[
+                {
+                 "height":48,
+                 "id":36,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":96,
+                 "x":0,
+                 "y":144
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -227,7 +238,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":36,
+ "nextobjectid":37,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -238,42 +249,42 @@
          "source":"Outside-Wall 48_48.tsj"
         }, 
         {
-         "firstgid":36,
+         "firstgid":46,
          "source":"Outside-Light 150_150.tsj"
         }, 
         {
-         "firstgid":39,
+         "firstgid":49,
          "source":"Outside-Window 48_48.tsj"
         },
     
         {
-         "firstgid":67,
+         "firstgid":77,
          "source":"terminal_tile.tsj"
         }, 
         {
-         "firstgid":68,
+         "firstgid":78,
          "source":"abstract.tsj"
         }, 
         {
-         "firstgid":78,
+         "firstgid":90,
          "source":"tilesets\/0_Asset_Floor_4848.tsj"
         },
     
         {
-         "firstgid":80,
+         "firstgid":92,
          "source":"tilesets\/0_Asset_Wall_144144.tsj"
         }, 
         {
-         "firstgid":116,
+         "firstgid":128,
          "source":"tilesets\/0_Asset_Chair_240240.tsj"
         }, 
         {
-         "firstgid":141,
+         "firstgid":153,
          "source":"tilesets\/0_Asset_Control_9696.tsj"
         },
     
         {
-         "firstgid":161,
+         "firstgid":173,
          "source":"tilesets\/door_transparent.tsj"
         }],
  "tilewidth":48,

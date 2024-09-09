@@ -4,11 +4,11 @@
  "layers":[
         {
          "data":[0, 0, 0,
-            89, 89, 89,
-            90, 89, 90,
-            89, 90, 89,
-            90, 89, 90,
-            89, 90, 89],
+            90, 90, 90,
+            91, 90, 91,
+            90, 91, 90,
+            91, 90, 91,
+            90, 91, 90],
          "height":6,
          "id":1,
          "name":"floor",
@@ -20,9 +20,9 @@
          "y":0
         }, 
         {
-         "data":[100, 101, 102,
-            112, 113, 114,
-            124, 125, 126,
+         "data":[101, 102, 103,
+            113, 114, 115,
+            125, 126, 127,
             0, 0, 0,
             0, 0, 0,
             0, 0, 0],
@@ -75,9 +75,9 @@
          "data":[0, 0, 0,
             0, 0, 0,
             0, 0, 0,
-            172, 173, 174,
-            175, 176, 177,
-            178, 179, 180],
+            173, 174, 175,
+            176, 177, 178,
+            179, 180, 181],
          "height":6,
          "id":10,
          "name":"foreground",
@@ -155,14 +155,14 @@
                  "y":240
                 }, 
                 {
-                 "height":33.1363636363637,
+                 "height":51.1363636363637,
                  "id":34,
                  "name":"security_lift_terminal",
                  "properties":[
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal>:Where to go?\n\nchoose Cancel:cancel;B3:b3;B2:b2;B1:b1;18:18;25:25;Roof:roof\n\nchoice cancel\nend\n\nchoice 18\nrename security_lift_exit:Level 18\nstate 3 security_lift_exit\nchoice 18,alarm\nstate 3 security_lift_enter\nstate 1\nchoice 18\nend\n\nchoice alarm\nrei>:Strange, we stopped\\on a different floor\nstate 1\nrename security_lift_exit:Level 18\nstate 3 security_lift_exit\nstate 3 security_lift_enter\nend\n\nchoice b3,b3_unlock\nrename security_lift_exit:Level B3\nstate 0 security_lift_exit\nend\n\nchoice b3\nterminal>:Floor access denied\\Contact the control room\\at level 18\nend\n\nchoice b2,ending\nrename security_lift_exit:Level B2\nstate 6 security_lift_exit\nend\n\nchoice b2\nrename security_lift_exit:Level B2\nstate 1 security_lift_exit\nend\n\nchoice b1\nrename security_lift_exit:Level B1\nstate 2 security_lift_exit\nend\n\nchoice 25\nrename security_lift_exit:Level 25\nstate 4 security_lift_exit\nend\n\nchoice roof\nrename security_lift_exit:Roof\nstate 5 security_lift_exit\nend\n"
+                         "value":"terminal>:Where to go?\n\nchoose Cancel:cancel;B3:b3;B2:b2;B1:b1;18:18;25:25;Roof:roof\n\nchoice cancel\nend\n\nchoice b3\nnot b3_unlock\nterminal>:Floor access denied\\Contact the control room\\at level 18\nend\nnot\n\nchoice\nsound Elevator\nterminal>:...\n\nchoice 18\nrename security_lift_exit:Level 18\nstate 3 security_lift_exit\nchoice 18,alarm\nstate 3 security_lift_enter\nstate 1\nchoice 18\nend\n\nchoice alarm\nrei>:Strange, we stopped\\on a different floor\nstate 1\nrename security_lift_exit:Level 18\nstate 3 security_lift_exit\nstate 3 security_lift_enter\nend\n\nchoice b3,b3_unlock\nrename security_lift_exit:Level B3\nstate 0 security_lift_exit\nend\n\n\nchoice b2,ending\nrename security_lift_exit:Level B2\nstate 6 security_lift_exit\nend\n\nchoice b2\nrename security_lift_exit:Level B2\nstate 1 security_lift_exit\nend\n\nchoice b1\nrename security_lift_exit:Level B1\nstate 2 security_lift_exit\nend\n\nchoice 25\nrename security_lift_exit:Level 25\nstate 4 security_lift_exit\nend\n\nchoice roof\nrename security_lift_exit:Roof\nstate 5 security_lift_exit\nend\n"
                         }, 
                         {
                          "name":"1",
@@ -183,8 +183,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":64.1818181818182,
-                 "x":26,
+                 "width":89.6818181818182,
+                 "x":16,
                  "y":163.090909090909
                 }, 
                 {
@@ -331,25 +331,25 @@
          "source":"abstract.tsj"
         }, 
         {
-         "firstgid":89,
+         "firstgid":90,
          "source":"tilesets\/0_Asset_Floor_4848.tsj"
         },
     
         {
-         "firstgid":91,
+         "firstgid":92,
          "source":"tilesets\/0_Asset_Wall_144144.tsj"
         }, 
         {
-         "firstgid":127,
+         "firstgid":128,
          "source":"tilesets\/0_Asset_Chair_240240.tsj"
         }, 
         {
-         "firstgid":152,
+         "firstgid":153,
          "source":"tilesets\/0_Asset_Control_9696.tsj"
         },
     
         {
-         "firstgid":172,
+         "firstgid":173,
          "source":"tilesets\/door_transparent.tsj"
         }],
  "tilewidth":48,

@@ -279,7 +279,7 @@ class UI(
     private fun playSpeechSoundIfNeeded() {
         if (!shouldSkipSound && shouldPlaySpeechSound && !speechSoundStarted) {
             speechSoundStarted = true
-            choreographer.uiSound(assets.sound.speech1, volume = 4f) {
+            choreographer.uiSound(assets.sound.speech[activePortrait] ?: assets.sound.speech1, volume = 4f) {
                 speechSoundStarted = false
                 playSpeechSoundIfNeeded()
             }

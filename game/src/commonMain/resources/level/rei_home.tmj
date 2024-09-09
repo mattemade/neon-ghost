@@ -3,11 +3,11 @@
  "infinite":false,
  "layers":[
         {
-         "data":[95, 96, 97, 98, 99,
-            100, 101, 102, 103, 104,
-            105, 106, 107, 108, 109,
-            110, 111, 112, 113, 114,
-            115, 116, 117, 118, 119],
+         "data":[96, 97, 98, 99, 100,
+            101, 102, 103, 104, 105,
+            106, 107, 108, 109, 110,
+            111, 112, 113, 114, 115,
+            116, 117, 118, 119, 120],
          "height":5,
          "id":1,
          "name":"floor",
@@ -54,8 +54,8 @@
          "data":[0, 0, 0, 0, 0,
             0, 0, 0, 0, 0,
             0, 0, 0, 0, 0,
-            0, 0, 90, 0, 0,
-            0, 0, 93, 0, 0],
+            0, 0, 91, 0, 0,
+            0, 0, 94, 0, 0],
          "height":5,
          "id":10,
          "name":"foreground",
@@ -240,7 +240,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"wait 2\nrei<: That dream again...\nrei<: How I wish to see\\the stars for real\nrei<: But the smoke and clouds are\\so thick in this city,\\you can't tell day from night\nphone>:(phone ringing)\nphone>:Good morning, Rei\nphone>:I've sent you the details\\of the mission\nphone>:Be extra careful,\\we are onto something big\\this time\nrei<:I'm on my way\nphone>:(call hangs up)\ntrigger heal\nstate 1 rei_home_table\nstate 1 enter_home\nstate 2"
+                         "value":"wait 2\nrei<: That dream again...\nrei<: How I wish to see\\the stars for real\nrei<: But the smoke and clouds are\\so thick in this city,\\you can't tell day from night\nsound Bomb Beep\nphone>:(phone ringing)\nsound Phone pick-up\nphone>:Good morning, Rei\nphone>:I've sent you the details\\of the mission\nphone>:Be extra careful,\\we are onto something big\\this time\nrei<:I'm on my way\nsound Phone hang-up\nphone>:(call hangs up)\ntrigger heal\nstate 1 rei_home_table\nstate 1 enter_home\nstate 2"
                         }, 
                         {
                          "name":"title",
@@ -316,11 +316,11 @@
         },
     
         {
-         "firstgid":89,
+         "firstgid":90,
          "source":"tilesets\/wooden_doors.tsj"
         }, 
         {
-         "firstgid":95,
+         "firstgid":96,
          "source":"rei_home_tiles.tsj"
         }],
  "tilewidth":48,

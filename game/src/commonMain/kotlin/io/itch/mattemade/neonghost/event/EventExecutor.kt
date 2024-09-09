@@ -130,6 +130,7 @@ class EventExecutor(
             "clearQueue" -> executeClearQueue()
             "save" -> executeSave()
             "stop" -> executeStopDialog()
+            "playSpeechNext" -> executePlaySpeechNext()
             "end" -> advance(forceEnd = requirementsFulfilled())
             else -> item.checkingChoice().executeDialogueLine()
         }
@@ -383,6 +384,13 @@ class EventExecutor(
     private fun executeSave() {
         if (requirementsFulfilled()) {
             onSave(activeTrigger?.name)
+        }
+        advance()
+    }
+
+    private fun executePlaySpeechNext() {
+        if (requirementsFulfilled()) {
+            skipSpeechOnNextText = false
         }
         advance()
     }

@@ -157,6 +157,9 @@ class InGame(
     }
 
     private fun openDoor(door: String, toRoom: String) {
+        if (playerKnowledge.contains("indoor") && extraAssets.isLoaded) {
+            choreographer.uiSound(extraAssets.sound.concurrentClips["Door opened"]!!, volume = 0.5f)
+        }
         val finalFinalRoom = toRoom == "washing_room_3"
         val finalRoom = (toRoom == "washing_room_2" || finalFinalRoom) && !playerKnowledge.contains(
             "lastFlash"

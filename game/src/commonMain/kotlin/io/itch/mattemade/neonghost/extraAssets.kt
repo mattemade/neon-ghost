@@ -114,6 +114,24 @@ class ExtraSound(context: Context) : AssetPack(context) {
             clip
         }
     }
+    private val additionalPreparations = listOf(
+        "Bomb Beep",
+        "Door opened",
+        "Elevator",
+        "Generator Off",
+        "Hacking",
+        "Phone hang-up",
+        "Phone pick-up",
+        "Security Card in",
+        "Security Card out",
+    ).map { "sound/Additional/$it.wav" }.forEachIndexed { index, it ->
+        val name = it.wavName()
+        prepare(index) {
+            val clip = context.resourcesVfs[it].readAudioClipEx()
+            concurrentClips[name] = clip
+            clip
+        }
+    }
 }
 
 class ExtraMusic(context: Context) : AssetPack(context) {
