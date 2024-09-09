@@ -58,6 +58,7 @@ class Textures(context: Context, private val packer: RuntimeTextureAtlasPacker) 
         }
     }
     val pendulum by "texture/dream/pendulum.png".pack()
+    val cityView by "texture/misc/city.png".pack()
 }
 
 class Sound(context: Context) : AssetPack(context) {

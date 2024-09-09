@@ -275,6 +275,7 @@ class InGame(
     }
 
 
+    private val citySlice = if (levelSpec.name == "roof") assets.texture.cityView else null
     private val levelHeight by lazy { level.height * level.tileHeight }
     private val walls = mutableListOf<Wall>()
     private val world by lazy {
@@ -1038,6 +1039,24 @@ class InGame(
         if (shapeRenderer == null) {
             shapeRenderer = ShapeRenderer(batch)
         }
+
+        citySlice?.let {
+            // top left 3.225, 2.1875
+            // bottom right 10.65, 7.9375
+            // middle right 11.0875, 4.95
+            // another top 4.800000000000001, 1.5
+            // super top console.kt:78 4.800000000000001, -0.8125
+            val xRatio = (cameraMan.position.x - 3.225f) / (4.95f - 3.225f) / 4f
+            val yRatio = (cameraMan.position.y - 1.5f) / (7.9375f - 1.5f)
+            batch.draw(
+                it,
+                cameraMan.position.x - visibleWorldWidth / 2f - xRatio * visibleWorldWidth,
+                cameraMan.position.y - visibleWorldHeight / 2f - yRatio * visibleWorldHeight,
+                width = it.width * Game.IPPU,
+                height = it.height * Game.IPPU
+            )
+        }
+
         backgroundLayer?.render(
             batch,
             camera,
