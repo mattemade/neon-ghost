@@ -435,7 +435,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:game by\\matte"
+                         "value":"terminal<:game by\\\\matte"
                         }, 
                         {
                          "name":"title",
@@ -462,7 +462,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:sprites and tiles by\\maschiat"
+                         "value":"terminal<:good art by maschiat\\\\terrible art by matte"
                         }, 
                         {
                          "name":"title",
@@ -489,7 +489,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:voice of Mirai by\\OD.MP3"
+                         "value":"terminal<:voice of Mirai by\\\\OD.MP3"
                         }, 
                         {
                          "name":"title",
@@ -516,7 +516,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:sound by\\M for Mediocre"
+                         "value":"terminal<:sound by\\\\M for Mediocre"
                         }, 
                         {
                          "name":"title",
@@ -543,7 +543,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:music by\\nicole starlight"
+                         "value":"terminal<:music by\\\\nicole starlight"
                         }, 
                         {
                          "name":"title",

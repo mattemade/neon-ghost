@@ -513,6 +513,7 @@ class InGame(
 
     private var dream: Dream? = null
     private var waitForDisappear = false
+    private var removeTools = false
     private var ghostFromPowerPlant: GhostFromPowerPlant? = null
     private var transformation: Transformation? = null
     private fun onTriggerEventCallback(event: String) {
@@ -633,6 +634,11 @@ class InGame(
 
             "freeRei" -> {
                 player.showFree()
+                eventExecutor.advance()
+            }
+
+            "removeTools" -> {
+                removeTools = true
                 eventExecutor.advance()
             }
         }
@@ -951,7 +957,10 @@ class InGame(
                 }
             }
         }
-
+        if (removeTools) {
+            removeTools = false
+            depthBasedDrawables.removeAll { it !is Player }
+        }
         depthBasedDrawables.forEach {
             it.update(
                 dt,

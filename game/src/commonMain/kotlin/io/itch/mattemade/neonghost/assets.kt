@@ -53,7 +53,7 @@ class Textures(context: Context, private val packer: RuntimeTextureAtlasPacker) 
         }
     }
     val objects by preparePlain {
-        listOf("terminal", "machine", "plant").associateWith {
+        listOf("terminal", "machine", "plant", "jetpack", "tools").associateWith {
             packer.pack("texture/object/$it.png").await()
         }
     }
@@ -268,6 +268,8 @@ class TileSets(context: Context, private val packer: RuntimeTextureAtlasPacker) 
     val buildingMap by "level/tilesets/building_map.png".pack()
     val gridMap1 by "level/tilesets/area_map_1.png".pack()
     val gridMap2 by "level/tilesets/area_map_2.png".pack()
+    val woodenDoors by "level/tilesets/wooden_doors.png".pack()
+    val reiHomeTiles by "level/tilesets/rei_home_tiles.png".pack()
 }
 
 class Animations(

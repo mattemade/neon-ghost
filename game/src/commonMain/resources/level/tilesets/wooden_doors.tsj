@@ -1,0 +1,14 @@
+{ "columns":3,
+ "image":"wooden_doors.png",
+ "imageheight":96,
+ "imagewidth":144,
+ "margin":0,
+ "name":"wooden_doors",
+ "spacing":0,
+ "tilecount":6,
+ "tiledversion":"1.10.2",
+ "tileheight":48,
+ "tilewidth":48,
+ "type":"tileset",
+ "version":"1.10"
+}
