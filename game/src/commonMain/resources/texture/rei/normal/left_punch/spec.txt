@@ -1,4 +1,4 @@
-10 frames like ../sheet.png
+11 frames like ../sheet.png
 signal punch
 8 for 300
 repeat 1

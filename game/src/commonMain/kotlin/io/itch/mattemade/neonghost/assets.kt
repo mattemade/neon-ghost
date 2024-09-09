@@ -345,6 +345,7 @@ class CharacterAnimations(
     val rightPunch by "texture/$character/right_punch".prepareAnimationPlayer(
         runtimeTextureAtlasPacker
     )
+    val handcuff by "texture/$character/handcuff".prepareAnimationPlayer(runtimeTextureAtlasPacker)
 }
 
 class GhostAnimations(context: Context, type: String, packer: RuntimeTextureAtlasPacker) :

@@ -1,4 +1,4 @@
-10 frames like ../sheet.png
+11 frames like ../sheet.png
 3 for 200
 signal footstep
 4 for 200

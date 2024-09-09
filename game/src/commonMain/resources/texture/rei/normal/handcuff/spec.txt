@@ -1,3 +1,3 @@
 11 frames like ../sheet.png
-7 for 5000
+11 for 5000
 repeat

@@ -625,7 +625,7 @@
                         {
                          "name":"4",
                          "type":"string",
-                         "value":"voice 369\nghost>:Awesome, you are natural!\\That reminds me of\\good old days...\nvoice 370\nghost>:We should seek for\\other magical girls once...\\once we... escape...\nvoice 371\nghost>:But for now we need\\to protect them! You've said\\there is a brainwashing\\machine? We have to destroy it!\n\nstate 5\nstate 1 roof_fight\nstate 2 jetpack\nstate 1 boss_fight\n\ncamera follow\n\nsound got\nhelp<:Transfomed into a Magical Girl\nsave"
+                         "value":"voice 369\nghost>:Awesome, you are natural!\\That reminds me of\\good old days...\nvoice 370\nghost>:We should seek for\\other magical girls once...\\once we... escape...\nvoice 371\nghost>:But for now we need\\to protect them! You've said\\there is a brainwashing\\machine? We have to destroy it!\n\nstate 5\nstate 1 roof_fight\nstate 2 jetpack\nstate 1 boss_fight\nstate 0 officer_boss\n\ncamera follow\n\nsound got\nhelp<:Transfomed into a Magical Girl\nsave"
                         }, 
                         {
                          "name":"type",

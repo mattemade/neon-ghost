@@ -2,11 +2,11 @@ package io.itch.mattemade.neonghost
 
 import com.littlekt.Context
 import com.littlekt.ContextListener
-import com.littlekt.graph.node.resource.HAlign
+import com.littlekt.file.vfs.readTexture
 import com.littlekt.graphics.Camera
 import com.littlekt.graphics.Color
-import com.littlekt.graphics.Fonts
 import com.littlekt.graphics.MutableColor
+import com.littlekt.graphics.Texture
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.gl.BlendFactor
 import com.littlekt.graphics.gl.ClearBufferMask
@@ -29,11 +29,8 @@ import io.itch.mattemade.neonghost.shader.CabinetFragmentShader
 import io.itch.mattemade.neonghost.shader.CabinetVertexShader
 import io.itch.mattemade.neonghost.shader.ParticleFragmentShader
 import io.itch.mattemade.neonghost.shader.ParticleVertexShader
-import io.itch.mattemade.neonghost.shader.TestFragmentShader
-import io.itch.mattemade.neonghost.shader.TestVertexShader
 import io.itch.mattemade.neonghost.shader.createCabinetShader
 import io.itch.mattemade.neonghost.shader.createParticleShader
-import io.itch.mattemade.neonghost.shader.createTestShader
 import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
@@ -78,7 +75,10 @@ class Game(
         DirectRender(context, virtualWidth, virtualHeight, ::updateCabinet, ::renderCabinet)
     lateinit var cabinetShader: ShaderProgram<CabinetVertexShader, CabinetFragmentShader>
     lateinit var particleShader: ShaderProgram<ParticleVertexShader, ParticleFragmentShader>
-    lateinit var testShader: ShaderProgram<TestVertexShader, TestFragmentShader>
+    lateinit var clickToFocus: Texture
+    lateinit var loading: Texture
+
+    //lateinit var testShader: ShaderProgram<TestVertexShader, TestFragmentShader>
     var useCabinet = drawCabinet
     var offsetX = 0f
     var offsetY = 0f
@@ -97,13 +97,16 @@ class Game(
     private var framesRenderedInPeriod = 0
     private var absoluteTime = Random.nextFloat() * 100f
 
-    private val eventState = mutableMapOf<String, Int>()
+    private val eventState = mutableMapOf<String, Int>().apply {
+        put("officer_boss", 1)
+    }
     private val playerKnowledge = mutableSetOf<String>()
     private val interactionOverride = mutableMapOf<String, String>()
 
     private var savedState: SavedState? = savedStateOverride
     private var previousRoomName: String? = null
     private var previousDoorName: String? = null
+    private var delayedOpenDoorArgs: OpenDoorArgs? = null
     private fun openDoor(
         door: String,
         toRoom: String,
@@ -111,14 +114,19 @@ class Game(
         isMagic: Boolean,
         deaths: Int
     ) {
-        previousRoomName?.let { previousRoomName ->
-            saveGame(door, previousRoomName, playerHealth, isMagic, deaths)
+        if (toRoom == "boxing_club" || extraAssetsReady) {
+            delayedOpenDoorArgs = null
+            previousRoomName?.let { previousRoomName ->
+                saveGame(door, previousRoomName, playerHealth, isMagic, deaths)
+            }
+            previousRoomName = toRoom
+            previousDoorName = door
+            assets.level.levels[toRoom]?.let { level ->
+                startGameFromLevel(level, door, playerHealth, isMagic, deaths)
+            } ?: error("no such level found $toRoom")
+        } else {
+            delayedOpenDoorArgs = OpenDoorArgs(door, toRoom, playerHealth, isMagic, deaths)
         }
-        previousRoomName = toRoom
-        previousDoorName = door
-        assets.level.levels[toRoom]?.let { level ->
-            startGameFromLevel(level, door, playerHealth, isMagic, deaths)
-        } ?: error("no such level found $toRoom")
     }
 
     private fun startGameFromLevel(
@@ -206,6 +214,7 @@ class Game(
         choreographer.reset()
         ghostOverlay.reset()
         eventState.clear()
+        eventState.put("officer_boss", 1)
         playerKnowledge.clear()
         interactionOverride.clear()
         previousRoomName = "boxing_club"
@@ -235,10 +244,13 @@ class Game(
             vfs["shader/particles.frag.glsl"].readString()
         ).also { it.prepare(this) }
 
-        testShader = createTestShader(
+        /*testShader = createTestShader(
             vfs["shader/test.vert.glsl"].readString(),
             vfs["shader/test.frag.glsl"].readString()
-        ).also { it.prepare(this) }
+        ).also { it.prepare(this) }*/
+
+        clickToFocus = resourcesVfs["texture/misc/click_to_focus.png"].readTexture()
+        loading = resourcesVfs["texture/misc/loading.png"].readTexture()
 
         input.addInputProcessor(object : InputProcessor {
             override fun keyDown(key: Key): Boolean {
@@ -322,6 +334,11 @@ class Game(
             } else if (!extraAssetsReady) {
                 extraAssetsReady = extraAssets.isLoaded
             }
+            delayedOpenDoorArgs?.let {
+                if (extraAssetsReady) {
+                    openDoor(it.door, it.toRoom, it.playerHealth, it.isMagic, it.deaths)
+                }
+            }
             if (focused && assetsReady) {
                 if (inGame == null) {
                     if (savedState != null) {
@@ -338,12 +355,11 @@ class Game(
                 cabinetRender.render(dt)
             } else {
                 directRender.render(dt)
-
             }
 
 
 
-            if (focused && assetsReady) {
+            if (focused && assetsReady && extraAssetsReady) {
                 framesRenderedInPeriod++
                 fpsCheckTimeout -= dt.milliseconds
                 if (fpsCheckTimeout < 0f) {
@@ -389,25 +405,7 @@ class Game(
     }
 
     private fun render(duration: Duration, batch: Batch) {
-        if (!focused) {
-            Fonts.default.draw(
-                batch,
-                "CLICK TO FOCUS",
-                1.5f * PPU,
-                0.5f * PPU,
-                align = HAlign.CENTER,
-                scale = scale.toFloat()
-            )
-        } else if (!assetsReady) {
-            Fonts.default.draw(
-                batch,
-                "LOADING",
-                1.5f * PPU,
-                0.5f * PPU,
-                align = HAlign.CENTER,
-                scale = scale.toFloat()
-            )
-        } else {
+        if (assetsReady) {
             context.gl.enable(State.BLEND)
             batch.setBlendFunction(BlendFactor.ONE, BlendFactor.ONE)
 
@@ -443,6 +441,28 @@ class Game(
 
             context.gl.disable(State.BLEND)
         }
+
+        if (!focused) {
+            batch.draw(
+                clickToFocus,
+                offsetX,
+                offsetY,
+                originX = 0f,
+                originY = 0f,
+                width = virtualWidth.toFloat() * scale,
+                height = virtualHeight.toFloat() * scale,
+            )
+        } else if (!assetsReady || (!extraAssetsReady && delayedOpenDoorArgs != null)) {
+            batch.draw(
+                loading,
+                offsetX,
+                offsetY,
+                originX = 0f,
+                originY = 0f,
+                width = virtualWidth.toFloat() * scale,
+                height = virtualHeight.toFloat() * scale,
+            )
+        }
     }
 
     private fun updateCabinet(duration: Duration, camera: Camera) {
@@ -473,6 +493,28 @@ class Game(
                 )
             }
         }
+
+        if (!focused) {
+            batch.draw(
+                clickToFocus,
+                cabinetOffsetX,
+                cabinetOffsetY,
+                originX = 0f,
+                originY = 0f,
+                width = cabinetWidth,
+                height = cabinetHeight,
+            )
+        } else if (!assetsReady || (!extraAssetsReady && delayedOpenDoorArgs != null)) {
+            batch.draw(
+                loading,
+                cabinetOffsetX,
+                cabinetOffsetY,
+                originX = 0f,
+                originY = 0f,
+                width = cabinetWidth,
+                height = cabinetHeight,
+            )
+        }
     }
 
     private val slightlyTransparentWhite = Color.WHITE.withAlpha(0.5f)
@@ -501,6 +543,14 @@ class Game(
 
         val shadowColor = MutableColor(0f, 0f, 0f, 0.25f).toFloatBits()
     }
+
+    private class OpenDoorArgs(
+        val door: String,
+        val toRoom: String,
+        val playerHealth: Int,
+        val isMagic: Boolean,
+        val deaths: Int
+    )
 }
 
 val Float.screenSpacePixelPerfect: Float

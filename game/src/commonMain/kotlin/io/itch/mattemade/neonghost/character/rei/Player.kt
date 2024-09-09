@@ -207,6 +207,18 @@ class Player(
         currentAnimation.update(Duration.ZERO)
     }
 
+    fun showHandcuff() {
+        forcedAnimation = true
+        currentAnimation = animations.handcuff
+        currentAnimation.update(Duration.ZERO)
+    }
+
+    fun showFree() {
+        forcedAnimation = false
+        stopBody(resetAnimationToIdle = true)
+        currentAnimation.update(Duration.ZERO)
+    }
+
     private var activatePunch = false
     fun activatePunch() {
         activatePunch = true

@@ -623,6 +623,16 @@ class InGame(
                     eventExecutor.advance()
                 }
             }
+
+            "activateHandcuff" -> {
+                player.showHandcuff()
+                eventExecutor.advance()
+            }
+
+            "freeRei" -> {
+                player.showFree()
+                eventExecutor.advance()
+            }
         }
     }
 
