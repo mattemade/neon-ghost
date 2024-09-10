@@ -106,6 +106,7 @@ class Game(
     private var savedState: SavedState? = savedStateOverride
     private var previousRoomName: String? = null
     private var previousDoorName: String? = null
+    private var trackToPlayOnNextUpdate: StreamBpm? = null
     private var delayedOpenDoorArgs: OpenDoorArgs? = null
     private fun openDoor(
         door: String,
@@ -193,6 +194,8 @@ class Game(
     private fun loadGame() {
         val movingIndoor = playerKnowledge.contains("moveIndoor")
         savedState?.let {
+            choreographer.reset()
+            ghostOverlay.reset()
             eventState.clear()
             eventState.putAll(it.eventState)
             playerKnowledge.clear()
@@ -204,7 +207,9 @@ class Game(
             it.activeMusic?.let { activeMusic ->
                 val track = assets.music.concurrentTracks[activeMusic]
                     ?: if (extraAssets.isLoaded) extraAssets.music.concurrentTracks[activeMusic] else null
-                track?.let { choreographer.play(it) }
+                track?.let {
+                    trackToPlayOnNextUpdate = it
+                }
             }
             previousRoomName = it.room
 
@@ -350,6 +355,7 @@ class Game(
                     openDoor(it.door, it.toRoom, it.playerHealth, it.isMagic, it.deaths)
                 }
             }
+            val trackToPlay = trackToPlayOnNextUpdate
             if (focused && assetsReady) {
                 if (inGame == null) {
                     if (savedState != null) {
@@ -361,6 +367,11 @@ class Game(
                 choreographer.update(dt)
                 inGame?.updateAndRender(choreographer.bpmBasedDt, dt)
                 ghostOverlay.updateAndRender(choreographer.bpmBasedDt)
+
+                trackToPlay?.let {
+                    choreographer.play(it)
+                    trackToPlayOnNextUpdate = null
+                }
             }
             if (useCabinet) {
                 cabinetRender.render(dt)

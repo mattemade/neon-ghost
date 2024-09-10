@@ -19,6 +19,7 @@ class Choreographer(private val context: Context) {
     private var secondsPerBeat = 0f
     private var doubleSecondsPerBeat = 0f
     private var secondsPerMeasure = 0f
+    private var holdTrack = false
     var playbackRateBasedDt: Duration = Duration.ZERO
     var bpmBasedDt: Duration = Duration.ZERO
     var bpm = 0f
@@ -43,6 +44,7 @@ class Choreographer(private val context: Context) {
 
     fun reset() {
         isFullyStopped = false
+        holdTrack = false
     }
 
     fun fullStop() {
@@ -55,7 +57,12 @@ class Choreographer(private val context: Context) {
         if (isFullyStopped) {
             return
         }
-        println("requesting to play ${music.name} after $currentlyPlaying after $previousMusic")
+        if (holdTrack) {
+            return
+        }
+        if (music.name == "magical girl optimistic") {
+            holdTrack = true
+        }
         previousMusic = currentMusic
         currentMusic = music.name
         if (music === currentlyPlayingTrack) {
@@ -136,5 +143,13 @@ class Choreographer(private val context: Context) {
     ): Int {
         val id = sound.play(positionX = x, positionY = y, volume = masterVolume, loop = looping)
         return id
+    }
+
+    fun holdMagicMusic() {
+        holdTrack = true
+    }
+
+    fun releaseMagicMusic() {
+        holdTrack = false
     }
 }

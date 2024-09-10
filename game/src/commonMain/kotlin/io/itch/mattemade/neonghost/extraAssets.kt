@@ -144,6 +144,7 @@ class ExtraMusic(context: Context) : AssetPack(context) {
         "music/mg safe area.mp3" to 50.9845f,
         "music/mg suspicious.mp3" to 121.45169f,
         "music/magical girl 1c 115.mp3" to 115f,
+        "music/magical girl optimistic.mp3" to 134.98456f,
     ).forEachIndexed { index, it ->
         val name = it.first.mp3name()
         prepare(index) {

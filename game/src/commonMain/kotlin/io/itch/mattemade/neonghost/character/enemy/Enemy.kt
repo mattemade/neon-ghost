@@ -205,7 +205,7 @@ class Enemy(
 
             val direction = tempVec2f.set(body.position.x, body.position.y).subtract(from.x, from.y)
             val force = (if (isDummy) { // dummy will get knock back even with normal punch
-                if (strength > 1) 1.5f else 0.3f
+                if (strength > 1) 1.5f else -10f
             } else {
                 if (health == 0) 1.5f else 1.25f
             } + 10f) / (difficulty + 10f)

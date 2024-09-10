@@ -326,6 +326,10 @@ class EventExecutor(
     private fun String?.executeRemember() {
         if (this != null) {
             onRemember(this)
+            if (this == "lift_hacked") {
+                "Hacking".executeSound(volume = 0.5f)
+                return
+            }
         }
         advance()
     }

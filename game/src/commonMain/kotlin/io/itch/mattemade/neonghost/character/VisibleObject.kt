@@ -12,6 +12,7 @@ import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.ParticleSimulator
 import com.littlekt.graphics.g2d.TextureSlice
 import com.littlekt.graphics.g2d.shape.ShapeRenderer
+import com.littlekt.graphics.toFloatBits
 import com.littlekt.input.InputMapController
 import com.littlekt.math.MutableVec2f
 import com.littlekt.math.Vec2f
@@ -47,6 +48,7 @@ class VisibleObject(
         (position.x - width / 2f).pixelPerfectPosition,
         (position.y - height).pixelPerfectPosition
     )
+    val tint = MutableColor(1f, 1f, 1f, 1f)
 
     override fun update(dt: Duration, millis: Float, notAdjustedDt: Duration, toBeat: Float, toMeasure: Float, isFighting: Boolean) {
 
@@ -58,7 +60,8 @@ class VisibleObject(
             x = texturePosition.x,
             y = texturePosition.y,
             width = width,
-            height = height
+            height = height,
+            colorBits = tint.toFloatBits()
         )
     }
     override fun renderShadow(shapeRenderer: ShapeRenderer) {

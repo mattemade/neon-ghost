@@ -213,6 +213,7 @@ class InGame(
     }
 
     private val timedActions = mutableListOf<TimedAction>()
+    private val ephemeralTimedActions = mutableListOf<TimedAction>()
     private fun wait(time: Float) {
         //timedActions.clear()
         timedActions += TimedAction(time, {}, eventExecutor::advance)
@@ -382,6 +383,8 @@ class InGame(
         castAoe(position, Player.castsToStopTime)
     }
 
+    private var spikesToAdd = mutableListOf<VisibleObject>()
+    private var spikesToRemove = mutableListOf<VisibleObject>()
     private fun castAoe(position: Vec2, power: Int) {
         if (eventState["tutorial_trigger"] == 1) {
             eventState["tutorial_trigger"] = 2
@@ -402,6 +405,30 @@ class InGame(
             ) {
                 it.hit(position, power * 2 + 1, fromSpell = true)
             }
+        }
+        val maxOpacity = (power + 1) / 3f
+        drawAoe(position, maxOpacity, false)
+    }
+
+    private fun drawAoe(position: Vec2, maxOpacity: Float, isGhost: Boolean) {
+        val back = VisibleObject(tempVec2f.set(position.x, position.y + 0.3f), if (isGhost) assets.texture.ghostAoeBack else assets.texture.aoeBack, position.y-0.15f)
+        val side = VisibleObject(tempVec2f.set(position.x, position.y + 0.3f), if (isGhost) assets.texture.ghostAoeSide else assets.texture.aoeSide, position.y)
+        val front = VisibleObject(tempVec2f.set(position.x, position.y + 0.3f), if (isGhost) assets.texture.ghostAoeFront else assets.texture.aoeFront, position.y+0.15f)
+        spikesToAdd.add(back)
+        spikesToAdd.add(side)
+        spikesToAdd.add(front)
+        spikesToAdd.forEach { it.tint.a = maxOpacity }
+        tempColor.set(1f, 1f, 1f, 1f)
+        ui.setFadeWorldColor(tempColor)
+        ephemeralTimedActions += TimedAction(0.4f, { ui.setFadeWorld(it) }) { ui.setFadeWorld(0f) }
+        ephemeralTimedActions += TimedAction(1f, { remains ->
+            back.tint.a = maxOpacity * remains
+            side.tint.a = maxOpacity * remains
+            front.tint.a = maxOpacity * remains
+        }) {
+            spikesToRemove.add(back)
+            spikesToRemove.add(side)
+            spikesToRemove.add(front)
         }
     }
 
@@ -663,6 +690,17 @@ class InGame(
                 eventState["rei_home_bed"] = 1
                 eventState["wake_up_trigger"] = 1
                 goThroughDoor("rei_home_bed", "rei_home", Player.maxPlayerHealth, false, 0)
+            }
+
+            "holdMagicMusic" -> {
+                choreographer.play(extraAssets.music.concurrentTracks["magical girl optimistic"]!!)
+                choreographer.holdMagicMusic()
+                eventExecutor.advance()
+            }
+
+            "releaseMagicMusic" -> {
+                choreographer.releaseMagicMusic()
+                eventExecutor.advance()
             }
         }
     }
@@ -933,6 +971,9 @@ class InGame(
         val millis = dt.milliseconds
         time += dt.seconds
         var remainder = dt.seconds
+        ephemeralTimedActions.removeAll {
+            it.update(remainder) < 0f
+        }
         while (timedActions.isNotEmpty()) {
             val activeAction = timedActions.first()
             val actionRemainder = activeAction.update(remainder)
@@ -962,6 +1003,7 @@ class InGame(
             } else if (ghostCasting > 0f) {
                 ghostCasting -= dt.seconds
                 if (ghostCasting <= 0f) {
+                    drawAoe(ghostBody.position, 0.5f, true)
                     if (ghostBody.targetEnemies.isNotEmpty()) {
                         ghostBody.targetEnemies.forEach {
                             it.hit(ghostBody.position, 3)
@@ -1002,6 +1044,14 @@ class InGame(
             depthBasedDrawables.remove(neonGhost!!)
             neonGhost = null
             removeNeonGhostFromList = false
+        }
+        if (spikesToAdd.isNotEmpty()) {
+            depthBasedDrawables.addAll(spikesToAdd)
+            spikesToAdd.clear()
+        }
+        if (spikesToRemove.isNotEmpty()) {
+            depthBasedDrawables.removeAll(spikesToRemove)
+            spikesToRemove.clear()
         }
         if (deadEnemies.isNotEmpty()) {
             enemies.removeAll(deadEnemies)

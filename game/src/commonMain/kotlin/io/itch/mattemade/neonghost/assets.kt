@@ -60,6 +60,12 @@ class Textures(context: Context, private val packer: RuntimeTextureAtlasPacker) 
     val pendulum by "texture/dream/pendulum.png".pack()
     val cityView by "texture/misc/city.png".pack()
     val clouds by "texture/misc/clouds.png".pack()
+    val ghostAoeFront by "texture/ghost/aoe/front.png".pack()
+    val ghostAoeSide by "texture/ghost/aoe/side.png".pack()
+    val ghostAoeBack by "texture/ghost/aoe/back.png".pack()
+    val aoeFront by "texture/rei/aoe/front.png".pack()
+    val aoeSide by "texture/rei/aoe/side.png".pack()
+    val aoeBack by "texture/rei/aoe/back.png".pack()
 }
 
 class Sound(context: Context) : AssetPack(context) {
