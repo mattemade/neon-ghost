@@ -66,6 +66,7 @@ class Textures(context: Context, private val packer: RuntimeTextureAtlasPacker) 
     val aoeFront by "texture/rei/aoe/front.png".pack()
     val aoeSide by "texture/rei/aoe/side.png".pack()
     val aoeBack by "texture/rei/aoe/back.png".pack()
+    val aoePunch by "texture/rei/aoe/punch.png".pack()
 }
 
 class Sound(context: Context) : AssetPack(context) {

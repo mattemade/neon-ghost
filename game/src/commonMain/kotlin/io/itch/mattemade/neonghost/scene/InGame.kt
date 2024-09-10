@@ -411,13 +411,27 @@ class InGame(
     }
 
     private fun drawAoe(position: Vec2, maxOpacity: Float, isGhost: Boolean) {
-        val back = VisibleObject(tempVec2f.set(position.x, position.y + 0.3f), if (isGhost) assets.texture.ghostAoeBack else assets.texture.aoeBack, position.y-0.15f)
-        val side = VisibleObject(tempVec2f.set(position.x, position.y + 0.3f), if (isGhost) assets.texture.ghostAoeSide else assets.texture.aoeSide, position.y)
-        val front = VisibleObject(tempVec2f.set(position.x, position.y + 0.3f), if (isGhost) assets.texture.ghostAoeFront else assets.texture.aoeFront, position.y+0.15f)
+        val back = VisibleObject(
+            tempVec2f.set(position.x, position.y + 0.3f),
+            if (isGhost) assets.texture.ghostAoeBack else assets.texture.aoeBack,
+            position.y - 0.15f
+        )
+        val side = VisibleObject(
+            tempVec2f.set(position.x, position.y + 0.3f),
+            if (isGhost) assets.texture.ghostAoeSide else assets.texture.aoeSide,
+            position.y
+        )
+        val front = VisibleObject(
+            tempVec2f.set(position.x, position.y + 0.3f),
+            if (isGhost) assets.texture.ghostAoeFront else assets.texture.aoeFront,
+            position.y + 0.15f
+        )
         spikesToAdd.add(back)
         spikesToAdd.add(side)
         spikesToAdd.add(front)
-        spikesToAdd.forEach { it.tint.a = maxOpacity }
+        front.tint.a = maxOpacity
+        side.tint.a = maxOpacity
+        back.tint.a = maxOpacity
         tempColor.set(1f, 1f, 1f, 1f)
         ui.setFadeWorldColor(tempColor)
         ephemeralTimedActions += TimedAction(0.4f, { ui.setFadeWorld(it) }) { ui.setFadeWorld(0f) }
@@ -439,7 +453,6 @@ class InGame(
 
     private var closeTutorialOnNextUpdate = false
     private fun castProjectile(position: Vec2, power: Int, facingLeft: Boolean) {
-        println("casting projectile at $position with $power, isLeft = $facingLeft")
         if (eventState["tutorial_trigger"] == 3) {
             eventState["tutorial_trigger"] = 4
 
@@ -447,6 +460,32 @@ class InGame(
             // it will receive Action button too, advancing the dialogue
             closeTutorialOnNextUpdate = true
 
+        }
+        enemies.forEach {
+            if ((facingLeft && it.x < position.x || !facingLeft && it.x > position.x) &&
+                it.y < position.y + 0.25f && it.y > position.y - 0.25f
+            ) {
+                it.hit(position, power * 2 + 1, fromSpell = true)
+            }
+        }
+
+        val sideFactor = if (facingLeft) -1f else 1f
+        val punch = VisibleObject(
+            tempVec2f.set(
+                position.x + sideFactor * (Game.visibleWorldWidth / 2f - 0.1f),
+                position.y - 0.4f
+            ), assets.texture.aoePunch, position.y - 0.02f, flip = facingLeft
+        )
+        val maxOpacity = (power + 1) / 3f
+        spikesToAdd.add(punch)
+        spikesToAdd.forEach { it.tint.a = maxOpacity }
+        tempColor.set(1f, 1f, 1f, 1f)
+        ui.setFadeWorldColor(tempColor)
+        ephemeralTimedActions += TimedAction(0.4f, { ui.setFadeWorld(it) }) { ui.setFadeWorld(0f) }
+        ephemeralTimedActions += TimedAction(1f, { remains ->
+            punch.tint.a = maxOpacity * remains
+        }) {
+            spikesToRemove.add(punch)
         }
     }
 
@@ -674,7 +713,7 @@ class InGame(
             }
 
             "finale" -> {
-                ghostOverlay.isActive = false
+                ghostOverlay.isMoving = false
                 ghostOverlay.renderJustOneMoreTime = true
                 eventExecutor.advance()
             }
@@ -1149,7 +1188,7 @@ class InGame(
             batch.draw(
                 it,
                 cameraMan.position.x - visibleWorldWidth / 2f,
-                cameraMan.position.y - visibleWorldHeight / 2f - yRatio * visibleWorldHeight -1f,
+                cameraMan.position.y - visibleWorldHeight / 2f - yRatio * visibleWorldHeight - 1f,
                 width = it.width * Game.IPPU,
                 height = it.height * Game.IPPU
             )

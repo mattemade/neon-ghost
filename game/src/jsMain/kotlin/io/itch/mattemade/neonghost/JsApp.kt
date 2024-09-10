@@ -37,7 +37,7 @@ fun main() {
         var room: String = "boxing_club"
         var activeMusic: String = "stop"
         var argument = false
-        var cabinet = false
+        var cabinet = true
         var savedState: Game.SavedState? = null
         window.location.href.takeIf { it.contains('?') }
             ?.substringAfter('?')

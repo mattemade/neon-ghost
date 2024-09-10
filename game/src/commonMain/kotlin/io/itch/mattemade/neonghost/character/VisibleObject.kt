@@ -39,6 +39,7 @@ class VisibleObject(
     val position: Vec2f,
     val slice: TextureSlice,
     override val depth: Float,
+    val flip: Boolean = false
 ) : Releasing by Self(),
     DepthBasedRenderable {
 
@@ -61,7 +62,8 @@ class VisibleObject(
             y = texturePosition.y,
             width = width,
             height = height,
-            colorBits = tint.toFloatBits()
+            colorBits = tint.toFloatBits(),
+            flipX = flip
         )
     }
     override fun renderShadow(shapeRenderer: ShapeRenderer) {
