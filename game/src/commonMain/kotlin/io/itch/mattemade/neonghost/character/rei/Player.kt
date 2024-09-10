@@ -417,7 +417,8 @@ class Player(
                 movingToBeat = true
                 dashCooldown = 200f
                 resetEnemyAi()
-                body.linearVelocity.set(xMovement * 2.5f, yMovement * 2.5f)
+                tempVec2f.set(xMovement, yMovement).setLength(2.5f)
+                body.linearVelocity.set(tempVec2f.x, tempVec2f.y)
                 choreographer.sound(assets.sound.dash.sound, body.position.x, body.position.y)
             } else {
                 if (keepMoving) {

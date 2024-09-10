@@ -183,7 +183,7 @@ class Game(
             playerKnowledge = mutableSetOf<String>().apply { addAll(playerKnowledge) },
             interactionOverride = mutableMapOf<String, String>().apply { putAll(interactionOverride) },
             ghostActive = ghostOverlay.isActive,
-            playerHealth = Player.maxPlayerHealth,//playerHealth,
+            playerHealth = if (isMagic) Player.maxPlayerHealth * 2 else Player.maxPlayerHealth,//playerHealth,
             isMagic = isMagic,
             activeMusic = choreographer.currentlyPlayingTrack?.name,
             deaths = deaths,
@@ -191,6 +191,7 @@ class Game(
     }
 
     private fun loadGame() {
+        val movingIndoor = playerKnowledge.contains("moveIndoor")
         savedState?.let {
             eventState.clear()
             eventState.putAll(it.eventState)
@@ -206,7 +207,17 @@ class Game(
                 track?.let { choreographer.play(it) }
             }
             previousRoomName = it.room
-            openDoor(it.door, it.room, it.playerHealth, it.isMagic, it.deaths + 1)
+
+            if (movingIndoor) {
+                playerKnowledge.remove("moveIndoor")
+                eventState["officer_catch"] = 1
+                previousRoomName = "interrogation_room"
+                openDoor("officer_catch", previousRoomName!!, Player.maxPlayerHealth, it.isMagic, it.deaths)
+            } else {
+                openDoor(it.door, it.room, it.playerHealth, it.isMagic, it.deaths + 1)
+            }
+
+
         } ?: resetGame()
     }
 

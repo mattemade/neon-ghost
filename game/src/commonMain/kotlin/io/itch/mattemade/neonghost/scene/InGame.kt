@@ -564,6 +564,7 @@ class InGame(
 
             "transform" -> {
                 ghostOverlay.blinking = true
+                player.health = Player.maxPlayerHealth * 2
                 transformation = Transformation(
                     player,
                     context,
@@ -643,6 +644,25 @@ class InGame(
             "removeTools" -> {
                 removeTools = true
                 eventExecutor.advance()
+            }
+
+            "finale" -> {
+                ghostOverlay.isActive = false
+                ghostOverlay.renderJustOneMoreTime = true
+                eventExecutor.advance()
+            }
+
+            "wake" -> {
+                //remember=training&officer_boss=1&start_game_trigger=1&first_fight_with_punk=1&rei_home_bed=2&wake_up_trigger=1
+                playerKnowledge.clear()
+                playerKnowledge.add("training")
+                eventState.clear()
+                eventState["officer_boss"] = 1
+                eventState["start_game_trigger"] = 1
+                eventState["first_fight_with_punk"] = 1
+                eventState["rei_home_bed"] = 1
+                eventState["wake_up_trigger"] = 1
+                goThroughDoor("rei_home_bed", "rei_home", Player.maxPlayerHealth, false, 0)
             }
         }
     }

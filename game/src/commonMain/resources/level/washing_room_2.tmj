@@ -6,11 +6,11 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89,
-            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89],
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90],
          "height":8,
          "id":1,
          "name":"floor",
@@ -22,11 +22,11 @@
          "y":0
         }, 
         {
-         "data":[96, 97, 98, 99, 94, 95, 95, 95, 96, 91, 92, 93, 94,
-            108, 109, 110, 111, 106, 107, 107, 107, 108, 103, 104, 105, 106,
-            120, 121, 122, 123, 118, 119, 119, 119, 120, 115, 116, 117, 118,
-            0, 0, 0, 0, 143, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 148, 0, 0, 0, 0, 0, 0, 0, 0,
+         "data":[97, 98, 99, 100, 95, 96, 96, 96, 97, 92, 93, 94, 95,
+            109, 110, 111, 112, 107, 108, 108, 108, 109, 104, 105, 106, 107,
+            121, 122, 123, 124, 119, 120, 120, 120, 121, 116, 117, 118, 119,
+            0, 0, 0, 0, 144, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 149, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -155,7 +155,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"music stop\ntrigger fullStop\nvoice 468\nghost<:Focus you magic\\as hard as you can,\\here we go!\nstop\ntrigger activatePrepare\nwait 4\nvoice 470\nghost<:Just a little more...\nstop\nwait 2\nvoice 471\nghost<:Punch! Now!\nstop\ntrigger activatePunch\nwait 2\ntrigger goodbye\nwait 3\nvoice 473\nghost<:Thank you...\\And goodbye...\nstop\ntrigger waitForDisappear\nremember ending\nteleport washing_room_3"
+                         "value":"music stop\ntrigger fullStop\nvoice 468\nghost<:Focus you magic\\as hard as you can,\\here we go!\nstop\ntrigger activatePrepare\nwait 4\nvoice 470\nghost<:Just a little more...\nstop\nwait 2\nvoice 471\nghost<:Punch! Now!\nstop\ntrigger activatePunch\nwait 2\nvoice 473\nkeepPlaying 8\nwait 4\ntrigger goodbye\n#wait 1\n#ghost<:Thank you...\\And goodbye...\nstop\ntrigger waitForDisappear\nwait 2\nremember ending\nteleport washing_room_3"
                         }, 
                         {
                          "name":"type",
@@ -236,19 +236,19 @@
          "source":"abstract.tsj"
         }, 
         {
-         "firstgid":89,
+         "firstgid":90,
          "source":"tilesets\/0_Asset_Floor_4848.tsj"
         }, 
         {
-         "firstgid":91,
+         "firstgid":92,
          "source":"tilesets\/0_Asset_Wall_144144.tsj"
         }, 
         {
-         "firstgid":127,
+         "firstgid":128,
          "source":"tilesets\/0_Asset_Chair_240240.tsj"
         }, 
         {
-         "firstgid":152,
+         "firstgid":153,
          "source":"tilesets\/0_Asset_Control_9696.tsj"
         }],
  "tilewidth":48,

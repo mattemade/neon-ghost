@@ -152,6 +152,7 @@ class Enemy(
     private var nextLeftPunch = true
     private var punchCooldown = 0f
     var hitCooldown = 0f
+    var hitsBeforeIgnoreCooldown = calcHitsBeforeCooldown(difficulty)
     var isAggressive = false
     var target: EnemyAi.TargetPoint? = null
         set(value) {
@@ -164,6 +165,10 @@ class Enemy(
         if (isDummy) {
             target = EnemyAi.TargetPoint(player, x, y)
         }
+    }
+
+    fun calcHitsBeforeCooldown(difficulty: Float): Int {
+        return if (difficulty > 4f) 0 else if (difficulty > 3f) 2 else 3
     }
 
     fun hit(from: Vec2, strength: Int, fromSpell: Boolean = false) {
@@ -184,19 +189,26 @@ class Enemy(
                 body.position.x,
                 body.position.y)
         }
-        hitCooldown = if (health == 0) 500f else 300f
-        currentMagicalAnimation = hit
+        if (strength == 1) {
+            hitsBeforeIgnoreCooldown--
+        } else {
+            hitsBeforeIgnoreCooldown = calcHitsBeforeCooldown(difficulty)
+        }
+        hitCooldown = if (health == 0) 500f else if (hitsBeforeIgnoreCooldown <= 0) 0f else 300f
+        if (hitCooldown > 0f) {
+            currentMagicalAnimation = hit
+        }
         if (strength > 1 || health == 0 || fromSpell || isDummy) {
             if (!isDummy) {
                 target = null
             }
 
             val direction = tempVec2f.set(body.position.x, body.position.y).subtract(from.x, from.y)
-            val force = if (isDummy) {
+            val force = (if (isDummy) { // dummy will get knock back even with normal punch
                 if (strength > 1) 1.5f else 0.3f
             } else {
-                if (health == 0) 1.0f else 1.5f// / difficulty
-            } / difficulty
+                if (health == 0) 1.5f else 1.25f
+            } + 10f) / (difficulty + 10f)
             tempVec2f2.set(force, 0f)
             val rotation = direction.angleTo(tempVec2f2)
             tempVec2f2.rotate(rotation)
@@ -212,9 +224,11 @@ class Enemy(
                 if (isFacingLeft && leftPunchTargets.isNotEmpty() || !isFacingLeft && rightPunchTargets.isNotEmpty()) {
                     player.hit(body.position, difficulty)
                 }
+                hitsBeforeIgnoreCooldown = calcHitsBeforeCooldown(difficulty)
             }
             "enemyFootstep" -> {
                 choreographer.sound(assets.sound.footstep.sound, body.position.x, body.position.y)
+                hitsBeforeIgnoreCooldown = calcHitsBeforeCooldown(difficulty)
             }
         }
     }
@@ -392,5 +406,6 @@ class Enemy(
 
     companion object {
         const val defaultPunchDistance = 28f / Game.PPU
+        const val defaultHitsBeforeIgnoreCooldown = 3
     }
 }

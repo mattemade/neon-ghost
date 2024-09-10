@@ -338,7 +338,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"voice 461\nghost<:Are you ready?\n\nchoose Yes:yes;No:no\n\nchoice no\nvoice 463\nghost<:Take your time to\\get ready, but don't\\take too long!\nend\n\nchoice yes\nrei>:I am ready\nteleport washing_room_2\n"
+                         "value":"voice 461\nghost<:Are you ready?\n\nchoose Yes:yes;No:no\n\nchoice no\nvoice 463\nghost<:Take your time to\\get ready, but don't\\take too long!\nend\n\nchoice yes\nrei>:I am ready\nforget indoor\nteleport washing_room_2\n"
                         }, 
                         {
                          "name":"title",
@@ -382,7 +382,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"camera trigger\nofficer<:Here you are! Are you ready?\nrei>:Ready for what?\nofficer<:I'm the one asking\\the questions here!\n\nfight guard<0.1,guard<0.9\n\n#trigger demon\n\nstate 2\nstate 1 washing_machine_interaction\n\nmusic mg safe area\ncamera follow\nwait 2\nvoice 455\nghost<: Well done, Rei!\\Now, let's take\\care of that thing\ncamera machine_top_camera\nvoice 456\nghost<: It is huge...\\I don't think you\\can damage it physically\nvoice 457\nghost<: If I channel my magic\\through you, you should\\have enough power\\to punch through it\nrei>: Do you have\\any magic left?\nvoice 459\nghost<: Don't worry about me,\\I've been done for a long time\nvoice 460\nghost<: And I am willing to\\put down what remains from\\my life in protecting\\all the future Magical Girls!\ncamera follow\nvoice 461\nghost<:Are you ready?\n\nchoose Yes:yes;No:no\n\nchoice no\nvoice 463\nghost<:Take your time to\\get ready, but don't\\take too long!\nend\n\nchoice yes\nrei>:I am ready\nteleport washing_room_2"
+                         "value":"camera trigger\nofficer<:Here you are! Are you ready?\nrei>:Ready for what?\nofficer<:I'm the one asking\\the questions here!\n\nfight guard<0.1,guard<0.9\n\n#trigger demon\n\nstate 2\nstate 1 washing_machine_interaction\n\nmusic mg safe area\ncamera follow\nwait 2\nvoice 455\nghost<: Well done, Rei!\\Now, let's take\\care of that thing\ncamera machine_top_camera\nvoice 456\nghost<: It is huge...\\I don't think you\\can damage it physically\nvoice 457\nghost<: If I channel my magic\\through you, you should\\have enough power\\to punch through it\nrei>: Do you have\\any magic left?\nvoice 459\nghost<: Don't worry about me,\\I've been done for a long time\nvoice 460\nghost<: And I am willing to\\put down what remains from\\my life in protecting\\all the future Magical Girls!\ncamera follow\nvoice 461\nghost<:Are you ready?\n\nchoose Yes:yes;No:no\n\nchoice no\nvoice 463\nghost<:Take your time to\\get ready, but don't\\take too long!\nend\n\nchoice yes\nrei>:I am ready\nforget indoor\nteleport washing_room_2"
                         }, 
                         {
                          "name":"type",

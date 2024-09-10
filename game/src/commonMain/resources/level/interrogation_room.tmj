@@ -6,9 +6,9 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
-            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
-            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90],
+            91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+            91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+            91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91],
          "height":6,
          "id":1,
          "name":"floor",
@@ -20,9 +20,9 @@
          "y":0
         }, 
         {
-         "data":[100, 100, 101, 102, 94, 95, 96, 127, 128, 129, 94,
-            112, 112, 113, 114, 106, 107, 108, 130, 131, 132, 106,
-            124, 124, 125, 126, 118, 119, 120, 133, 134, 135, 118,
+         "data":[101, 101, 102, 103, 95, 96, 97, 128, 129, 130, 95,
+            113, 113, 114, 115, 107, 108, 109, 131, 132, 133, 107,
+            125, 125, 126, 127, 119, 120, 121, 134, 135, 136, 119,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -105,7 +105,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"clearQueue\ntrigger activateHandcuff\ncamera nowhere:0\nscreen fadeOut:0\nmusic stop\nmusic stop\ncamera interrogation_camera:0\nwait 1\nvoice 5_d\nwait 1\nscreen fadeIn:1\n\nchoice tools\nforget tools\nremember no_tools\ntools<:Tools lost\nchoice\n\nmusic mg suspicious\nrei<:(How did they catch me?)\nrei<:(Great, now I am\\in handcuffs)\nofficer>:Oh, you're finally awake\nrei<:Where am I?\nofficer>:I'm the one asking\\the questions here\nofficer>:How did you know\\about the box?\nrei<:I don't know what\\you are talking about\nofficer>:I see...\nofficer>:Who should we call\\to pick you up?\nrei<:I don't have anyone,\\so good luck with your ransom\nofficer>:Good, no one is\\looking for you then\nrei<:...\nvoice 6_d\nnoone<: ... me ...\nrei<:What is that?!\nofficer>:I'm the one asking\\the questions here\nguard>:Sir, the detector\\reacts on her\nofficer>:What??\nofficer>:Looks like we've got\\our lucky ticket, guys\nofficer>:Bring her to\\the washing machine!\nguard>:Yes, sir!\nrei<:Hey, I am not that dirty!\nguard>:It is not to clean you...\\Well, at least\\not from the outside\nrei<:Ewww, that's even worse\nstate 2\nstate 1 interrogation_officer\nstate 1 interrogation_guard\nteleport washing_room\n"
+                         "value":"clearQueue\ntrigger activateHandcuff\ncamera nowhere:0\nscreen fadeOut:0\nmusic stop\nmusic stop\ncamera interrogation_camera:0\nwait 1\nvoice 5_d\nwait 1\nscreen fadeIn:1\n\nchoice tools\nforget tools\nremember no_tools\ntools<:Tools lost\nchoice\n\nmusic mg suspicious\nrei<:(That guy is tough...)\nrei<:(Great, now I am\\in handcuffs)\nofficer>:Oh, you're finally awake\nrei<:Where am I?\nofficer>:I'm the one asking\\the questions here\nofficer>:How did you know\\about the box?\nrei<:I don't know what\\you are talking about\nofficer>:I see...\nofficer>:Who should we call\\to pick you up?\nrei<:I don't have anyone,\\so good luck with your ransom\nofficer>:Good, no one is\\looking for you then\nrei<:...\nvoice 6_d\nnoone<: ... me ...\nrei<:What is that?!\nofficer>:I'm the one asking\\the questions here\nguard>:Sir, the detector\\reacts on her\nofficer>:What??\nofficer>:Looks like we've got\\our lucky ticket, guys\nofficer>:Bring her to\\the washing machine!\nguard>:Yes, sir!\nrei<:Hey, I am not that dirty!\nguard>:It is not to clean you...\\Well, at least\\not from the outside\nrei<:Ewww, that's even worse\nstate 2\nstate 1 interrogation_officer\nstate 1 interrogation_guard\nteleport washing_room\n"
                         }, 
                         {
                          "name":"title",
@@ -323,15 +323,15 @@
          "source":"abstract.tsj"
         }, 
         {
-         "firstgid":89,
+         "firstgid":90,
          "source":"tilesets\/0_Asset_Floor_4848.tsj"
         }, 
         {
-         "firstgid":91,
+         "firstgid":92,
          "source":"tilesets\/0_Asset_Wall_144144.tsj"
         }, 
         {
-         "firstgid":127,
+         "firstgid":128,
          "source":"tilesets\/red_door.tsj"
         }],
  "tilewidth":48,

@@ -118,7 +118,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"music stop\n#officer<:got you!\nstate 1\nteleport interrogation_room"
+                         "value":"officer<:Oh, here you are\nrei>:Not for long\nofficer<:Yes, not for long\nremember moveIndoor\nfight officer2<0.5,guard>0.5\n\n#music stop\n#officer<:got you!\n#state 1\n#teleport interrogation_room"
                         }, 
                         {
                          "name":"type",

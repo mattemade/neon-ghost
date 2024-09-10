@@ -232,6 +232,16 @@ class EventExecutor(
                     name,
                 )
 
+            "officer2" ->
+                EnemySpec(
+                    assets.animation.officerAnimations,
+                    10f,
+                    10000,
+                    fromLeft,
+                    verticalPosition,
+                    name,
+                )
+
             "dummy" ->
                 EnemySpec(
                     assets.animation.dummyAnimations,
