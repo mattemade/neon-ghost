@@ -113,7 +113,8 @@ class Game(
         toRoom: String,
         playerHealth: Int,
         isMagic: Boolean,
-        deaths: Int
+        deaths: Int,
+        isLoaded: Boolean,
     ) {
         if (toRoom == "boxing_club" || extraAssetsReady) {
             delayedOpenDoorArgs = null
@@ -123,7 +124,7 @@ class Game(
             previousRoomName = toRoom
             previousDoorName = door
             assets.level.levels[toRoom]?.let { level ->
-                startGameFromLevel(level, door, playerHealth, isMagic, deaths)
+                startGameFromLevel(level, door, playerHealth, isMagic, deaths, isLoaded)
             } ?: error("no such level found $toRoom")
         } else {
             delayedOpenDoorArgs = OpenDoorArgs(door, toRoom, playerHealth, isMagic, deaths)
@@ -136,6 +137,7 @@ class Game(
         playerHealth: Int,
         isMagic: Boolean,
         deaths: Int,
+        isLoaded: Boolean,
     ) {
         inGame = InGame(
             context,
@@ -166,7 +168,8 @@ class Game(
                 resetGame()
             },
             playerHealth = playerHealth,
-            isMagic = isMagic
+            isMagic = isMagic,
+            isLoaded = isLoaded
         )
     }
 
@@ -214,18 +217,22 @@ class Game(
             previousRoomName = it.room
 
             if (playerKnowledge.contains("ending")) {
+                choreographer.play(assets.music.concurrentTracks["stop"]!!)
                 choreographer.fullStop()
                 ghostOverlay.isActive = false
                 ghostOverlay.isMoving = false
+            } else if (playerKnowledge.contains("magic")) {
+                choreographer.holdMagicMusic()
+                trackToPlayOnNextUpdate = extraAssets.music.concurrentTracks["magical girl optimistic"]!!
             }
 
             if (movingIndoor) {
                 playerKnowledge.remove("moveIndoor")
                 eventState["officer_catch"] = 1
                 previousRoomName = "interrogation_room"
-                openDoor("officer_catch", previousRoomName!!, Player.maxPlayerHealth, it.isMagic, it.deaths)
+                openDoor("officer_catch", previousRoomName!!, Player.maxPlayerHealth, it.isMagic, it.deaths, false)
             } else {
-                openDoor(it.door, it.room, it.playerHealth, it.isMagic, it.deaths + 1)
+                openDoor(it.door, it.room, it.playerHealth, it.isMagic, it.deaths + 1, true)
             }
 
 
@@ -240,7 +247,7 @@ class Game(
         playerKnowledge.clear()
         interactionOverride.clear()
         previousRoomName = "boxing_club"
-        openDoor("player", "boxing_club", Player.maxPlayerHealth, false, 0)
+        openDoor("player", "boxing_club", Player.maxPlayerHealth, false, 0, false)
 
         /*        choreographer.play(assets.music.concurrentTracks["magical girl 3d"]!!)
                 eventState["officer_catch"] = 1
@@ -358,7 +365,7 @@ class Game(
             }
             delayedOpenDoorArgs?.let {
                 if (extraAssetsReady) {
-                    openDoor(it.door, it.toRoom, it.playerHealth, it.isMagic, it.deaths)
+                    openDoor(it.door, it.toRoom, it.playerHealth, it.isMagic, it.deaths, false)
                 }
             }
             val trackToPlay = trackToPlayOnNextUpdate

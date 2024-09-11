@@ -272,7 +272,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:Welcome to the CorpX\\Central Power Research Facility\nterminal<:Please wait here for our\\colleagues to help you out\nrei>:Help me out, huh?\\No, thanks"
+                         "value":"terminal<:Welcome to the CorpX\\Central Power Research Facility\nterminal<:Please wait here for our\\colleagues to help you out\nrei>:Help me out, huh?\\No, thanks\nguard<:We insist\n\nfight guard<0.2,guard<0.5"
                         }, 
                         {
                          "name":"title",
@@ -491,6 +491,114 @@
                  "width":48,
                  "x":672,
                  "y":384
+                }, 
+                {
+                 "height":48,
+                 "id":83,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":192,
+                 "y":384
+                }, 
+                {
+                 "height":48,
+                 "id":84,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":144,
+                 "y":432
+                }, 
+                {
+                 "height":48,
+                 "id":85,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":48,
+                 "y":432
+                }, 
+                {
+                 "height":48,
+                 "id":86,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":0,
+                 "y":384
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -499,7 +607,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":83,
+ "nextobjectid":87,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

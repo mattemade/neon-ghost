@@ -292,7 +292,7 @@ class Enemy(
         if (canAct() && !isAggressive && !isDummy) {
             val isFacingPlayer = isFacingLeft && player.x < x || !isFacingLeft && player.x > x
             if (isFacingPlayer) {
-                if (tempVec2f2.set(player.x, player.y).subtract(x, y).length() < 2.5f) {
+                if (tempVec2f2.set(player.x, player.y).subtract(x, y).length() < 1.5f) {
                     isAggressive = true
                     onBecomingAggessive(this)
                 }

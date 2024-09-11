@@ -115,6 +115,5 @@ private fun onLowPerformance(resetZoom: Boolean) {
         zoomFactor += 1f
     }
     val setZoom = zoom * zoomFactor
-    println("onLowPerformance, zooming to $setZoom")
     canvas.style.asDynamic().zoom = "$setZoom"
 }

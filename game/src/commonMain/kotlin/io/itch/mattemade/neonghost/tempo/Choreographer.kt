@@ -12,7 +12,18 @@ class Choreographer(private val context: Context) {
     var masterVolume = 1f
         set(value) {
             currentlyPlayingTrack?.let {
-                it.stream.setVolume(currentlyPlayingId, it.basicVolume * value)
+                it.stream.setVolume(currentlyPlayingId, it.basicVolume * value * uiMusicVolume)
+            }
+            field = value
+        }
+    var targetUiMusicVolume = 1f
+    var lastUiMusicVolume = 1f
+    var uiMusicVolumeChangeIn = 0f
+    var uiMusicVolume = targetUiMusicVolume
+        set(value) {
+            currentlyPlayingTrack?.let {
+                val volume = it.basicVolume * value * masterVolume
+                it.stream.setVolume(currentlyPlayingId, volume)
             }
             field = value
         }
@@ -31,6 +42,7 @@ class Choreographer(private val context: Context) {
     var toMeasure = 0f
         private set
 
+    var startNextTrackWithoutFading: Boolean = false
     var playbackRate = 1.0
     var currentlyPlayingTrack: StreamBpm? = null
         private set
@@ -55,11 +67,13 @@ class Choreographer(private val context: Context) {
 
     var previousMusic: String? = null
     var currentMusic: String? = null
-    fun play(music: StreamBpm) {
+    var nextTrackAfterFade: StreamBpm? = null
+    val fadeOutNotAllowedWhenTurningOn = setOf("magical girl optimistic", "magical girl 3d", "bassy_beat")
+    fun play(music: StreamBpm/*, allowFadeOut: Boolean = false*/) {
         if (isFullyStopped) {
             return
         }
-        if (holdTrack) {
+        if (holdTrack && music.name != "magical girl optimistic") {
             return
         }
         if (music.name == "magical girl optimistic") {
@@ -70,7 +84,18 @@ class Choreographer(private val context: Context) {
         if (music === currentlyPlayingTrack) {
             return
         }
-        currentlyPlaying?.stop(currentlyPlayingId)
+        val allowFadeOut = !fadeOutNotAllowedWhenTurningOn.contains(music.name) && !startNextTrackWithoutFading
+        startNextTrackWithoutFading = false
+        if (allowFadeOut) {
+            nextTrackAfterFade = music
+            musicVolume(0f)
+        } else {
+            currentlyPlaying?.stop(currentlyPlayingId)
+            start(music)
+        }
+    }
+
+    private fun start(music: StreamBpm) {
         currentlyPlayingId = music.stream.play(
             volume = music.basicVolume * masterVolume,
             referenceDistance = 10000f,
@@ -85,6 +110,7 @@ class Choreographer(private val context: Context) {
         doubleSecondsPerBeat = secondsPerBeat * 2f
         secondsPerMeasure = secondsPerBeat * 4
         currentlyPlayingTrack = music
+        uiMusicVolume = 1f
     }
 
     var xPosition: Float = 0f
@@ -108,6 +134,21 @@ class Choreographer(private val context: Context) {
             bpmBasedDt = dt.times(playbackRate)
             return
         }
+        if (uiMusicVolumeChangeIn > 0f) {
+            uiMusicVolumeChangeIn -= dt.seconds
+            if (uiMusicVolumeChangeIn <= 0f) {
+                uiMusicVolume = targetUiMusicVolume
+                nextTrackAfterFade?.let {
+                    currentlyPlaying?.stop(currentlyPlayingId)
+                    nextTrackAfterFade = null
+                    start(it)
+                }
+            } else {
+                uiMusicVolume =
+                    lastUiMusicVolume + ((defaultUiMusicVolumeChangeIn - uiMusicVolumeChangeIn) / defaultUiMusicVolumeChangeIn) * (targetUiMusicVolume - lastUiMusicVolume)
+            }
+        }
+
         playbackRateBasedDt = dt.times(playbackRate)
         time += playbackRateBasedDt.seconds
         toBeat = (time % secondsPerBeat) / secondsPerBeat
@@ -128,12 +169,23 @@ class Choreographer(private val context: Context) {
         return id
     }
 
-    fun sound(sound: AudioClipEx, x: Float, y: Float, looping: Boolean = false, volume: Float = 1f): Int {
+    fun sound(
+        sound: AudioClipEx,
+        x: Float,
+        y: Float,
+        looping: Boolean = false,
+        volume: Float = 1f
+    ): Int {
         if (x >= xPosition - Game.visibleWorldWidth / 1.5f && x <= xPosition + Game.visibleWorldWidth / 1.5f &&
             y >= yPosition - Game.visibleWorldHeight / 1.5f && y <= yPosition + Game.visibleWorldHeight / 1.5f
         ) {
             everActiveSoundClips.add(sound)
-            val id = sound.play(positionX = x, positionY = y, volume = masterVolume * volume, loop = looping)
+            val id = sound.play(
+                positionX = x,
+                positionY = y,
+                volume = masterVolume * volume,
+                loop = looping
+            )
             sound.setPlaybackRate(id, playbackRate.toFloat())
             return id
         } else {
@@ -157,5 +209,16 @@ class Choreographer(private val context: Context) {
 
     fun releaseMagicMusic() {
         holdTrack = false
+    }
+
+
+    fun musicVolume(uiValue: Float) {
+        targetUiMusicVolume = uiValue
+        lastUiMusicVolume = uiMusicVolume
+        uiMusicVolumeChangeIn = defaultUiMusicVolumeChangeIn
+    }
+
+    companion object {
+        const val defaultUiMusicVolumeChangeIn = 0.4f
     }
 }

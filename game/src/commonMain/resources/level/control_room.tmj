@@ -260,7 +260,7 @@
          "name":"trigger",
          "objects":[
                 {
-                 "height":48,
+                 "height":15.2727272727273,
                  "id":30,
                  "name":"main_lift_enter",
                  "properties":[
@@ -282,12 +282,12 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":144,
-                 "x":48,
+                 "width":106.727272727273,
+                 "x":67.2727272727273,
                  "y":384
                 }, 
                 {
-                 "height":48,
+                 "height":15.5,
                  "id":72,
                  "name":"main_lift_exit",
                  "properties":[
@@ -299,12 +299,12 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":144,
-                 "x":48,
+                 "width":106.545454545455,
+                 "x":67.0909090909091,
                  "y":384
                 }, 
                 {
-                 "height":48,
+                 "height":18.5,
                  "id":76,
                  "name":"security_lift_exit",
                  "properties":[
@@ -316,7 +316,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":130.333333333333,
+                 "width":112.333333333333,
                  "x":685.666666666667,
                  "y":144
                 }, 
@@ -392,7 +392,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:What map to show?\n\nchoose Leave:leave; Building:building; Power grid:grid\n\nchoice leave\nend\n\nchoice building\nstop\nwait 0.1\ncamera building_camera:0\nwait 1\nterminal<:Here is the building map\nrei>:Interesting\nrei>:Why do they have these\\underground floors?\nwait 0.1\ncamera follow:0\nend\n\n\nchoice grid,ghost\nstop\nwait 0.1\ncamera grid_camera_2:0\nwait 1\nterminal>:Here is the power grid map\nvoice 245\nghost<: Hmm, how strange\nvoice 246\nghost<: The green dots on\\this map match my feeling\\of the other magical girls\nrei>: Looks like this yellow dot\\is where we are\nrei>: And theese green dots around\\are active power plants\nrei>: Like the one\\where I found you...\nvoice 250\nghost<: I see...\\Poor souls...\nvoice 251\nghost<: May I ask you...\\to help them the same way\\you helped me?\nchoose I promise:promise;No:no\nchoice grid,ghost,no\nvoice 252\nghost<:Sorry...\\I knew I was asking\\for the impossible...\nchoice grid,ghost,promise\nvoice 253\nghost<:Thank you, you are too kind!\\It's no wonder you are\\a magical girl too!\nremember promise\nchoice grid,ghost\nstate 1\nwait 0.1\ncamera follow:0\nend\n\nchoice grid\nstop\nwait 0.1\ncamera grid_camera_1:0\nwait 1\nterminal<:Here is the power grid map\nrei>:So they have a power\\plant in this building\nwait 0.1\ncamera follow:0\nend\n"
+                         "value":"terminal<:What map to show?\n\nchoose Leave:leave; Building:building; Power grid:grid\n\nchoice leave\nend\n\nchoice building\nstop\nwait 0.1\ncamera building_camera:0\nwait 1\nterminal<:Here is the building map\nrei>:Interesting\nrei>:Why do they have these\\underground floors?\nwait 0.1\ncamera follow:0\nend\n\n\nchoice grid,ghost\nstop\nwait 0.1\ncamera grid_camera_2:0\nwait 1\nterminal>:Here is the power grid map\nvoice 245\nghost<: Hmm, how strange\nvoice 246\nghost<: The green dots on\\this map match my feeling\\of the other magical girls\nrei>: Looks like this yellow dot\\is where we are\nrei>: And these green dots around\\are active power plants\nrei>: Like the one\\where I found you...\nvoice 250\nghost<: I see...\\Poor souls...\nvoice 251\nghost<: May I ask you...\\to help them the same way\\you helped me?\nchoose I promise:promise;No:no\nchoice grid,ghost,no\nvoice 252\nghost<:Sorry...\\I knew I was asking\\for the impossible...\nchoice grid,ghost,promise\nvoice 253\nghost<:Thank you, you are too kind!\\It's no wonder you are\\a magical girl too!\nremember promise\nchoice grid,ghost\nstate 1\nwait 0.1\ncamera follow:0\nend\n\nchoice grid\nstop\nwait 0.1\ncamera grid_camera_1:0\nwait 1\nterminal<:Here is the power grid map\nrei>:So they have a power\\plant in this building\nwait 0.1\ncamera follow:0\nend\n"
                         }, 
                         {
                          "name":"1",
@@ -500,7 +500,7 @@
                  "y":158.5
                 }, 
                 {
-                 "height":48,
+                 "height":18.5,
                  "id":99,
                  "name":"security_lift_enter",
                  "properties":[
@@ -537,7 +537,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":129,
+                 "width":111.25,
                  "x":687,
                  "y":144
                 }, 
@@ -549,7 +549,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"guard>:Get her!\n\nfight guard<0.5,guard>0.5\nstate 1"
+                         "value":"guard>:Get her!\n\nfight guard>0.2\nstate 1"
                         }, 
                         {
                          "name":"type",
@@ -621,7 +621,7 @@
                 {
                  "height":48,
                  "id":100,
-                 "name":"mbns2",
+                 "name":"",
                  "properties":[
                         {
                          "name":"facingLeft",
@@ -643,7 +643,7 @@
                 {
                  "height":48,
                  "id":101,
-                 "name":"mbns1",
+                 "name":"",
                  "properties":[
                         {
                          "name":"facingLeft",
@@ -659,13 +659,13 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":825.5,
-                 "y":142
+                 "x":816,
+                 "y":144
                 }, 
                 {
                  "height":48,
                  "id":102,
-                 "name":"mbns3",
+                 "name":"",
                  "properties":[
                         {
                          "name":"facingLeft",
@@ -687,7 +687,7 @@
                 {
                  "height":48,
                  "id":103,
-                 "name":"mbns4",
+                 "name":"",
                  "properties":[
                         {
                          "name":"facingLeft",
@@ -705,6 +705,87 @@
                  "width":48,
                  "x":192,
                  "y":384
+                }, 
+                {
+                 "height":48,
+                 "id":107,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":672,
+                 "y":192
+                }, 
+                {
+                 "height":48,
+                 "id":108,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":4
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":48,
+                 "y":432
+                }, 
+                {
+                 "height":48,
+                 "id":109,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":4
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":144,
+                 "y":432
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -713,7 +794,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":107,
+ "nextobjectid":110,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

@@ -142,14 +142,14 @@
          "name":"trigger",
          "objects":[
                 {
-                 "height":48,
+                 "height":28,
                  "id":18,
                  "name":"enter_home",
                  "properties":[
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"choice tools\nteleport strange_room\nend\n\nchoice\nrei<:I should probably\\take my tools\\before I go\nchoose Stay home:no; Leave without tools:yes\nchoice yes\nrei<:Are you sure?\\They may be quite handy\nchoose Stay home to\\take the tools:no; Leave without\\hacking tools:still_yes\n\nchoice still_yes\nteleport strange_room\n"
+                         "value":"choice tools\nteleport strange_room\nend\n\nchoice\nrei<:I should probably\\take my tools\\before I go\nchoose Stay home:no; Leave without tools:yes\nchoice yes\nrei<:Are you sure?\\They may be quite handy\nchoose Stay home to\\take the tools:no; Leave without\\hacking tools:still_yes\n\nchoice still_yes\nrei<:No way I leave\\without my tools\nend\n#teleport strange_room\n"
                         }, 
                         {
                          "name":"title",
@@ -166,7 +166,7 @@
                  "visible":true,
                  "width":48,
                  "x":96,
-                 "y":192
+                 "y":212
                 }, 
                 {
                  "height":20.7765151515151,
@@ -213,7 +213,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"table>: Your hacking instruments are lying on the table,\\fixed and clean as you like them\nchoose Take them:yes; Leave:no\nchoice no\nend\nchoice yes\nremember tools\nsound got\ntrigger removeTools\ntools>:Tools obtained\nstate 2\n"
+                         "value":"table>: Your hacking instruments are lying on the table,\\fixed and clean as you like them\nchoose Take them:yes; Leave:no\nchoice no\nend\nchoice yes\nremember tools\nremember no_tools\nsound got\ntrigger removeTools\ntools>:Tools obtained\nstate 2\n"
                         }, 
                         {
                          "name":"title",

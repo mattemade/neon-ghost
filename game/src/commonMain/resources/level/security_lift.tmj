@@ -128,7 +128,7 @@
          "name":"trigger",
          "objects":[
                 {
-                 "height":48,
+                 "height":12,
                  "id":30,
                  "name":"security_lift_enter",
                  "properties":[
@@ -152,7 +152,7 @@
                  "visible":true,
                  "width":144,
                  "x":0,
-                 "y":240
+                 "y":276
                 }, 
                 {
                  "height":51.1363636363637,
@@ -188,7 +188,7 @@
                  "y":163.090909090909
                 }, 
                 {
-                 "height":48,
+                 "height":12,
                  "id":35,
                  "name":"security_lift_exit",
                  "properties":[
@@ -244,11 +244,11 @@
                  "visible":true,
                  "width":144,
                  "x":0,
-                 "y":240
+                 "y":276
                 },
             
                 {
-                 "height":48,
+                 "height":11.75,
                  "id":37,
                  "name":"security_lift_enter_2",
                  "properties":[
@@ -272,7 +272,7 @@
                  "visible":true,
                  "width":144,
                  "x":0,
-                 "y":240
+                 "y":276.25
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -295,6 +295,60 @@
                  "width":96,
                  "x":0,
                  "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":40,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"string",
+                         "value":"4"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":0,
+                 "y":192
+                }, 
+                {
+                 "height":48,
+                 "id":41,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"string",
+                         "value":"4"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":96,
+                 "y":192
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -303,7 +357,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":38,
+ "nextobjectid":42,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

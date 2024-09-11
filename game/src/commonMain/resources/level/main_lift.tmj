@@ -128,10 +128,15 @@
          "name":"trigger",
          "objects":[
                 {
-                 "height":48,
+                 "height":12,
                  "id":30,
                  "name":"main_lift_enter",
                  "properties":[
+                        {
+                         "name":"0",
+                         "type":"string",
+                         "value":"music mg safe area"
+                        }, 
                         {
                          "name":"type",
                          "type":"string",
@@ -142,7 +147,7 @@
                  "visible":true,
                  "width":144,
                  "x":0,
-                 "y":240
+                 "y":276
                 }, 
                 {
                  "height":44.5909090909091,
@@ -172,7 +177,7 @@
                  "y":159.454545454545
                 }, 
                 {
-                 "height":48,
+                 "height":11.6666666666666,
                  "id":35,
                  "name":"main_lift_exit",
                  "properties":[
@@ -207,7 +212,7 @@
                  "visible":true,
                  "width":144,
                  "x":0,
-                 "y":240
+                 "y":276.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -230,6 +235,60 @@
                  "width":96,
                  "x":0,
                  "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":37,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"string",
+                         "value":"4"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"punk"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":96,
+                 "y":192
+                }, 
+                {
+                 "height":48,
+                 "id":38,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"string",
+                         "value":"4"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"punk"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":0,
+                 "y":192
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -238,7 +297,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":37,
+ "nextobjectid":39,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

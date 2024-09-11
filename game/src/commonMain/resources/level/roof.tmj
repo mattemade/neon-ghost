@@ -457,7 +457,7 @@
                  "y":576
                 }, 
                 {
-                 "height":57.6363636363636,
+                 "height":47.9999999999996,
                  "id":35,
                  "name":"security_lift_exit",
                  "properties":[
@@ -471,7 +471,7 @@
                  "visible":true,
                  "width":144,
                  "x":672,
-                 "y":278.363636363636
+                 "y":288
                 }, 
                 {
                  "height":48,
@@ -481,7 +481,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"\nrei<:It is not fully loaded,\\but should be enough\\to land to the street\n\nchoice ghost\nchoose Leave:leave; Fly to\\the sky:sky; Fly to the\\street:street\nchoice\n\nnot ghost\nchoose Leave:leave; Fly to the\\street:street\nchoice\nnot\n\nchoice leave\nend\n\nchoice street\njetpack<:Are you sure?\\There is no way back\nchoose No:no;Yes:yes\nchoice street,no\nend\nchoice street,yes\nremember jetpack\nteleport ending_room\n\nchoice sky\nstop\n#trigger jetpackFlight\nscreen fadeOut\nwait 3\nrei<:Oh no, the tank is empty!\nrei<:Mirai, please,\\get ready to catch me!\nvoice 358\nghost>:We are so close!\\Leeet's goooo!\nstop\n#trigger magicFlight\nscreen fadeIn\ntrigger transform\nremember magic\nrei<:Wow, what happened\\to my clothes?!\nvoice 363\nghost>: Ha ha ha, yes,\\it always happens\nvoice 364\nghost>: Now, try to focus on that\\feeling a bit longer,\\and release the power around\nhelp<:KEYBOARD: J OR X\\GAMEPAD: A OR Y\\HOLD TO FOCUS\\RELEASE TO RELEASE\ncamera lock\nstate 1 tutorial_trigger\nstate 1"
+                         "value":"\nrei<:It is not fully loaded,\\but should be enough\\to land to the street\n\nchoice ghost\nchoose Leave:leave; Fly to\\the sky:sky; Fly to the\\street:street\nchoice\n\nnot ghost\nchoose Leave:leave; Fly to the\\street:street\nchoice\nnot\n\nchoice leave\nend\n\nchoice street\njetpack<:Are you sure?\\There is no way back\nchoose No:no;Yes:yes\nchoice street,no\nend\nchoice street,yes\nremember jetpack\nteleport ending_room\n\nchoice sky\nstop\n#trigger jetpackFlight\nmusic stop\nscreen fadeOut\nwait 3\nrei<:Oh no, the tank is empty!\nrei<:Mirai, please,\\get ready to catch me!\nvoice 358\nghost>:We are so close!\\Leeet's goooo!\nstop\n#trigger magicFlight\nscreen fadeIn\ntrigger transform\nremember magic\nrei<:Wow, what happened\\to my clothes?!\nvoice 363\nghost>: Ha ha ha, yes,\\it always happens\nvoice 364\nghost>: Now, try to focus on that\\feeling a bit longer,\\and release the power around\nhelp<:KEYBOARD: J OR X\\GAMEPAD: A OR Y\\HOLD TO FOCUS\\RELEASE TO RELEASE\ncamera lock\nstate 1 tutorial_trigger\nstate 1\ntrigger magicTutorial"
                         }, 
                         {
                          "name":"2",
@@ -540,7 +540,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"not sky\ncamera trigger\nrei<:You can see the\\whole city from here\nrei<:So I am in the central\\research facility of CorpX\ncamera sky_view\nrei<:The sky is so close...\\Yet out of reach\nrei<:I wish I could see the stars,\\just like in my dream\nremember sky\n\nnot\nchoice ghost\ncamera sky_view\nvoice 339\nghost>:Oh... I see...\\You really can't see\\anything through...\nrei<:Yeah, it was like\\that as long\\as I remember\nrei<:Those who can't get\\the electricity from CorpX\\just burn whatever\\fuel they have\nvoice 342\nghost>:I could lift you up with\\my magic... But I am afraid\\it will be the last thing\\I will ever do\nvoice 343\nghost>:Maybe it is a good\\idea, though...\ncamera jetpack\nrei<:Wait, look, there\\is a jetpack\nrei<:It is not fully loaded,\\but it should be fine\nrei<:Can you catch me if\\I will start falling down?\nvoice 347\nghost>:Yes, I have enough\\powers to land you safely\nvoice 348\nghost>:Are you going to risk\\your life entrusting me?\nrei<:Yes...\nrei<:I feel this is my\\first and last chance\n\nchoice\ncamera follow\nstate 1\n"
+                         "value":"not sky\ncamera trigger\nmusic mg safe area\nrei<:You can see the\\whole city from here\nrei<:So I am in the central\\research facility of CorpX\ncamera sky_view\nrei<:The sky is so close...\\Yet out of reach\nrei<:I wish I could see the stars,\\just like in my dream\nremember sky\n\nnot\nchoice ghost\ncamera sky_view\nmusic mg safe area\nvoice 339\nghost>:Oh... I see...\\You really can't see\\anything through...\nrei<:Yeah, it was like\\that as long\\as I remember\nrei<:Those who can't get\\the electricity from CorpX\\just burn whatever\\fuel they have\nvoice 342\nghost>:I could lift you up with\\my magic... But I am afraid\\it will be the last thing\\I will ever do\nvoice 343\nghost>:Maybe it is a good\\idea, though...\ncamera jetpack\nrei<:Wait, look, there\\is a jetpack\nrei<:It is not fully loaded,\\but it should be fine\nrei<:Can you catch me if\\I will start falling down?\nvoice 347\nghost>:Yes, I have enough\\powers to land you safely\nvoice 348\nghost>:Are you going to risk\\your life entrusting me?\nrei<:Yes...\nrei<:I feel this is my\\first and last chance\n\nchoice\ncamera follow\nstate 1\n"
                         }, 
                         {
                          "name":"type",
@@ -555,7 +555,7 @@
                  "y":-96
                 }, 
                 {
-                 "height":48,
+                 "height":21,
                  "id":66,
                  "name":"security_lift_enter",
                  "properties":[
@@ -621,22 +621,22 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"#trigger aoeTutorial\n#wait until aoe attack"
+                         "value":"help<:KEYBOARD: J OR X\\GAMEPAD: A OR Y\\HOLD TO FOCUS\\RELEASE TO RELEASE\n#trigger aoeTutorial\n#wait until aoe attack"
                         }, 
                         {
                          "name":"2",
                          "type":"string",
-                         "value":"voice 366\nghost>:Yes, like that!\\It is a bit tricky,\\but I'm sure you\\will get used to it!\nvoice 367\nghost>:And, as you seem to be\\a good fighter, you can try\\to punch with the focused magic\nhelp<:PUNCH WHILE FOCUSING\nstate 3"
+                         "value":"wait 1\nvoice 366\nghost>:Yes, like that!\\It is a bit tricky,\\but I'm sure you\\will get used to it!\nvoice 367\nghost>:And, as you seem to be\\a good fighter, you can try\\to punch with the focused magic\nhelp<:PUNCH WHILE FOCUSING\nstate 3"
                         }, 
                         {
                          "name":"3",
                          "type":"string",
-                         "value":"#trigger castTutorial\n#wait to cast projectile\n"
+                         "value":"#trigger castTutorial\n#wait to cast projectile\nhelp<:FOCUS MAGIC BY HOLDING J OR X\\\\PUNCH WITH K OR Z WHILE FOCUSING"
                         }, 
                         {
                          "name":"4",
                          "type":"string",
-                         "value":"voice 369\nghost>:Awesome, you are natural!\\That reminds me of\\good old days...\nvoice 370\nghost>:We should seek for\\other magical girls once...\\once we... escape...\nvoice 371\nghost>:But for now we need\\to protect them! You've said\\there is a brainwashing\\machine? We have to destroy it!\n\ntrigger holdMagicMusic\n\nstate 5\nstate 1 roof_fight\nstate 2 jetpack\nstate 1 boss_fight\nstate 0 officer_boss\n\ncamera follow\n\nsound got\nhelp<:Transfomed into a Magical Girl\nsave"
+                         "value":"wait 1\nvoice 369\nghost>:Awesome, you are natural!\\That reminds me of\\good old days...\nvoice 370\nghost>:We should seek for\\other magical girls once...\\once we... escape...\nvoice 371\nghost>:But for now we need\\to protect them! You've said\\there is a brainwashing\\machine? We have to destroy it!\n\ntrigger holdMagicMusic\n\nstate 5\nstate 1 roof_fight\nstate 2 jetpack\nstate 1 boss_fight\nstate 0 officer_boss\n\ncamera follow\n\nsound got\nhelp<:Transfomed into a Magical Girl\nsave"
                         }, 
                         {
                          "name":"type",
@@ -693,6 +693,249 @@
                  "width":48,
                  "x":288,
                  "y":240
+                }, 
+                {
+                 "height":48,
+                 "id":74,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":816,
+                 "y":288
+                }, 
+                {
+                 "height":48,
+                 "id":75,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":768,
+                 "y":336
+                }, 
+                {
+                 "height":48,
+                 "id":76,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":672,
+                 "y":336
+                }, 
+                {
+                 "height":48,
+                 "id":77,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":336,
+                 "y":288
+                }, 
+                {
+                 "height":48,
+                 "id":78,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":624,
+                 "y":576
+                }, 
+                {
+                 "height":48,
+                 "id":79,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":624,
+                 "y":624
+                }, 
+                {
+                 "height":48,
+                 "id":80,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":336,
+                 "y":384
+                }, 
+                {
+                 "height":48,
+                 "id":81,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":630.666666666667,
+                 "y":285.333333333333
+                }, 
+                {
+                 "height":48,
+                 "id":82,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":240,
+                 "y":336
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -701,7 +944,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":73,
+ "nextobjectid":83,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

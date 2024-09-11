@@ -67,22 +67,25 @@ class InGame(
     private val playerKnowledge: MutableSet<String>,
     private val interactionOverride: MutableMap<String, String>,
     private val onGameOver: () -> Unit,
-    private val goThroughDoor: (door: String, toRoom: String, playerHealth: Int, isMagic: Boolean, deaths: Int) -> Unit,
+    private val goThroughDoor: (door: String, toRoom: String, playerHealth: Int, isMagic: Boolean, deaths: Int, isLoaded: Boolean) -> Unit,
     private val wentThroughDoor: String? = null,
     private val saveState: (fromTrigger: String?) -> Unit,
     private val restartGame: () -> Unit,
     private val playerHealth: Int,
     private val isMagic: Boolean,
     private val deaths: Int,
+    private val isLoaded: Boolean,
 ) : Releasing by Self() {
 
     private var initialized = false
     private val level = levelSpec.level
     private val spawnState = when {
-        playerKnowledge.contains("ending") -> 4
-        playerKnowledge.contains("magic") -> 3
-        playerKnowledge.contains("ghost") -> 2
-        playerKnowledge.contains("tools") -> 1
+        isLoaded -> -1 // to avoid spawning enemies in the location where we were loaded into
+        playerKnowledge.contains("ending") -> 5
+        playerKnowledge.contains("magic") -> 4
+        playerKnowledge.contains("ghost") -> 3
+        playerKnowledge.contains("tools") -> 2
+        playerKnowledge.contains("indoor") -> 1
         else -> 0
     }
     private val sharedFrameBuffer =
@@ -202,7 +205,8 @@ class InGame(
             if (finalRoom) {
                 ghostOverlay.finalSequence()
             }
-            goThroughDoor(door, toRoom, player.health, player.isMagicGirl, deaths)
+            player.health = player.maxHealth // just heal after on any room change, as it is essentially how continue works anyway
+            goThroughDoor(door, toRoom, player.health, player.isMagicGirl, deaths, false)
         }))
     }
 
@@ -234,11 +238,12 @@ class InGame(
     private fun musicCommand(command: String) {
         probablyReturnPreviousMusicIfNotAskedForOther = false
         if (command == "previous") {
-            choreographer.previousMusic?.let {
+            // TODO: maybe refine returning the previous music? Or just play that until we reach the lift?
+            /*choreographer.previousMusic?.let {
                 val track = assets.music.concurrentTracks[it]
                     ?: if (extraAssets.isLoaded) extraAssets.music.concurrentTracks[it] else null
                 track?.let(choreographer::play)
-            }
+            }*/
 
         } else {
             val track = assets.music.concurrentTracks[command]
@@ -395,27 +400,39 @@ class InGame(
     private fun castAoe(position: Vec2, power: Int) {
         if (eventState["tutorial_trigger"] == 1) {
             eventState["tutorial_trigger"] = 2
+            nextTutorialRepeat = 8f
             triggers.get("tutorial_trigger")?.let {
                 eventExecutor.execute(it, playerKnowledge)
             }
         }
-        enemies.forEach {
-            if (belongsToEllipse(
-                    it.x,
-                    it.y,
-                    position.x,
-                    position.y,
-                    Player.spellRx,
-                    Player.spellRy,
-                    it.extraForEllipseCheck,
-                )
-            ) {
-                it.hit(position, power * 2 + 1, fromSpell = true)
-            }
+        staticEnemies.forEach {
+            hitEnemyWithAoe(it, position, power)
         }
-        val maxOpacity = 1f//0.5f + 0.5f * (power + 1) / 3f
+        enemies.forEach {
+            hitEnemyWithAoe(it, position, power)
+        }
+        val maxOpacity = 0.35f + 0.65f * (power + 1) / 3f
         val length = 1f + 0.5f * (power + 1)
         drawAoe(position, length, maxOpacity, false)
+    }
+
+    private fun hitEnemyWithAoe(
+        it: Enemy,
+        position: Vec2,
+        power: Int
+    ) {
+        if (belongsToEllipse(
+                it.x,
+                it.y,
+                position.x,
+                position.y,
+                Player.spellRx,
+                Player.spellRy,
+                it.extraForEllipseCheck,
+            )
+        ) {
+            it.hit(position, power * 2 + 1, fromSpell = true)
+        }
     }
 
     private fun drawAoe(position: Vec2, length: Float, maxOpacity: Float, isGhost: Boolean) {
@@ -440,9 +457,9 @@ class InGame(
         front.tint.a = maxOpacity
         side.tint.a = maxOpacity
         back.tint.a = maxOpacity
-        tempColor.set(1f, 1f, 1f, 1f)
+        tempColor.set(1f, 1f, 1f, maxOpacity / 2f)
         ui.setFadeWorldColor(tempColor)
-        ephemeralTimedActions += TimedAction(0.4f, { ui.setFadeWorld(it) }) { ui.setFadeWorld(0f) }
+        ephemeralTimedActions += TimedAction(0.2f, { ui.setFadeWorld(maxOpacity * it / 2f) }) { ui.setFadeWorld(0f) }
         ephemeralTimedActions += TimedAction(length, { remains ->
             back.tint.a = maxOpacity * remains
             side.tint.a = maxOpacity * remains
@@ -459,6 +476,8 @@ class InGame(
         castProjectile(position, Player.castsToStopTime, facingLeft)
     }
 
+    private var inTutorial = false
+    private var nextTutorialRepeat = 0f
     private var closeTutorialOnNextUpdate = false
     private fun castProjectile(position: Vec2, power: Int, facingLeft: Boolean) {
         if (eventState["tutorial_trigger"] == 3) {
@@ -468,13 +487,14 @@ class InGame(
             // it will receive Action button too, advancing the dialogue
             closeTutorialOnNextUpdate = true
 
+            inTutorial = false
+            nextTutorialRepeat = 0f
+        }
+        staticEnemies.forEach {
+            hitEnemyWithProjectile(facingLeft, it, position, power)
         }
         enemies.forEach {
-            if ((facingLeft && it.x < position.x || !facingLeft && it.x > position.x) &&
-                it.y < position.y + 0.25f && it.y > position.y - 0.25f
-            ) {
-                it.hit(position, power * 2 + 1, fromSpell = true)
-            }
+            hitEnemyWithProjectile(facingLeft, it, position, power)
         }
 
         val sideFactor = if (facingLeft) -1f else 1f
@@ -484,17 +504,32 @@ class InGame(
                 position.y - 0.4f
             ), assets.texture.aoePunch, position.y - 0.02f, flip = facingLeft
         )
-        val maxOpacity = 1f//0.5f + 0.5f * (power + 1) / 3f
+        val maxOpacity = 0.35f + 0.65f * (power + 1) / 3f
         val length = 1f + 0.5f * (power + 1)
         spikesToAdd.add(punch)
         spikesToAdd.forEach { it.tint.a = maxOpacity }
-        tempColor.set(1f, 1f, 1f, 0.5f)
+        tempColor.set(1f, 1f, 1f, maxOpacity / 2f)
         ui.setFadeWorldColor(tempColor)
-        ephemeralTimedActions += TimedAction(0.4f, { ui.setFadeWorld(it * 0.5f) }) { ui.setFadeWorld(0f) }
+        ephemeralTimedActions += TimedAction(
+            0.2f,
+            { ui.setFadeWorld(it * maxOpacity / 2f) }) { ui.setFadeWorld(0f) }
         ephemeralTimedActions += TimedAction(length, { remains ->
             punch.tint.a = maxOpacity * remains
         }) {
             spikesToRemove.add(punch)
+        }
+    }
+
+    private fun hitEnemyWithProjectile(
+        facingLeft: Boolean,
+        it: Enemy,
+        position: Vec2,
+        power: Int
+    ) {
+        if ((facingLeft && it.x < position.x || !facingLeft && it.x > position.x) &&
+            it.y < position.y + 0.35f && it.y > position.y - 0.35f
+        ) {
+            it.hit(position, power * 2 + 1, fromSpell = true)
         }
     }
 
@@ -738,7 +773,7 @@ class InGame(
                 eventState["first_fight_with_punk"] = 1
                 eventState["rei_home_bed"] = 1
                 eventState["wake_up_trigger"] = 1
-                goThroughDoor("rei_home_bed", "rei_home", Player.maxPlayerHealth, false, 0)
+                goThroughDoor("rei_home_bed", "rei_home", Player.maxPlayerHealth, false, 0, false)
             }
 
             "holdMagicMusic" -> {
@@ -749,6 +784,12 @@ class InGame(
 
             "releaseMagicMusic" -> {
                 choreographer.releaseMagicMusic()
+                eventExecutor.advance()
+            }
+
+            "magicTutorial" -> {
+                nextTutorialRepeat = 8f
+                inTutorial = true
                 eventExecutor.advance()
             }
         }
@@ -818,6 +859,9 @@ class InGame(
     ): Enemy {
         // starting fight - should play fight music (won't do anything if it is already playing)
         if (overrideX == null && overrideY == null) {
+            /*if (enemies.isEmpty()) { // or maybe just heal between the doors instead?
+                player.health = player.maxHealth
+            }*/
             musicCommand("magical girl 3d")
         }
 
@@ -863,14 +907,13 @@ class InGame(
     }
 
     private fun onEnemyDeath(enemy: Enemy) {
-        if (enemy.name != null) {
+        if (enemy.name?.isNotBlank() == true) {
             eventState[enemy.name] = 1
         }
         deadEnemies += enemy
     }
 
     private fun onEnemyBecomesAggressive(enemy: Enemy) {
-        println("became aggressive!!")
         musicCommand("magical girl 3d")
         staticEnemies.remove(enemy)
         enemies.add(enemy)
@@ -907,12 +950,14 @@ class InGame(
                 )
             } ?: run {
                 val name = obj.name
-                if (eventState[name] != 1) {
-                    val type = obj.properties["type"]?.string ?: "punk"
-                    val facingLeft = obj.properties["facingLeft"]?.bool ?: false
-
-                    eventExecutor.enemySpec(type, !facingLeft, 0f, name)?.let {
-                        createEnemy(it, x, midY)
+                if (name.isBlank() || eventState[name] != 1) {
+                    val requiredGameState = obj.properties["state"]?.int ?: 0
+                    if (spawnState >= requiredGameState || name == "officer_boss") {
+                        val type = obj.properties["type"]?.string ?: "punk"
+                        val facingLeft = obj.properties["facingLeft"]?.bool ?: false
+                        eventExecutor.enemySpec(type, !facingLeft, 0f, name)?.let {
+                            createEnemy(it, x, midY)
+                        }
                     }
                 }
             }
@@ -984,6 +1029,7 @@ class InGame(
     }
 
     private fun scheduleGameOver() {
+        choreographer.startNextTrackWithoutFading = true
         timedActions += TimedAction(0.5f, { ui.setFadeWorld(1f - it) }) {
             ui.setFadeWorld(1f)
             onGameOver()
@@ -1016,6 +1062,16 @@ class InGame(
                 eventExecutor.advance()
             }
             return
+        }
+
+        if (inTutorial && ui.activeLines == null) {
+            nextTutorialRepeat -= dt.seconds
+            if (nextTutorialRepeat <= 0f) {
+                nextTutorialRepeat = 8f
+                triggers.get("tutorial_trigger")?.let {
+                    eventExecutor.execute(it, playerKnowledge)
+                }
+            }
         }
 
         val millis = dt.milliseconds
@@ -1051,12 +1107,29 @@ class InGame(
                     }
                 }
             } else if (ghostCasting > 0f) {
+                ghostBody.updatePosition(
+                    tempVec2.set(ghostOverlay.ghostPosition.x, ghostOverlay.ghostPosition.y)
+                        .addLocal(
+                            cameraMan.position.x - visibleWorldWidth / 2f,
+                            cameraMan.position.y - visibleWorldHeight / 2f
+                        )
+                )
                 ghostCasting -= dt.seconds
                 if (ghostCasting <= 0f) {
                     drawAoe(ghostBody.position, 1f, 0.5f, true)
                     if (ghostBody.targetEnemies.isNotEmpty()) {
                         ghostBody.targetEnemies.forEach {
-                            it.hit(ghostBody.position, 3)
+                            if (belongsToEllipse(
+                                    it.x,
+                                    it.y,
+                                    ghostBody.position.x,
+                                    ghostBody.position.y,
+                                    GhostOverlay.radiusX,
+                                    GhostOverlay.radiusY,
+                                    it.extraForEllipseCheck
+                            )) {
+                                it.hit(ghostBody.position, 3)
+                            }
                         }
                         ghostBody.targetEnemies.clear()
                     }
@@ -1070,6 +1143,15 @@ class InGame(
                     ghostCooldown = GhostOverlay.castCooldown + ghostStaying
                     ghostStaying = 0f
                 }
+            } else if (ghostStaying < 0f) {
+                ghostOverlay.isMoving = true
+                ghostCooldown = GhostOverlay.castCooldown + ghostStaying
+                ghostStaying = 0f
+            } else {
+                if (ghostOverlay.isActive) {
+                    ghostOverlay.isMoving = true
+                }
+                println("SHOULD NOT HAPPEN, ${ghostOverlay.isActive}, ${ghostOverlay.isMoving}, $ghostCasting, $ghostStaying")
             }
         }
         if (removeTools) {
@@ -1305,6 +1387,7 @@ class InGame(
             if (gameOverTimer > 0f) {
                 gameOverTimer -= notAdjustedDt.seconds
                 if (gameOverTimer <= 0f) {
+                    choreographer.releaseMagicMusic()
                     musicCommand("stop")
                     //choreographer.play(assets.music.concurrentTracks["stop"]!!)
                     onGameOver()

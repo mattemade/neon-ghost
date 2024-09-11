@@ -98,7 +98,7 @@ class UI(
 
     private var activePortrait: String? = null
     private var isPortraitLeft: Boolean = false
-    private var activeLines: List<String>? = null
+    var activeLines: List<String>? = null
     private var shouldSkipSound = true
 
     private var availableInteractionName: List<String>? = null
@@ -346,6 +346,7 @@ class UI(
     }
 
     fun showDialogLine(portrait: String, isLeft: Boolean, text: String, skipSpeech: Boolean = false) {
+        choreographer.musicVolume(0.5f)
         if (portrait == "rei" && isMagic()) {
             activePortrait = "magic"
         } else {
@@ -358,8 +359,12 @@ class UI(
     }
 
     fun stopDialog() {
+        if (activePortrait == null && activeLines == null) {
+            return
+        }
         activePortrait = null
         activeLines = null
+        choreographer.musicVolume(1f)
     }
 
     private var currentDtMillis: Float = 0f

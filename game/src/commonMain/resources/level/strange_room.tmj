@@ -113,7 +113,7 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"camera strange_camera\nmusic mg suspicious\nofficer<:Here is the box\npunk<:It's so small, are you sure?\nguard>:That's the top stuff,\\what would you expect?\npunk<:I don't know,\\usually you have bigger\\things for that money\nguard>:I would also like\\to put a bigger thing\\into your...\nofficer>:Calm down you both\nstop\nmusic stop\nscreen splashOut:0.1\nwait 1.1\ncamera strange_camera_2:0\nguard>:What's going on?!\nmusic magical girl 3d\nrei<:(I'll take that)\nstop\nscreen splashIn:2\nofficer<:Where is the box?!\nofficer<:Looks like we have\\a rat to catch!\\Come on, guys!\nteleport street_level"
+                         "value":"camera strange_camera\n\nremember no_tools\nforget tools\n\nmusic mg suspicious\nofficer<:Here is the box\npunk<:It's so small, are you sure?\nguard>:That's the top stuff,\\what would you expect?\npunk<:I don't know,\\usually you have bigger\\things for that money\nguard>:I would also like\\to put a bigger thing\\into your...\nofficer>:Calm down you both\nstop\nmusic stop\nscreen splashOut:0.1\nwait 1.1\ncamera strange_camera_2:0\nguard>:What's going on?!\nmusic magical girl 3d\nrei<:(I'll take that)\nstop\nscreen splashIn:2\nofficer<:Where is the box?!\nofficer<:Looks like we have\\a rat to catch!\\Come on, guys!\nteleport street_level"
                         }, 
                         {
                          "name":"type",

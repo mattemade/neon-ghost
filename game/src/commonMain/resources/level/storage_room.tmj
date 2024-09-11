@@ -6,9 +6,9 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
-            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
-            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90],
+            91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+            91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+            91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91],
          "height":6,
          "id":1,
          "name":"floor",
@@ -20,9 +20,9 @@
          "y":0
         }, 
         {
-         "data":[100, 100, 101, 102, 94, 95, 96, 97, 98, 99, 100, 100, 101, 102, 94, 95, 96, 97, 98, 99, 94,
-            112, 112, 113, 114, 106, 107, 108, 109, 110, 111, 112, 112, 113, 114, 106, 107, 108, 109, 110, 111, 106,
-            124, 124, 125, 126, 118, 119, 120, 121, 122, 123, 124, 124, 125, 126, 118, 119, 120, 121, 122, 123, 118,
+         "data":[101, 101, 102, 103, 95, 96, 97, 98, 99, 100, 101, 101, 102, 103, 95, 96, 97, 98, 99, 100, 95,
+            113, 113, 114, 115, 107, 108, 109, 110, 111, 112, 113, 113, 114, 115, 107, 108, 109, 110, 111, 112, 107,
+            125, 125, 126, 127, 119, 120, 121, 122, 123, 124, 125, 125, 126, 127, 119, 120, 121, 122, 123, 124, 119,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -57,9 +57,9 @@
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 136, 137, 138, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 139, 140, 141, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 142, 143, 144, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            0, 0, 137, 138, 139, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 140, 141, 142, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 143, 144, 145, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":6,
          "id":10,
          "name":"foreground",
@@ -192,7 +192,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"terminal<:Confiscated items\n\nchoice no_tools\nrei>:Oh, here are\\my hacking tools!\nsound got\ntools>:Tools obtained\nremember tools\nforget no_tools\nstate 1\nend\n\nchoice\nterminal<:Empty\nrei>:I wish I took my\\tools with me...\nstate 1"
+                         "value":"terminal<:Confiscated items\n\nchoice no_tools\nrei>:Oh, here are\\my hacking tools!\nmusic mg safe area\nsound got\ntools>:Hacking tools obtained\nremember tools\nforget no_tools\nstate 1\nend\n\nchoice\nterminal<:Empty\nrei>:I wish I took my\\tools with me...\nstate 1"
                         }, 
                         {
                          "name":"1",
@@ -224,7 +224,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"guard<:Here she is!\n\nfight guard<0.1, guard>0.1, guard<0.9, guard>0.9\n\nstate 1"
+                         "value":"guard<:Here she is!\n\nfight guard>0.5, guard<0.5\n\nstate 1"
                         }, 
                         {
                          "name":"type",
@@ -259,6 +259,60 @@
                  "width":48,
                  "x":912,
                  "y":144
+                }, 
+                {
+                 "height":48,
+                 "id":49,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"string",
+                         "value":"0"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":432,
+                 "y":192
+                }, 
+                {
+                 "height":48,
+                 "id":50,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"facingLeft",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"state",
+                         "type":"string",
+                         "value":"0"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"guard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":192,
+                 "y":192
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -267,7 +321,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":49,
+ "nextobjectid":51,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -294,19 +348,19 @@
          "source":"abstract.tsj"
         }, 
         {
-         "firstgid":89,
+         "firstgid":90,
          "source":"tilesets\/0_Asset_Floor_4848.tsj"
         }, 
         {
-         "firstgid":91,
+         "firstgid":92,
          "source":"tilesets\/0_Asset_Wall_144144.tsj"
         }, 
         {
-         "firstgid":127,
+         "firstgid":128,
          "source":"tilesets\/red_door.tsj"
         }, 
         {
-         "firstgid":136,
+         "firstgid":137,
          "source":"tilesets\/red_door_transparent.tsj"
         }],
  "tilewidth":48,

@@ -141,9 +141,10 @@ class NeonGhost(
                 currentAnimation.update(notAdjustedDt)
                 return
             }
-            ghostOverlay.renderNeonGhost(null, isFacingLeft, 0f, 0f)
-            removeGhost(this)
-            dead = true
+            removeNeonGhost()
+            if (activatePunch) {
+                castProjectile(body.position, isFacingLeft)
+            }
             return
         }
 
@@ -167,38 +168,30 @@ class NeonGhost(
 
         if (controller.down(GameInput.MAGIC)) {
             if (controller.pressed(GameInput.ATTACK)) {
-                punchCooldown = 300f
+                punchCooldown = 300f // has no effect, as ghost's cast is defined later
                 stopBody()
                 currentAnimation = animations.leftPunch
             }
         } else {
-            punchCooldown = 300f
+            punchCooldown = 300f // has no effect, ghost will be removed right now
             stopBody()
             castAoe(body.position)
-            // TODO: cast ghost AOE
-            // 1. create a AOE fixture in normal world of RX circle
-            // 2. destroy the ghost
-            // 3. on contact, check if enemies within the range are in the elliplse
-            // 4. on next normal world update, hit all the enemies within the range
+            removeNeonGhost()
+            return
         }
 
         currentAnimation.update(notAdjustedDt * speed.toDouble()) // will trigger animation callbacks
 
         if (activatePunch) {
-            activatePunch = false
-            castProjectile(body.position, isFacingLeft)
-            // TODO: cast ghost projectile
-            // 1. add it in the normal world
-            /*if (isFacingLeft) {
-                leftPunchTargets.forEach {
-                    it.hit(body.position, if (movingToBeat) 2 else 1)
-                }
-            } else {
-                rightPunchTargets.forEach {
-                    it.hit(body.position, if (movingToBeat) 2 else 1)
-                }
-            }*/
+            //activatePunch = false
+            punchCooldown = 5f
         }
+    }
+
+    private fun removeNeonGhost() {
+        ghostOverlay.renderNeonGhost(null, isFacingLeft, 0f, 0f)
+        removeGhost(this)
+        dead = true
     }
 
     override fun render(batch: Batch) {
