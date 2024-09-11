@@ -49,6 +49,8 @@ class Choreographer(private val context: Context) {
 
     fun fullStop() {
         isFullyStopped = true
+        toBeat = 0.4f // to make enemies move linearly
+        toMeasure = 1f // to make Rei always hit the beat
     }
 
     var previousMusic: String? = null
@@ -102,6 +104,10 @@ class Choreographer(private val context: Context) {
     }
 
     fun update(dt: Duration) {
+        if (isFullyStopped) {
+            bpmBasedDt = dt.times(playbackRate)
+            return
+        }
         playbackRateBasedDt = dt.times(playbackRate)
         time += playbackRateBasedDt.seconds
         toBeat = (time % secondsPerBeat) / secondsPerBeat

@@ -78,6 +78,13 @@ class InGame(
 
     private var initialized = false
     private val level = levelSpec.level
+    private val spawnState = when {
+        playerKnowledge.contains("ending") -> 4
+        playerKnowledge.contains("magic") -> 3
+        playerKnowledge.contains("ghost") -> 2
+        playerKnowledge.contains("tools") -> 1
+        else -> 0
+    }
     private val sharedFrameBuffer =
         context.createPixelFrameBuffer(Game.virtualWidth, Game.virtualHeight)
     private val worldRender = PixelRender(
@@ -406,11 +413,12 @@ class InGame(
                 it.hit(position, power * 2 + 1, fromSpell = true)
             }
         }
-        val maxOpacity = (power + 1) / 3f
-        drawAoe(position, maxOpacity, false)
+        val maxOpacity = 1f//0.5f + 0.5f * (power + 1) / 3f
+        val length = 1f + 0.5f * (power + 1)
+        drawAoe(position, length, maxOpacity, false)
     }
 
-    private fun drawAoe(position: Vec2, maxOpacity: Float, isGhost: Boolean) {
+    private fun drawAoe(position: Vec2, length: Float, maxOpacity: Float, isGhost: Boolean) {
         val back = VisibleObject(
             tempVec2f.set(position.x, position.y + 0.3f),
             if (isGhost) assets.texture.ghostAoeBack else assets.texture.aoeBack,
@@ -435,7 +443,7 @@ class InGame(
         tempColor.set(1f, 1f, 1f, 1f)
         ui.setFadeWorldColor(tempColor)
         ephemeralTimedActions += TimedAction(0.4f, { ui.setFadeWorld(it) }) { ui.setFadeWorld(0f) }
-        ephemeralTimedActions += TimedAction(1f, { remains ->
+        ephemeralTimedActions += TimedAction(length, { remains ->
             back.tint.a = maxOpacity * remains
             side.tint.a = maxOpacity * remains
             front.tint.a = maxOpacity * remains
@@ -476,13 +484,14 @@ class InGame(
                 position.y - 0.4f
             ), assets.texture.aoePunch, position.y - 0.02f, flip = facingLeft
         )
-        val maxOpacity = (power + 1) / 3f
+        val maxOpacity = 1f//0.5f + 0.5f * (power + 1) / 3f
+        val length = 1f + 0.5f * (power + 1)
         spikesToAdd.add(punch)
         spikesToAdd.forEach { it.tint.a = maxOpacity }
-        tempColor.set(1f, 1f, 1f, 1f)
+        tempColor.set(1f, 1f, 1f, 0.5f)
         ui.setFadeWorldColor(tempColor)
-        ephemeralTimedActions += TimedAction(0.4f, { ui.setFadeWorld(it) }) { ui.setFadeWorld(0f) }
-        ephemeralTimedActions += TimedAction(1f, { remains ->
+        ephemeralTimedActions += TimedAction(0.4f, { ui.setFadeWorld(it * 0.5f) }) { ui.setFadeWorld(0f) }
+        ephemeralTimedActions += TimedAction(length, { remains ->
             punch.tint.a = maxOpacity * remains
         }) {
             spikesToRemove.add(punch)
@@ -631,6 +640,7 @@ class InGame(
             "transform" -> {
                 ghostOverlay.blinking = true
                 player.health = Player.maxPlayerHealth * 2
+                player.maxHealth = Player.maxPlayerHealth * 2
                 transformation = Transformation(
                     player,
                     context,
@@ -830,7 +840,8 @@ class InGame(
             initialFacingLeft = !enemySpec.fromLeft,
             canAct = { initialized && !isInDialogue && timedActions.isEmpty() },
             onDeath = ::onEnemyDeath,
-            onBecomingAggessive = ::onEnemyBecomesAggressive
+            onBecomingAggessive = ::onEnemyBecomesAggressive,
+            isBoss = enemySpec.name == "officer_boss",
         )
         depthBasedDrawables.add(enemy)
         if (overrideX != null || overrideY != null) {
@@ -1042,7 +1053,7 @@ class InGame(
             } else if (ghostCasting > 0f) {
                 ghostCasting -= dt.seconds
                 if (ghostCasting <= 0f) {
-                    drawAoe(ghostBody.position, 0.5f, true)
+                    drawAoe(ghostBody.position, 1f, 0.5f, true)
                     if (ghostBody.targetEnemies.isNotEmpty()) {
                         ghostBody.targetEnemies.forEach {
                             it.hit(ghostBody.position, 3)

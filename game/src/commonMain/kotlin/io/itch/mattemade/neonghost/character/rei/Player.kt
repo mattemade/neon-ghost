@@ -91,6 +91,7 @@ class Player(
     private val punchWidth = 16f / Game.PPU
     private val punchDepth = 10f / Game.PPU
     var health: Int = initialHealth
+    var maxHealth: Int = if (isMagicGirl) maxPlayerHealth * 2 else maxPlayerHealth
 
 
     private val body = world.createBody(

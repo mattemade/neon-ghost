@@ -213,6 +213,12 @@ class Game(
             }
             previousRoomName = it.room
 
+            if (playerKnowledge.contains("ending")) {
+                choreographer.fullStop()
+                ghostOverlay.isActive = false
+                ghostOverlay.isMoving = false
+            }
+
             if (movingIndoor) {
                 playerKnowledge.remove("moveIndoor")
                 eventState["officer_catch"] = 1

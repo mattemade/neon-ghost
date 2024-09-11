@@ -112,6 +112,7 @@ class UI(
     var activeOptions: List<Pair<List<String>, String>>? = null
     var readyToSelectOption = false
     var activeOption = 0
+    var rearrangedBoss = false
 
     fun render(
         toMeasure: Float,
@@ -145,12 +146,28 @@ class UI(
             renderProgressbar(
                 34f,
                 healthBarPadding,
-                healthBarWidth,
+                if (player.isMagicGirl) healthBarWidth*2f else healthBarWidth,
                 healthBarHeight,
-                player.health.toFloat() / Player.maxPlayerHealth,
+                player.health.toFloat() / player.maxHealth,
                 Color.GRAY,
                 Color.GREEN
             )
+
+            if (!rearrangedBoss) {
+                for (i in 0 until maxHealthSlots) {
+                    val enemy = health[i]
+                    if (enemy != null) {
+                        if (enemy.isBoss) {
+                            rearrangedBoss = true
+                            if (i != 0) {
+                                health[i] = health[0]
+                                health[0] = enemy
+                            }
+                            break
+                        }
+                    }
+                }
+            }
 
             for (i in 0 until maxHealthSlots) {
                 val enemy = health[i]
@@ -160,9 +177,9 @@ class UI(
                     val startX = if (isLeft) 34f else Game.virtualWidth - healthBarWidth - 2f
                     val startY = (row + 1) * healthBarPadding + row * healthBarHeight
                     renderProgressbar(
-                        startX,
+                        if (enemy.isBoss) startX - healthBarWidth else startX,
                         startY,
-                        healthBarWidth,
+                        if (enemy.isBoss) healthBarWidth * 2f else healthBarWidth,
                         healthBarHeight,
                         enemy.health.toFloat() / enemy.initialHeath,
                         Color.GRAY,

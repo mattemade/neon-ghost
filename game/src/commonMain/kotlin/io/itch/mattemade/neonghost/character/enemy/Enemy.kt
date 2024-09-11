@@ -50,7 +50,8 @@ class Enemy(
     val initialFacingLeft: Boolean = false,
     private val canAct: () -> Boolean,
     private val onDeath: (Enemy) -> Unit,
-    private val onBecomingAggessive: (Enemy) -> Unit
+    private val onBecomingAggessive: (Enemy) -> Unit,
+    val isBoss: Boolean,
 ) : Releasing by Self(),
     DepthBasedRenderable {
     private val isDummy = name == "dummy"
