@@ -349,7 +349,7 @@
                  "type":"",
                  "visible":true,
                  "width":65,
-                 "x":384,
+                 "x":385,
                  "y":308.5
                 }, 
                 {
@@ -381,7 +381,7 @@
                  "type":"",
                  "visible":true,
                  "width":63,
-                 "x":576,
+                 "x":577,
                  "y":308.5
                 }, 
                 {
@@ -413,8 +413,8 @@
                  "type":"",
                  "visible":true,
                  "width":65,
-                 "x":386,
-                 "y":160
+                 "x":385,
+                 "y":162
                 }, 
                 {
                  "height":240,
@@ -496,8 +496,8 @@
                  "type":"",
                  "visible":true,
                  "width":63,
-                 "x":575.5,
-                 "y":158.5
+                 "x":576.5,
+                 "y":160.5
                 }, 
                 {
                  "height":18.5,
@@ -642,50 +642,6 @@
                 }, 
                 {
                  "height":48,
-                 "id":101,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"facingLeft",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"guard"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":816,
-                 "y":144
-                }, 
-                {
-                 "height":48,
-                 "id":102,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"facingLeft",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"guard"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":0,
-                 "y":384
-                }, 
-                {
-                 "height":48,
                  "id":103,
                  "name":"",
                  "properties":[
@@ -714,7 +670,7 @@
                         {
                          "name":"facingLeft",
                          "type":"bool",
-                         "value":false
+                         "value":true
                         }, 
                         {
                          "name":"state",
@@ -730,8 +686,8 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":672,
-                 "y":192
+                 "x":816,
+                 "y":144
                 }, 
                 {
                  "height":48,

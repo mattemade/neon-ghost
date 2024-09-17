@@ -10,7 +10,6 @@ import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
 import com.littlekt.graphics.g2d.tilemap.tiled.TiledTilesLayer
 import com.littlekt.graphics.shader.ShaderProgram
 import com.littlekt.graphics.toFloatBits
-import com.littlekt.input.InputMapController
 import com.littlekt.math.MutableVec2f
 import com.littlekt.math.PI2
 import com.littlekt.math.Vec2f
@@ -39,6 +38,7 @@ import io.itch.mattemade.neonghost.shader.ParticleVertexShader
 import io.itch.mattemade.neonghost.shader.Particler
 import io.itch.mattemade.neonghost.tempo.Choreographer
 import io.itch.mattemade.neonghost.tempo.UI
+import io.itch.mattemade.neonghost.touch.CombinedInput
 import io.itch.mattemade.neonghost.world.CameraMan
 import io.itch.mattemade.neonghost.world.GeneralContactListener
 import io.itch.mattemade.neonghost.world.GhostBody
@@ -60,7 +60,7 @@ class InGame(
     private val extraAssets: ExtraAssets,
     private val particleShader: ShaderProgram<ParticleVertexShader, ParticleFragmentShader>,
     private val levelSpec: LevelSpec,
-    private val inputController: InputMapController<GameInput>,
+    private val inputController: CombinedInput,
     private val choreographer: Choreographer,
     private val ghostOverlay: GhostOverlay,
     private val eventState: MutableMap<String, Int>,
@@ -75,6 +75,7 @@ class InGame(
     private val isMagic: Boolean,
     private val deaths: Int,
     private val isLoaded: Boolean,
+    private val onTransformed: () -> Unit,
 ) : Releasing by Self() {
 
     private var initialized = false
@@ -124,6 +125,7 @@ class InGame(
         UI(
             context,
             assets,
+            extraAssets,
             player,
             choreographer,
             inputController,
@@ -133,7 +135,7 @@ class InGame(
             ::selectOption,
             player::isMagicGirl,
             canAct = {
-                timedActions.isEmpty() && dream == null && transformation == null && ghostFromPowerPlant == null
+                timedActions.isEmpty() && dream == null && ghostFromPowerPlant == null
             },
             canInteract = {
                 timedActions.isEmpty() && !isInDialogue && enemies.isEmpty()
@@ -205,7 +207,8 @@ class InGame(
             if (finalRoom) {
                 ghostOverlay.finalSequence()
             }
-            player.health = player.maxHealth // just heal after on any room change, as it is essentially how continue works anyway
+            player.health =
+                player.maxHealth // just heal after on any room change, as it is essentially how continue works anyway
             goThroughDoor(door, toRoom, player.health, player.isMagicGirl, deaths, false)
         }))
     }
@@ -436,6 +439,10 @@ class InGame(
     }
 
     private fun drawAoe(position: Vec2, length: Float, maxOpacity: Float, isGhost: Boolean) {
+        choreographer.uiSound(
+            if (isGhost) extraAssets.sound.ghostSplash.sound else extraAssets.sound.splash.sound,
+            volume = if (isGhost) 0.5f else 0.5f * maxOpacity
+        )
         val back = VisibleObject(
             tempVec2f.set(position.x, position.y + 0.3f),
             if (isGhost) assets.texture.ghostAoeBack else assets.texture.aoeBack,
@@ -459,7 +466,9 @@ class InGame(
         back.tint.a = maxOpacity
         tempColor.set(1f, 1f, 1f, maxOpacity / 2f)
         ui.setFadeWorldColor(tempColor)
-        ephemeralTimedActions += TimedAction(0.2f, { ui.setFadeWorld(maxOpacity * it / 2f) }) { ui.setFadeWorld(0f) }
+        ephemeralTimedActions += TimedAction(
+            0.2f,
+            { ui.setFadeWorld(maxOpacity * it / 2f) }) { ui.setFadeWorld(0f) }
         ephemeralTimedActions += TimedAction(length, { remains ->
             back.tint.a = maxOpacity * remains
             side.tint.a = maxOpacity * remains
@@ -497,6 +506,7 @@ class InGame(
             hitEnemyWithProjectile(facingLeft, it, position, power)
         }
 
+
         val sideFactor = if (facingLeft) -1f else 1f
         val punch = VisibleObject(
             tempVec2f.set(
@@ -518,6 +528,11 @@ class InGame(
         }) {
             spikesToRemove.add(punch)
         }
+
+        choreographer.uiSound(
+            extraAssets.sound.lightning.sound,
+            volume = 0.5f*maxOpacity
+        )
     }
 
     private fun hitEnemyWithProjectile(
@@ -629,6 +644,7 @@ class InGame(
     private var removeTools = false
     private var ghostFromPowerPlant: GhostFromPowerPlant? = null
     private var transformation: Transformation? = null
+    private var flight: Flight? = null
     private fun onTriggerEventCallback(event: String) {
         when (event) {
             "faster" -> {
@@ -672,23 +688,31 @@ class InGame(
                 eventExecutor.advance()*/
             }
 
+            "magicFlight" -> {
+                transformation?.nextStage()
+            }
             "transform" -> {
                 ghostOverlay.blinking = true
                 player.health = Player.maxPlayerHealth * 2
                 player.maxHealth = Player.maxPlayerHealth * 2
                 transformation = Transformation(
                     player,
+                    cameraMan,
+                    choreographer,
                     context,
                     assets,
+                    extraAssets,
                     inputController,
-                    particleShader
+                    particleShader,
+                    onFirstComplete = {
+                        eventExecutor.advance()
+                    },
                 ) {
                     transformation = null
                     player.transform()
+                    onTransformed()
                     eventExecutor.advance()
                 }
-
-
             }
 
             "dream" -> {
@@ -790,6 +814,11 @@ class InGame(
             "magicTutorial" -> {
                 nextTutorialRepeat = 8f
                 inTutorial = true
+                eventExecutor.advance()
+            }
+
+            "skipFade" -> {
+                choreographer.startNextTrackWithoutFading = true
                 eventExecutor.advance()
             }
         }
@@ -1127,7 +1156,8 @@ class InGame(
                                     GhostOverlay.radiusX,
                                     GhostOverlay.radiusY,
                                     it.extraForEllipseCheck
-                            )) {
+                                )
+                            ) {
                                 it.hit(ghostBody.position, 3)
                             }
                         }
@@ -1151,7 +1181,7 @@ class InGame(
                 if (ghostOverlay.isActive) {
                     ghostOverlay.isMoving = true
                 }
-                println("SHOULD NOT HAPPEN, ${ghostOverlay.isActive}, ${ghostOverlay.isMoving}, $ghostCasting, $ghostStaying")
+                //println("SHOULD NOT HAPPEN, ${ghostOverlay.isActive}, ${ghostOverlay.isMoving}, $ghostCasting, $ghostStaying")
             }
         }
         if (removeTools) {

@@ -19,10 +19,12 @@ import com.littlekt.util.milliseconds
 import com.littlekt.util.viewport.ScalingViewport
 import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.neonghost.Assets
+import io.itch.mattemade.neonghost.ExtraAssets
 import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.character.enemy.Enemy
 import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.screenSpacePixelPerfect
+import io.itch.mattemade.neonghost.touch.CombinedInput
 import io.itch.mattemade.neonghost.world.Trigger
 import io.itch.mattemade.utils.drawing.DelayedTextDrawer
 import io.itch.mattemade.utils.drawing.MonoSpaceTextDrawer
@@ -33,9 +35,10 @@ import kotlin.time.Duration
 class UI(
     private val context: Context,
     private val assets: Assets,
+    private val extraAssets: ExtraAssets,
     private val player: Player,
     private val choreographer: Choreographer,
-    private val controller: InputMapController<GameInput>,
+    private val controller: CombinedInput,
     private val interactionOverrideMap: Map<String, String>,
     private val advanceDialogue: () -> Unit,
     private val activateInteraction: (Trigger) -> Unit,
@@ -296,7 +299,8 @@ class UI(
     private fun playSpeechSoundIfNeeded() {
         if (!shouldSkipSound && shouldPlaySpeechSound && !speechSoundStarted) {
             speechSoundStarted = true
-            choreographer.uiSound(assets.sound.speech[activePortrait] ?: assets.sound.speech1, volume = 4f) {
+            val voice = (if (extraAssets.isLoaded) extraAssets.sound.speech[activePortrait] else null) ?: assets.sound.otherVoice
+            choreographer.uiSound(voice.sound, volume = 0.5f) {
                 speechSoundStarted = false
                 playSpeechSoundIfNeeded()
             }

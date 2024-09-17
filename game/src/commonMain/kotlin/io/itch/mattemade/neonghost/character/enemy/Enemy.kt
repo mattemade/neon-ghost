@@ -1,25 +1,22 @@
 package io.itch.mattemade.neonghost.character.enemy
 
+import com.littlekt.file.Vfs
+import com.littlekt.graphics.MutableColor
+import com.littlekt.graphics.g2d.Batch
+import com.littlekt.graphics.g2d.ParticleSimulator
+import com.littlekt.graphics.g2d.shape.ShapeRenderer
+import com.littlekt.math.MutableVec2f
+import com.soywiz.korma.geom.Angle
+import com.soywiz.korma.geom.radians
 import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.CharacterAnimations
 import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.character.DepthBasedRenderable
 import io.itch.mattemade.neonghost.character.rei.Player
-import io.itch.mattemade.neonghost.world.ContactBits
-import com.littlekt.file.Vfs
-import com.littlekt.graphics.Color
-import com.littlekt.graphics.MutableColor
-import com.littlekt.graphics.g2d.Batch
-import com.littlekt.graphics.g2d.ParticleSimulator
-import com.littlekt.graphics.g2d.shape.ShapeRenderer
-import com.littlekt.graphics.toFloatBits
-import com.littlekt.input.InputMapController
-import com.littlekt.math.MutableVec2f
-import com.soywiz.korma.geom.Angle
-import com.soywiz.korma.geom.radians
-import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.neonghost.pixelPerfectPosition
 import io.itch.mattemade.neonghost.tempo.Choreographer
+import io.itch.mattemade.neonghost.touch.CombinedInput
+import io.itch.mattemade.neonghost.world.ContactBits
 import io.itch.mattemade.utils.animation.SignallingAnimationPlayer
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
@@ -31,7 +28,6 @@ import org.jbox2d.dynamics.Filter
 import org.jbox2d.dynamics.FixtureDef
 import org.jbox2d.dynamics.World
 import kotlin.math.max
-import kotlin.math.min
 import kotlin.time.Duration
 
 class Enemy(
@@ -42,7 +38,7 @@ class Enemy(
     private val choreographer: Choreographer,
     private val assets: Assets,
     animations: CharacterAnimations,
-    private val controller: InputMapController<GameInput>,
+    private val controller: CombinedInput,
     private val particleSimulator: ParticleSimulator,
     private val vfs: Vfs,
     private val difficulty: Float = 1f,
@@ -105,7 +101,8 @@ class Enemy(
             },
             filter = Filter().apply {
                 categoryBits = ContactBits.ENEMY
-                maskBits = ContactBits.WALL or ContactBits.REI_PUNCH /*or ContactBits.ENEMY*/ or ContactBits.GHOST_AOE
+                maskBits =
+                    ContactBits.WALL or ContactBits.REI_PUNCH /*or ContactBits.ENEMY*/ or ContactBits.GHOST_AOE
             },
             friction = 2f,
             userData = this
@@ -119,7 +116,12 @@ class Enemy(
     private val leftPunchFixture = body.createFixture(
         FixtureDef(
             shape = PolygonShape().apply {
-                setAsBox(punchWidth / 2f, punchDepth / 2f, center = tempVec2.set(-punchDistance, 0f), angle = 0f.radians)
+                setAsBox(
+                    punchWidth / 2f,
+                    punchDepth / 2f,
+                    center = tempVec2.set(-punchDistance, 0f),
+                    angle = 0f.radians
+                )
             },
             filter = Filter().apply {
                 categoryBits = ContactBits.ENEMY_PUNCH
@@ -132,7 +134,12 @@ class Enemy(
     private val rightPunchFixture = body.createFixture(
         FixtureDef(
             shape = PolygonShape().apply {
-                setAsBox(punchWidth / 2f, punchDepth / 2f, center = tempVec2.set(punchDistance, 0f), angle = 0f.radians)
+                setAsBox(
+                    punchWidth / 2f,
+                    punchDepth / 2f,
+                    center = tempVec2.set(punchDistance, 0f),
+                    angle = 0f.radians
+                )
             },
             filter = Filter().apply {
                 categoryBits = ContactBits.ENEMY_PUNCH
@@ -188,7 +195,8 @@ class Enemy(
             choreographer.sound(
                 if (strength == 1) assets.sound.punch.sound else assets.sound.powerPunch.sound,
                 body.position.x,
-                body.position.y)
+                body.position.y
+            )
         }
         if (strength == 1) {
             hitsBeforeIgnoreCooldown--
@@ -227,6 +235,7 @@ class Enemy(
                 }
                 hitsBeforeIgnoreCooldown = calcHitsBeforeCooldown(difficulty)
             }
+
             "enemyFootstep" -> {
                 choreographer.sound(assets.sound.footstep.sound, body.position.x, body.position.y)
                 hitsBeforeIgnoreCooldown = calcHitsBeforeCooldown(difficulty)
@@ -242,7 +251,14 @@ class Enemy(
         body.setTransform(tempVec2, Angle.ZERO)
     }
 
-    override fun update(dt: Duration, millis: Float, notAdjustedDt: Duration, toBeat: Float, toMeasure: Float, isFighting: Boolean) {
+    override fun update(
+        dt: Duration,
+        millis: Float,
+        notAdjustedDt: Duration,
+        toBeat: Float,
+        toMeasure: Float,
+        isFighting: Boolean
+    ) {
         if (!canAct()) {
             stopBody()
             currentMagicalAnimation.update(dt)
@@ -346,7 +362,8 @@ class Enemy(
             val height = frame.height / Game.PPU
             val xOffset = (frame.width * 0.1f / Game.PPU).pixelPerfectPosition
             val yOffset = (3f / Game.PPU).pixelPerfectPosition
-            val positionX = texturePositionX(width).pixelPerfectPosition + if (isFacingLeft) -xOffset else xOffset
+            val positionX =
+                texturePositionX(width).pixelPerfectPosition + if (isFacingLeft) -xOffset else xOffset
             val positionY = texturePositionY(height) + yOffset
             batch.draw(
                 frame,
@@ -383,6 +400,7 @@ class Enemy(
             color = Color.BLUE.toFloatBits(),
         )*/
     }
+
     override fun renderShadow(shapeRenderer: ShapeRenderer) {
         currentMagicalAnimation.currentKeyFrame?.let { frame ->
             val width = frame.width / Game.PPU

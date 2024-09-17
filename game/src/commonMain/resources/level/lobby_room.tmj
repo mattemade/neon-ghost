@@ -331,14 +331,14 @@
                  "y":384
                 }, 
                 {
-                 "height":192,
+                 "height":15,
                  "id":76,
                  "name":"lobby_guards_fight",
                  "properties":[
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"guard<:Not that fast!\n\nfight guard<,guard>,guard<\nfight guard<,guard>,guard<,guard>\nfight guard<,guard>,guard<,guard>,guard<\n\nstate 2"
+                         "value":"guard<:We won't let you go!\n\nfight guard<,guard>,guard<,guard>\n\nstate 2"
                         }, 
                         {
                          "name":"type",
@@ -348,9 +348,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":528,
-                 "x":336,
-                 "y":384
+                 "width":122,
+                 "x":492.5,
+                 "y":556.75
                 }, 
                 {
                  "height":178.666666666667,
@@ -360,7 +360,12 @@
                         {
                          "name":"1",
                          "type":"string",
-                         "value":"punk<:Get out of my way!\n\nfight punk<,punk>,punk<,punk>,punk<\n\nstate 2"
+                         "value":"punk<:Get out of my way!\n\nfight punk>,punk<\n\nstate 3"
+                        }, 
+                        {
+                         "name":"2",
+                         "type":"string",
+                         "value":"punk<:Get out of my way!\n\nfight punk<,punk>,punk<,punk>,punk<\n\nstate 3"
                         }, 
                         {
                          "name":"type",
@@ -375,7 +380,7 @@
                  "y":390
                 }, 
                 {
-                 "height":48,
+                 "height":16.25,
                  "id":79,
                  "name":"lobby_exit",
                  "properties":[
@@ -397,9 +402,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":144,
-                 "x":480,
-                 "y":528
+                 "width":112.25,
+                 "x":495.75,
+                 "y":559.75
                 }, 
                 {
                  "height":48,

@@ -481,7 +481,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"\nrei<:It is not fully loaded,\\but should be enough\\to land to the street\n\nchoice ghost\nchoose Leave:leave; Fly to\\the sky:sky; Fly to the\\street:street\nchoice\n\nnot ghost\nchoose Leave:leave; Fly to the\\street:street\nchoice\nnot\n\nchoice leave\nend\n\nchoice street\njetpack<:Are you sure?\\There is no way back\nchoose No:no;Yes:yes\nchoice street,no\nend\nchoice street,yes\nremember jetpack\nteleport ending_room\n\nchoice sky\nstop\n#trigger jetpackFlight\nmusic stop\nscreen fadeOut\nwait 3\nrei<:Oh no, the tank is empty!\nrei<:Mirai, please,\\get ready to catch me!\nvoice 358\nghost>:We are so close!\\Leeet's goooo!\nstop\n#trigger magicFlight\nscreen fadeIn\ntrigger transform\nremember magic\nrei<:Wow, what happened\\to my clothes?!\nvoice 363\nghost>: Ha ha ha, yes,\\it always happens\nvoice 364\nghost>: Now, try to focus on that\\feeling a bit longer,\\and release the power around\nhelp<:KEYBOARD: J OR X\\GAMEPAD: A OR Y\\HOLD TO FOCUS\\RELEASE TO RELEASE\ncamera lock\nstate 1 tutorial_trigger\nstate 1\ntrigger magicTutorial"
+                         "value":"\nrei<:It is not fully loaded,\\but should be enough\\to land to the street\n\nchoice ghost\nchoose Leave:leave; Fly to\\the sky:sky; Fly to the\\street:street\nchoice\n\nnot ghost\nchoose Leave:leave; Fly to the\\street:street\nchoice\nnot\n\nchoice leave\nend\n\nchoice street\njetpack<:Are you sure?\\There is no way back\nchoose No:no;Yes:yes\nchoice street,no\nend\nchoice street,yes\nremember jetpack\nteleport ending_room\n\nchoice sky\nstop\nmusic stop\ntrigger transform\n#screen fadeOut\n#trigger waitForJetpackCompletion\nrei<:Oh no, the tank is empty!\nrei<:Mirai, please,\\get ready to catch me!\nvoice 358\nghost>:We are so close!\\Leeet's goooo!\nstop\ntrigger magicFlight\n#trigger waitFor\n#screen fadeIn\n#trigger transform\nremember magic\nrei<:Wow, what happened\\to my clothes?!\nvoice 363\nghost>: Ha ha ha, yes,\\it always happens\nvoice 364\nghost>: Now, try to focus on that\\feeling a bit longer,\\and release the power around\nhelp<:KEYBOARD: J OR X\\GAMEPAD: A OR Y\\HOLD TO FOCUS\\RELEASE TO RELEASE\ncamera lock\nstate 1 tutorial_trigger\nstate 1\ntrigger magicTutorial"
                         }, 
                         {
                          "name":"2",
@@ -502,8 +502,8 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":288,
-                 "y":240
+                 "x":296,
+                 "y":254
                 }, 
                 {
                  "height":229.333333333333,
@@ -631,7 +631,7 @@
                         {
                          "name":"3",
                          "type":"string",
-                         "value":"#trigger castTutorial\n#wait to cast projectile\nhelp<:FOCUS MAGIC BY HOLDING J OR X\\\\PUNCH WITH K OR Z WHILE FOCUSING"
+                         "value":"#trigger castTutorial\n#wait to cast projectile\nhelp<:FOCUS MAGIC BY HOLDING J OR X\\PUNCH WITH K OR Z WHILE FOCUSING\\\\SLIDE BETWEEN BUTTONS ON TOUCH CONTROLS"
                         }, 
                         {
                          "name":"4",

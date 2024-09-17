@@ -34,6 +34,84 @@ class ExtraSound(context: Context) : AssetPack(context) {
             )
         )
     }
+    val reiVoice by pack {
+        SoundPack(
+            context, listOf(
+                "sound/voice/rei1.wav",
+                "sound/voice/rei2.wav",
+            )
+        )
+    }
+    val punkVoice by pack {
+        SoundPack(
+            context, listOf(
+                "sound/voice/strange1.wav",
+                "sound/voice/strange2.wav",
+            )
+        )
+    }
+    val guardVoice by pack {
+        SoundPack(
+            context, listOf(
+                "sound/voice/low_middle1.wav",
+                "sound/voice/low_middle2.wav",
+            )
+        )
+    }
+    val officerVoice by pack {
+        SoundPack(
+            context, listOf(
+                "sound/voice/high_bass1.wav",
+                "sound/voice/high_bass2.wav",
+            )
+        )
+    }
+    val terminalVoice by pack {
+        SoundPack(
+            context, listOf(
+                "sound/voice/robot.wav",
+            )
+        )
+    }
+    val speech by preparePlain(1) {
+        listOf(
+            "rei" to reiVoice,
+            "magic" to reiVoice,
+            "punk" to punkVoice,
+            "guard" to guardVoice,
+            "officer" to officerVoice,
+            "terminal" to terminalVoice,
+            ).toMap()
+    }
+
+    val ghostSplash by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Punches/ghost_splash.wav",
+            )
+        )
+    }
+    val splash by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Punches/splash.wav",
+            )
+        )
+    }
+    val lightning by pack {
+        SoundPack(
+            context, listOf(
+                "sound/Punches/lightning.wav",
+            )
+        )
+    }
+
+    val jetpack by prepare {
+        context.resourcesVfs["sound/jetpack.wav"].readAudioClipEx()
+    }
+    val magicJetpack by prepare {
+        context.resourcesVfs["sound/magic_jetpack.wav"].readAudioClipEx()
+    }
 
     private fun String.wavName(): String = this.substringAfterLast("/").substringBefore(".wav")
     val concurrentClips = ConcurrentMutableMap<String, AudioClipEx>()
@@ -108,7 +186,7 @@ class ExtraSound(context: Context) : AssetPack(context) {
         "509",
     ).map { "sound/Misc/$it.wav" }.forEachIndexed { index, it ->
         val name = it.wavName()
-        prepare(index) {
+        prepare(0) {
             val clip = context.resourcesVfs[it].readAudioClipEx()
             concurrentClips[name] = clip
             clip
@@ -126,7 +204,7 @@ class ExtraSound(context: Context) : AssetPack(context) {
         "Security Card out",
     ).map { "sound/Additional/$it.wav" }.forEachIndexed { index, it ->
         val name = it.wavName()
-        prepare(index) {
+        prepare(0) {
             val clip = context.resourcesVfs[it].readAudioClipEx()
             concurrentClips[name] = clip
             clip
@@ -150,7 +228,7 @@ class ExtraMusic(context: Context) : AssetPack(context) {
         prepare(index) {
             val track =
                 context.resourcesVfs[it.first].readAudioClipEx()
-                    .asTrack(name, it.second, basicVolume = 0.1f, offset = 0.0f)
+                    .asTrack(name, it.second, basicVolume = if (name == "magical girl optimistic") 0.075f else 0.1f, offset = 0.0f)
             concurrentTracks[name] = track
             track
         }

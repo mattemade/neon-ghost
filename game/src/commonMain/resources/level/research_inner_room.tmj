@@ -315,7 +315,7 @@
          "name":"trigger",
          "objects":[
                 {
-                 "height":48,
+                 "height":9.45454545454544,
                  "id":35,
                  "name":"security_lift_exit",
                  "properties":[
@@ -327,12 +327,12 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":144,
-                 "x":720,
+                 "width":111.272727272727,
+                 "x":736.363636363636,
                  "y":336
                 }, 
                 {
-                 "height":48,
+                 "height":13.6363636363636,
                  "id":65,
                  "name":"red_door",
                  "properties":[
@@ -359,12 +359,12 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":144,
-                 "x":288,
-                 "y":480
+                 "width":110.25,
+                 "x":304.75,
+                 "y":514.363636363636
                 }, 
                 {
-                 "height":48,
+                 "height":9.81818181818181,
                  "id":83,
                  "name":"security_lift_enter",
                  "properties":[
@@ -401,8 +401,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":144,
-                 "x":720,
+                 "width":111.090909090909,
+                 "x":736.363636363636,
                  "y":336
                 }, 
                 {
@@ -452,7 +452,7 @@
                  "visible":true,
                  "width":57.75,
                  "x":142.75,
-                 "y":262
+                 "y":263
                 }, 
                 {
                  "height":27.75,
@@ -506,7 +506,7 @@
                  "visible":true,
                  "width":57.75,
                  "x":336.625,
-                 "y":307.875
+                 "y":308.875
                 }, 
                 {
                  "height":27.75,
@@ -560,7 +560,7 @@
                  "visible":true,
                  "width":57.75,
                  "x":624.791666666667,
-                 "y":259.125
+                 "y":260.125
                 }, 
                 {
                  "height":27.75,
@@ -587,7 +587,7 @@
                  "visible":true,
                  "width":57.75,
                  "x":624.897727272727,
-                 "y":548.852272727273
+                 "y":549.852272727273
                 }, 
                 {
                  "height":27.75,
@@ -614,7 +614,7 @@
                  "visible":true,
                  "width":57.75,
                  "x":767.458333333333,
-                 "y":551.791666666667
+                 "y":552.791666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -668,8 +668,8 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":624,
-                 "y":240
+                 "x":623.75,
+                 "y":239.625
                 }, 
                 {
                  "height":48,

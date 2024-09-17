@@ -3,17 +3,14 @@ package io.itch.mattemade.neonghost.scene
 import com.littlekt.Context
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.Batch
-import com.littlekt.graphics.gl.PixmapTextureData
 import com.littlekt.graphics.shader.ShaderProgram
-import com.littlekt.input.InputMapController
-import com.littlekt.math.random
-import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.shader.ParticleFragmentShader
 import io.itch.mattemade.neonghost.shader.ParticleVertexShader
 import io.itch.mattemade.neonghost.shader.Particler
+import io.itch.mattemade.neonghost.touch.CombinedInput
 import io.itch.mattemade.utils.math.fill
 import kotlin.random.Random
 import kotlin.time.Duration
@@ -22,7 +19,7 @@ class Dream(
     player: Player,
     context: Context,
     assets: Assets,
-    private val input: InputMapController<GameInput>,
+    private val input: CombinedInput,
     particleShader: ShaderProgram<ParticleVertexShader, ParticleFragmentShader>,
     val complete: () -> Unit
 ) {
@@ -48,8 +45,7 @@ class Dream(
         11000f,
         2f * Game.IPPU,
         interpolation = 3,
-        fillData = {
-            index, startColor, endColor, startPosition, endPosition, activeBetween ->
+        fillData = { index, startColor, endColor, startPosition, endPosition, activeBetween ->
             val x = (index / doubles) % width
             val y = (index / doubles) / width
             val pixelColor = textureData.pixmap.get(slice.x + x, slice.y + y)

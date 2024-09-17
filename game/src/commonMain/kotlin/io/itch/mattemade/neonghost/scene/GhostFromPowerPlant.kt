@@ -4,14 +4,10 @@ import com.littlekt.Context
 import com.littlekt.graphics.MutableColor
 import com.littlekt.graphics.g2d.Batch
 import com.littlekt.graphics.g2d.tilemap.tiled.TiledObjectLayer
-import com.littlekt.graphics.gl.PixmapTextureData
 import com.littlekt.graphics.shader.ShaderProgram
-import com.littlekt.input.InputMapController
 import com.littlekt.math.MutableVec2f
 import com.littlekt.math.Vec2f
-import com.littlekt.math.random
 import com.soywiz.kds.fastCastTo
-import io.itch.mattemade.blackcat.input.GameInput
 import io.itch.mattemade.neonghost.Assets
 import io.itch.mattemade.neonghost.Game
 import io.itch.mattemade.neonghost.LevelSpec
@@ -19,6 +15,7 @@ import io.itch.mattemade.neonghost.character.rei.Player
 import io.itch.mattemade.neonghost.shader.ParticleFragmentShader
 import io.itch.mattemade.neonghost.shader.ParticleVertexShader
 import io.itch.mattemade.neonghost.shader.Particler
+import io.itch.mattemade.neonghost.touch.CombinedInput
 import io.itch.mattemade.utils.math.fill
 import kotlin.random.Random
 import kotlin.time.Duration
@@ -28,7 +25,7 @@ class GhostFromPowerPlant(
     context: Context,
     assets: Assets,
     levelSpec: LevelSpec,
-    private val input: InputMapController<GameInput>,
+    private val input: CombinedInput,
     particleShader: ShaderProgram<ParticleVertexShader, ParticleFragmentShader>,
     val complete: () -> Unit
 ) {
@@ -38,7 +35,8 @@ class GhostFromPowerPlant(
         currentKeyFrame!!
     }
 
-    val centerPoint = levelSpec.level.layer("trigger").fastCastTo<TiledObjectLayer>().objects.first { it.name == "power_plant" }.let {
+    val centerPoint = levelSpec.level.layer("trigger")
+        .fastCastTo<TiledObjectLayer>().objects.first { it.name == "power_plant" }.let {
         val mapHeight = levelSpec.level.height * levelSpec.level.tileHeight
         MutableVec2f(
             it.bounds.x + it.bounds.width / 2f,
@@ -71,8 +69,7 @@ class GhostFromPowerPlant(
         11000f,
         2f/* * Game.IPPU*/,
         interpolation = 1,
-        fillData = {
-            index, startColor, endColor, startPosition, endPosition, activeBetween ->
+        fillData = { index, startColor, endColor, startPosition, endPosition, activeBetween ->
             val x = (index / doubles) % width
             val y = (index / doubles) / width
             val pixelColor = textureData.pixmap.get(slice.x + x, slice.y + y)

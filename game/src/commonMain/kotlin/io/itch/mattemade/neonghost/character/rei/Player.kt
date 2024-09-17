@@ -25,6 +25,7 @@ import io.itch.mattemade.neonghost.character.DepthBasedRenderable
 import io.itch.mattemade.neonghost.character.enemy.Enemy
 import io.itch.mattemade.neonghost.pixelPerfectPosition
 import io.itch.mattemade.neonghost.tempo.Choreographer
+import io.itch.mattemade.neonghost.touch.CombinedInput
 import io.itch.mattemade.neonghost.world.ContactBits
 import io.itch.mattemade.utils.animation.SignallingAnimationPlayer
 import io.itch.mattemade.utils.math.fill
@@ -49,7 +50,7 @@ class Player(
     private val choreographer: Choreographer,
     private val assets: Assets,
     private val extraAssets: ExtraAssets,
-    private val controller: InputMapController<GameInput>,
+    private val controller: CombinedInput,
     private val particleSimulator: ParticleSimulator,
     private val vfs: Vfs,
     val initialHealth: Int,

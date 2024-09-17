@@ -18,6 +18,7 @@ import io.itch.mattemade.neonghost.character.rei.Player.Companion.spellRx
 import io.itch.mattemade.neonghost.character.rei.Player.Companion.spellRy
 import io.itch.mattemade.neonghost.pixelPerfectPosition
 import io.itch.mattemade.neonghost.scene.GhostOverlay
+import io.itch.mattemade.neonghost.touch.CombinedInput
 import io.itch.mattemade.neonghost.world.CameraMan
 import io.itch.mattemade.neonghost.world.ContactBits
 import io.itch.mattemade.utils.animation.SignallingAnimationPlayer
@@ -37,7 +38,7 @@ class NeonGhost(
     initiallyFacingLeft: Boolean,
     private val neonGhostWorld: World,
     private val assets: Assets,
-    private val controller: InputMapController<GameInput>,
+    private val controller: CombinedInput,
     private val particleSimulator: ParticleSimulator,
     private val vfs: Vfs,
     private val ghostOverlay: GhostOverlay,

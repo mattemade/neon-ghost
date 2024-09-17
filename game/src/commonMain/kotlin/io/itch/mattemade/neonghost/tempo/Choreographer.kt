@@ -97,7 +97,7 @@ class Choreographer(private val context: Context) {
 
     private fun start(music: StreamBpm) {
         currentlyPlayingId = music.stream.play(
-            volume = music.basicVolume * masterVolume,
+            volume = music.basicVolume * masterVolume * uiMusicVolume,
             referenceDistance = 10000f,
             rolloffFactor = 0f,
             loop = true
@@ -157,12 +157,13 @@ class Choreographer(private val context: Context) {
             playbackRateBasedDt//if (bpm > 0f) playbackRateBasedDt.times(bpm / 150.0) else playbackRateBasedDt
     }
 
-    fun uiSound(sound: AudioClipEx, volume: Float, onEnd: ((Int) -> Unit)? = null): Int {
+    fun uiSound(sound: AudioClipEx, volume: Float, loop: Boolean = false, onEnd: ((Int) -> Unit)? = null): Int {
         everActiveSoundClips.add(sound)
         val id = sound.play(
             positionX = xPosition,
             positionY = yPosition,
             volume = volume * masterVolume,
+            loop = loop,
             onEnded = onEnd
         )
         sound.setPlaybackRate(id, playbackRate.toFloat())

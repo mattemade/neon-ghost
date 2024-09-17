@@ -42,6 +42,6 @@ fun main() {
                 activeMusic = activeMusic
             )
         }
-        Game(it, onLowPerformance = {}, savedStateOverride = savedState)
+        Game(it, onLowPerformance = {0f}, savedStateOverride = savedState)
     }
 }

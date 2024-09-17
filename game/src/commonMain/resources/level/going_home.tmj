@@ -35,8 +35,8 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 91, 0, 0, 53, 53, 0, 0, 53, 53, 0, 0, 0, 53, 53, 0, 0, 0, 0, 53, 53, 0, 0, 81, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 94, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 81, 0, 0, 0, 0, 0,
+         "data":[0, 0, 0, 0, 92, 0, 0, 53, 53, 0, 0, 53, 53, 0, 0, 0, 53, 53, 0, 0, 0, 0, 53, 53, 0, 0, 81, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 81, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -125,7 +125,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"punk>:Hey, girl!\npunk>:Do you want to have some fun?\n\nchoose Yes:yes; No:no\nchoice yes\npunk>:He he he\nchoice no\npunk>:But I want!\nchoice\n\nfight punk>0.5\n\nrei<: Remember your place!\npunk>: Oh, be sure, I'll remember\nstate 1\n"
+                         "value":"punk>:Hey, girl!\npunk>:Do you want to have some fun?\n\nchoose Yes:yes; No:no\nchoice yes\npunk>:He he he\nchoice no\npunk>:But I want!\nchoice\n\nfight punk>0.5\n\nmusic stop\nrei<: Remember your place!\npunk>: Oh, be sure, I'll remember\nstate 1\n"
                         }, 
                         {
                          "name":"type",
@@ -289,7 +289,7 @@
          "source":"abstract.tsj"
         }, 
         {
-         "firstgid":89,
+         "firstgid":90,
          "source":"tilesets\/wooden_doors.tsj"
         }],
  "tilewidth":48,

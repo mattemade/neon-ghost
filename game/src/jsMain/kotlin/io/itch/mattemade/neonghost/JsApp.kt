@@ -72,9 +72,9 @@ fun main() {
             )
         }
         scheduleCanvasResize(it)
-        val game = Game(it, ::onLowPerformance, cabinet, savedState)
+        val game = Game(it, ::onLowPerformance, cabinet, savedState, zoom)
         window.addEventListener("blur", {
-            game.focused = false
+            //game.focused = false
         })
         game
     }
@@ -108,7 +108,7 @@ private fun scheduleCanvasResize(context: Context) {
     }
 }
 
-private fun onLowPerformance(resetZoom: Boolean) {
+private fun onLowPerformance(resetZoom: Boolean): Float {
     if (resetZoom) {
         zoomFactor = 1f
     } else {
@@ -116,4 +116,5 @@ private fun onLowPerformance(resetZoom: Boolean) {
     }
     val setZoom = zoom * zoomFactor
     canvas.style.asDynamic().zoom = "$setZoom"
+    return setZoom
 }

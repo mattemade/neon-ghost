@@ -201,7 +201,7 @@ class GhostOverlay(
         isMoving = true
     }
 
-    var renderJustOneMoreTime = false
+    var renderJustOneMoreTime = true
     private var neonGhostSlice: TextureSlice? = null
     private var neonGhostFacingLeft: Boolean = false
     private var neonGhostX = 0f

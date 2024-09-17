@@ -258,7 +258,7 @@
                         {
                          "name":"0",
                          "type":"string",
-                         "value":"wait 2\nrei<:Mirai...\nrei<:Goodbye...\nrei<:...\nrei<:I have to find\\the way out\nstate 1\nremember indoor\nremember lastFlash"
+                         "value":"wait 2\nrei<:Mirai...\nrei<:Goodbye...\nrei<:...\nrei<:I have to find\\the way out\nstate 1\nstate 2 lobby_punks_fight\nstate 1 lobby_guards_fight\nremember indoor\nremember lastFlash"
                         }, 
                         {
                          "name":"type",

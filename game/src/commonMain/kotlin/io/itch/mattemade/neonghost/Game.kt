@@ -32,6 +32,8 @@ import io.itch.mattemade.neonghost.shader.ParticleVertexShader
 import io.itch.mattemade.neonghost.shader.createCabinetShader
 import io.itch.mattemade.neonghost.shader.createParticleShader
 import io.itch.mattemade.neonghost.tempo.Choreographer
+import io.itch.mattemade.neonghost.touch.CombinedInput
+import io.itch.mattemade.neonghost.touch.VirtualController
 import io.itch.mattemade.utils.releasing.Releasing
 import io.itch.mattemade.utils.releasing.Self
 import io.itch.mattemade.utils.render.DirectRender
@@ -41,9 +43,10 @@ import kotlin.time.Duration
 
 class Game(
     context: Context,
-    private val onLowPerformance: (Boolean) -> Unit,
+    private val onLowPerformance: (Boolean) -> Float,
     private val drawCabinet: Boolean = false,
-    savedStateOverride: SavedState? = null
+    savedStateOverride: SavedState? = null,
+    initialZoom: Float,
 ) : ContextListener(context),
     Releasing by Self() {
 
@@ -51,6 +54,9 @@ class Game(
     var focused = false
         set(value) {
             field = value
+            if (!value) {
+                virtualController.isVisible = false
+            }
             if (!value && assets.isLoaded && choreographer.isActive) {
                 context.audio.suspend()
             } else if (value) {
@@ -60,6 +66,8 @@ class Game(
     val assets = Assets(context, ::onAnimationEvent).releasing()
     val extraAssets = ExtraAssets(context).releasing()
     val inputController = context.bindInputs()
+    val virtualController = VirtualController(context, assets, initialZoom)
+    val combinedInput = CombinedInput(inputController, virtualController)
     var inGame: InGame? = null
     val ghostOverlay by lazy {
         GhostOverlay(
@@ -145,7 +153,7 @@ class Game(
             extraAssets,
             particleShader,
             level,
-            inputController,
+            combinedInput,
             choreographer,
             ghostOverlay,
             eventState,
@@ -169,7 +177,8 @@ class Game(
             },
             playerHealth = playerHealth,
             isMagic = isMagic,
-            isLoaded = isLoaded
+            isLoaded = isLoaded,
+            onTransformed = { virtualController.isMagic = true }
         )
     }
 
@@ -216,23 +225,32 @@ class Game(
             }
             previousRoomName = it.room
 
+            var magic = it.isMagic
+            var health = Player.maxPlayerHealth
             if (playerKnowledge.contains("ending")) {
+                magic = true
+                virtualController.isMagic = true
                 choreographer.play(assets.music.concurrentTracks["stop"]!!)
                 choreographer.fullStop()
                 ghostOverlay.isActive = false
                 ghostOverlay.isMoving = false
             } else if (playerKnowledge.contains("magic")) {
+                magic = true
+                health = Player.maxPlayerHealth * 2
+                virtualController.isMagic = true
                 choreographer.holdMagicMusic()
                 trackToPlayOnNextUpdate = extraAssets.music.concurrentTracks["magical girl optimistic"]!!
             }
 
             if (movingIndoor) {
+                choreographer.startNextTrackWithoutFading = true
+                trackToPlayOnNextUpdate = assets.music.concurrentTracks["stop"]!!
                 playerKnowledge.remove("moveIndoor")
                 eventState["officer_catch"] = 1
                 previousRoomName = "interrogation_room"
-                openDoor("officer_catch", previousRoomName!!, Player.maxPlayerHealth, it.isMagic, it.deaths, false)
+                openDoor("officer_catch", previousRoomName!!, health, it.isMagic, it.deaths, false)
             } else {
-                openDoor(it.door, it.room, it.playerHealth, it.isMagic, it.deaths + 1, true)
+                openDoor(it.door, it.room, health, magic, it.deaths + 1, true)
             }
 
 
@@ -240,6 +258,7 @@ class Game(
     }
 
     private fun resetGame() {
+        virtualController.isMagic = false
         choreographer.reset()
         ghostOverlay.reset()
         eventState.clear()
@@ -248,11 +267,6 @@ class Game(
         interactionOverride.clear()
         previousRoomName = "boxing_club"
         openDoor("player", "boxing_club", Player.maxPlayerHealth, false, 0, false)
-
-        /*        choreographer.play(assets.music.concurrentTracks["magical girl 3d"]!!)
-                eventState["officer_catch"] = 1
-                previousRoomName = "interrogation_room"
-                openDoor("officer_catch", "interrogation_room", 10, false)*/
     }
 
     private fun onAnimationEvent(event: String) {
@@ -300,7 +314,7 @@ class Game(
 
             override fun touchUp(screenX: Float, screenY: Float, pointer: Pointer): Boolean {
                 if (focused) {
-
+                    virtualController.isVisible = true
                 } else {
                     focused = true
                 }
@@ -319,11 +333,14 @@ class Game(
         })
 
         onResize { width, height ->
+            virtualController.resize(width, height)
+
             fpsCheckTimeout = 5000f
             framesRenderedInPeriod = 0
+            // resizing to a higher resolution than was before
             if (width > directRender.postViewport.virtualWidth || height > directRender.postViewport.virtualHeight) {
                 //useCabinet = true
-                onLowPerformance(true)// just to reset the zoom factor - it will auto-adjust in 5 seconds after
+                virtualController.zoom = onLowPerformance(true)// just to reset the zoom factor - it will auto-adjust in 5 seconds after
             }
 
             val widthScale = width / virtualWidth
@@ -331,6 +348,10 @@ class Game(
             scale = minOf(widthScale, heightScale)
             val scaledWidth = virtualWidth * scale
             val scaledHeight = virtualHeight * scale
+
+            if (scale < 3) {
+                useCabinet = false
+            }
 
             directRender.resize(width, height)
             cabinetRender.resize(width, height)
@@ -386,47 +407,46 @@ class Game(
                     trackToPlayOnNextUpdate = null
                 }
             }
+
+            if (focused && assetsReady) {
+                virtualController.update()
+            }
             if (useCabinet) {
                 cabinetRender.render(dt)
             } else {
                 directRender.render(dt)
             }
-
-
+            if (focused && assetsReady) {
+                virtualController.render(dt)
+            }
 
             if (focused && assetsReady && extraAssetsReady) {
                 framesRenderedInPeriod++
                 fpsCheckTimeout -= dt.milliseconds
                 if (fpsCheckTimeout < 0f) {
-                    if (framesRenderedInPeriod < 190) { // average is less than 38 fps
+                    if (framesRenderedInPeriod < 0) { // average is less than 38 fps
                         if (useCabinet) {
                             val canZoomOutEvenMore =
                                 directRender.postViewport.virtualWidth > virtualWidth * 5f &&
                                         directRender.postViewport.virtualHeight > virtualHeight * 5f
                             if (canZoomOutEvenMore) {
-                                onLowPerformance(false)
+                                virtualController.zoom = onLowPerformance(false)
                             } else {
                                 useCabinet = false
-                                onLowPerformance(true)
+                                virtualController.zoom = onLowPerformance(true)
                             }
                         } else {
                             val canZoomOutEvenMore =
                                 directRender.postViewport.virtualWidth > virtualWidth * 2f &&
                                         directRender.postViewport.virtualHeight > virtualHeight * 2f
                             if (canZoomOutEvenMore) {
-                                onLowPerformance(false)
+                                virtualController.zoom = onLowPerformance(false)
                             }
                         }
                     }
                     fpsCheckTimeout = 5000f
                     framesRenderedInPeriod = 0
                 }
-            }
-
-            val delay = 1000000000f / 1500000f
-            val currentTime = System_nanoTime()
-            while (System_nanoTime() - currentTime < delay) {
-
             }
         }
 
@@ -575,6 +595,8 @@ class Game(
         const val virtualHeight = 240//224//240
         const val visibleWorldWidth = (virtualWidth / PPU).toInt()
         const val visibleWorldHeight = (virtualHeight / PPU).toInt()
+        const val halfVisibleWorldWidth = visibleWorldWidth / 2f
+        const val halfVisibleWorldHeight = visibleWorldHeight / 2f
 
         val shadowColor = MutableColor(0f, 0f, 0f, 0.25f).toFloatBits()
     }

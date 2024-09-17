@@ -8,8 +8,8 @@ uniform float u_time;
 varying lowp vec4 v_color;
 varying vec2 v_texCoords;
 
-const float gamePadding = 0.025;
-const float overlayPadding = 0.0125;
+const float gamePadding = 0.0;//0.025;
+const float overlayPadding = 0.0;//0.0125;
 
 const float negativeGamePadding = 1.0 - gamePadding;
 const float negativeOverlayPadding = 1.0 - overlayPadding;
@@ -21,7 +21,8 @@ const float reflectionPositionFactor = 1.0;
 const float gameReflectionColorFactor = 0.4;
 const float ghostReflectionColorFactor = 0.2;
 const float smallCornerR = 0.05;
-const vec2 virtualResolution = vec2(320, 240);
+const vec2 realVirtualResolution = vec2(320, 240);
+const vec2 virtualResolution = realVirtualResolution - realVirtualResolution * gamePadding;
 const vec2 blurDirection = vec2(-3.0, 0.0);
 
 
@@ -43,7 +44,8 @@ const vec2 blurDirection = vec2(-3.0, 0.0);
 // Emulated input resolution.
 #if 0
   // Fix resolution to set amount.
-vec2 res=vec2(320.0/1.0,240.0/1.0);
+vec2 res=vec2(virtualResolution.x/1.0,
+              virtualResolution.y/1.0);
 #else
   // Optimize for resize.
 #define res (u_resolution.xy/1.0)

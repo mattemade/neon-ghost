@@ -70,11 +70,14 @@ class Textures(context: Context, private val packer: RuntimeTextureAtlasPacker) 
 }
 
 class Sound(context: Context) : AssetPack(context) {
-    val speech1 by prepare { context.resourcesVfs["sound/speech1.mp3"].readAudioClipEx() }
-    val speech by preparePlain {
-        listOf("rei_" to "Voice - 2", "punk_" to "Voice - 3").associate {
-            it.first to  context.resourcesVfs["sound/Additional/${it.second}.wav"].readAudioClipEx()
-        }
+
+
+    val otherVoice by pack {
+        SoundPack(
+            context, listOf(
+                "sound/voice/high_middle1.wav",
+            )
+        )
     }
     val punch by pack {
         SoundPack(
