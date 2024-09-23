@@ -4,11 +4,13 @@ A classic 2D beat 'em up adventure made in 1 month for [Magical Girl Game Jam #1
 
 [Check it on itch.io](https://mattemade.itch.io/neon-ghost)
 
-Source license terms:
+License terms:
 
-* all the code is licensed under [Apache 2.0](LICENSE-CODE.txt)
-* voice recordings from [sound/Misc](game%2Fsrc%2FcommonMain%2Fresources%2Fsound%2FMisc) are licensed under [CC0](LICENSE-VOICE.txt)
-* music, sounds and graphic assets: TBC 
+* some basic project and build configuration code is taken from [littlekt-game-template](https://github.com/littlektframework/littlekt-game-template) is licensed under [MIT](LICENSE-TEMPLATE.txt)
+* all the game code is licensed under [Apache 2.0](LICENSE-CODE.txt)
+* graphic assets (sprites and tiles) are licensed under [CC BY-NC-ND 4.0](LICENSE-IMAGES.txt), look below for authors
+* music in is licensed under [CC BY-SA 4.0](LICENSE-MUSIC.txt)
+* sound effects and voice recordings in [sound/](game%2Fsrc%2FcommonMain%2Fresources%2Fsound%2FMisc), and levels/tileset definitions in [resources/level/](game/src/commonMain/resources/level) are licensed under [CC0 (public domain)](LICENSE-SOUND.txt)
 
 The team behind the game:
 
